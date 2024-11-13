@@ -86,7 +86,7 @@ export default function FolderTableView() {
             },
             {
               accessor: 'actions',
-              width: 170,
+              width: 45 * 4,
               render: (folder) => (
                 <Group gap='sm'>
                   <Tooltip label='View files'>

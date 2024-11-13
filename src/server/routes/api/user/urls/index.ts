@@ -98,6 +98,9 @@ export default fastifyPlugin(
             ...(maxViews && { maxViews: maxViews }),
             ...(password && { password: password }),
           },
+          omit: {
+            password: true,
+          },
         });
 
         let domain;

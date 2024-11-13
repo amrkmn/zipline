@@ -4,11 +4,11 @@ import { Url } from '@/lib/db/models/url';
 import { formatRootUrl } from '@/lib/url';
 import { ActionIcon, Anchor, Card, Group, Menu, Stack, Text, Tooltip } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
-import { IconCopy, IconDots, IconTrashFilled } from '@tabler/icons-react';
+import { IconCopy, IconDots, IconPencil, IconTrashFilled } from '@tabler/icons-react';
 import { copyUrl, deleteUrl } from './actions';
 import { useSettingsStore } from '@/lib/store/settings';
 
-export default function UserCard({ url }: { url: Url }) {
+export default function UserCard({ url, setSelectedUrl }: { url: Url; setSelectedUrl: (url: Url) => void }) {
   const config = useConfig();
   const clipboard = useClipboard();
 
@@ -50,6 +50,9 @@ export default function UserCard({ url }: { url: Url }) {
                   onClick={() => clipboard.copy(url.destination.trim())}
                 >
                   Copy destination
+                </Menu.Item>
+                <Menu.Item leftSection={<IconPencil size='1rem' />} onClick={() => setSelectedUrl(url)}>
+                  Edit
                 </Menu.Item>
                 <Menu.Item
                   leftSection={<IconTrashFilled size='1rem' />}

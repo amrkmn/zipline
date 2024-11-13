@@ -1,50 +1,52 @@
-import { File } from '@/lib/db/models/file';
+import { Url } from '@/lib/db/models/url';
 import { fetchApi } from '@/lib/fetchApi';
 import { Button, Divider, Modal, NumberInput, PasswordInput, Stack, TextInput, Title } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IconEye, IconKey, IconPencil, IconPencilOff, IconTrashFilled } from '@tabler/icons-react';
 import { useState } from 'react';
-import { mutateFiles } from '../actions';
+import { mutate } from 'swr';
 
-export default function EditFileDetailsModal({
-  file,
+export default function EditUrlModal({
+  url,
   onClose,
   open,
 }: {
   open: boolean;
-  file: File | null;
+  url: Url | null;
   onClose: () => void;
 }) {
-  if (!file) return null;
+  if (!url) return null;
 
-  const [maxViews, setMaxViews] = useState<number | null>(file?.maxViews ?? null);
+  const [maxViews, setMaxViews] = useState<number | null>(url?.maxViews ?? null);
   const [password, setPassword] = useState<string | null>('');
-  const [originalName, setOriginalName] = useState<string | null>(file?.originalName ?? null);
-  const [type, setType] = useState<string | null>(file?.type ?? null);
+  const [vanity, setVanity] = useState<string | null>(url?.vanity ?? null);
+  const [destination, setDestination] = useState<string | null>(url?.destination ?? null);
 
   const handleRemovePassword = async () => {
-    if (!file.password) return;
+    if (!url.password) return;
 
-    const { error } = await fetchApi(`/api/user/files/${file.id}`, 'PATCH', {
+    const { error } = await fetchApi(`/api/user/urls/${url.id}`, 'PATCH', {
       password: null,
     });
 
     if (error) {
       showNotification({
         title: 'Failed to remove password...',
-        message: error.message,
+        message: error.error,
         color: 'red',
         icon: <IconPencilOff size='1rem' />,
       });
     } else {
       showNotification({
         title: 'Password removed!',
-        message: 'The password has been removed from the file.',
+        message: 'The password has been removed from the URL.',
         color: 'green',
         icon: <IconPencil size='1rem' />,
       });
 
-      mutateFiles();
+      onClose();
+      mutate('/api/user/urls');
+      mutate({ key: '/api/user/urls' });
     }
   };
 
@@ -52,96 +54,89 @@ export default function EditFileDetailsModal({
     const data: {
       maxViews?: number;
       password?: string;
-      originalName?: string;
-      type?: string;
+      vanity?: string;
+      destination?: string;
     } = {};
 
     if (maxViews !== null) data['maxViews'] = maxViews;
     if (password !== null) data['password'] = password?.trim();
-    if (originalName !== null) data['originalName'] = originalName?.trim();
-    if (type !== null) data['type'] = type?.trim();
+    if (vanity !== null && vanity !== url.vanity) data['vanity'] = vanity?.trim();
+    if (destination !== null && destination !== url.destination) data['destination'] = destination?.trim();
 
-    const { error } = await fetchApi(`/api/user/files/${file.id}`, 'PATCH', data);
+    const { error } = await fetchApi(`/api/user/urls/${url.id}`, 'PATCH', data);
 
     if (error) {
       showNotification({
         title: 'Failed to save changes...',
-        message: error.message,
+        message: error.error,
         color: 'red',
         icon: <IconPencilOff size='1rem' />,
       });
     } else {
       showNotification({
         title: 'Changes saved!',
-        message: 'The changes to the file have been saved.',
+        message: 'The changes have been saved successfully.',
         color: 'green',
         icon: <IconPencil size='1rem' />,
       });
 
       onClose();
-
-      setPassword(null);
-      mutateFiles();
+      mutate('/api/user/urls');
+      mutate({ key: '/api/user/urls' });
     }
   };
 
   return (
     <Modal
-      zIndex={300}
-      title={<Title>Editing &quot;{file.name}&quot;</Title>}
-      onClose={onClose}
+      title={<Title>Editing &quot;{url.vanity ?? url.code}&quot;</Title>}
       opened={open}
+      onClose={onClose}
     >
       <Stack gap='xs' my='sm'>
         <NumberInput
           label='Max Views'
           placeholder='Unlimited'
-          description='The maximum number of views this file can have before it is deleted. Leave blank to allow as many views as you want.'
-          min={0}
+          description='The maximum number of clicks this URL can have before it is automatically deleted. Leave blank to allow as many views as you want.'
           value={maxViews || ''}
           onChange={(value) => setMaxViews(value === '' ? null : Number(value))}
+          min={0}
           leftSection={<IconEye size='1rem' />}
         />
 
         <TextInput
-          label='Original Name'
-          description='Add an original name. When downloading this file, instead of using the generated file name (if chosen), it will download with this "original name" instead.'
-          value={originalName ?? ''}
+          label='Vanity'
+          placeholder='Optional'
+          description='A custom alias for your URL. Leave blank to use the randomly generated code.'
+          value={vanity || ''}
           onChange={(event) =>
-            setOriginalName(event.currentTarget.value.trim() === '' ? null : event.currentTarget.value.trim())
+            setVanity(event.currentTarget.value.trim() === '' ? null : event.currentTarget.value.trim())
           }
         />
 
         <TextInput
-          label='Type'
-          description={
-            <>
-              Change a file&apos;s mimetype. <b>DO NOT CHANGE THIS VALUE</b> unless you know what you are
-              doing, this can mess with how Zipline renders specific file types.
-            </>
-          }
-          value={type ?? ''}
+          label='Destination'
+          placeholder='https://example.com'
+          value={destination || ''}
           onChange={(event) =>
-            setType(event.currentTarget.value.trim() === '' ? null : event.currentTarget.value.trim())
+            setDestination(event.currentTarget.value.trim() === '' ? null : event.currentTarget.value.trim())
           }
-          c='red'
         />
 
         <Divider />
 
-        {file.password ? (
+        {url.password ? (
           <Button
             variant='light'
             color='red'
             leftSection={<IconTrashFilled size='1rem' />}
             onClick={handleRemovePassword}
           >
-            Remove Password
+            Remove password
           </Button>
         ) : (
           <PasswordInput
             label='Password'
-            description='Set a password for this file. Leave blank to disable password protection.'
+            description='Set a password for this URL. Leave blank to disable password protection.'
             value={password ?? ''}
             autoComplete='off'
             onChange={(event) =>

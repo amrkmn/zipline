@@ -430,7 +430,7 @@ export default function FileTable({ id }: { id?: string }) {
             {
               accessor: 'actions',
               textAlign: 'right',
-              width: 180,
+              width: 45 * 4,
               render: (file) => (
                 <Group gap='sm'>
                   <Tooltip label='More details'>
