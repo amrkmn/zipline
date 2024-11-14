@@ -351,7 +351,7 @@ export default function FileModal({
               </SimpleGrid>
             )}
 
-            <Group justify='space-between' mt='lg'>
+            <Group justify='space-between' mt='sm'>
               <Group>
                 {!reduce && (
                   <Text size='sm' c='dimmed'>
