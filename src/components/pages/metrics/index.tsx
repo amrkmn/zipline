@@ -3,11 +3,13 @@ import { DatePicker } from '@mantine/dates';
 import { IconCalendarSearch, IconCalendarTime } from '@tabler/icons-react';
 import { useState } from 'react';
 import FilesUrlsCountGraph from './parts/FilesUrlsCountGraph';
-import StatsCards from './parts/StatsCards';
-import StatsTables from './parts/StatsTables';
-import StorageGraph from './parts/StorageGraph';
-import ViewsGraph from './parts/ViewsGraph';
 import { useApiStats } from './useStats';
+import dynamic from 'next/dynamic';
+
+const StatsCards = dynamic(() => import('./parts/StatsCards'));
+const StatsTables = dynamic(() => import('./parts/StatsTables'));
+const StorageGraph = dynamic(() => import('./parts/StorageGraph'));
+const ViewsGraph = dynamic(() => import('./parts/ViewsGraph'));
 
 export default function DashboardMetrics() {
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
