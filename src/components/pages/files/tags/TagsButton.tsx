@@ -1,6 +1,6 @@
 import { Response } from '@/lib/api/response';
 import { Tag } from '@/lib/db/models/tag';
-import { ActionIcon, Group, Modal, Stack, Text, Title, Tooltip } from '@mantine/core';
+import { ActionIcon, Group, Modal, Paper, Stack, Text, Title, Tooltip } from '@mantine/core';
 import { IconPencil, IconPlus, IconTagOff, IconTags, IconTrashFilled } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -10,6 +10,7 @@ import { fetchApi } from '@/lib/fetchApi';
 import { showNotification } from '@mantine/notifications';
 import CreateTagModal from './CreateTagModal';
 import EditTagModal from './EditTagModal';
+import { mutateFiles } from '@/components/file/actions';
 
 export default function TagsButton() {
   const router = useRouter();
@@ -40,6 +41,7 @@ export default function TagsButton() {
     }
 
     mutate();
+    mutateFiles();
   };
 
   useEffect(() => {
@@ -77,21 +79,31 @@ export default function TagsButton() {
                   <TagPill tag={tag} />
 
                   <Text size='sm' c='dimmed'>
-                    {tag.files!.length} files
+                    {tag.files!.length} file{tag.files!.length === 1 ? '' : 's'}
                   </Text>
                 </Group>
 
                 <Group>
-                  <ActionIcon variant='outline' onClick={() => setSelectedTag(tag)}>
-                    <IconPencil size='1rem' />
-                  </ActionIcon>
+                  <Tooltip label='Edit tag'>
+                    <ActionIcon variant='outline' onClick={() => setSelectedTag(tag)}>
+                      <IconPencil size='1rem' />
+                    </ActionIcon>
+                  </Tooltip>
 
-                  <ActionIcon variant='outline' color='red' onClick={() => handleDelete(tag)}>
-                    <IconTrashFilled size='1rem' />
-                  </ActionIcon>
+                  <Tooltip label='Delete tag'>
+                    <ActionIcon variant='outline' color='red' onClick={() => handleDelete(tag)}>
+                      <IconTrashFilled size='1rem' />
+                    </ActionIcon>
+                  </Tooltip>
                 </Group>
               </Group>
             ))}
+
+          {tags?.length === 0 && (
+            <Paper withBorder px='sm' py='xs'>
+              No tags. Create one by clicking the plus icon.
+            </Paper>
+          )}
         </Stack>
       </Modal>
 

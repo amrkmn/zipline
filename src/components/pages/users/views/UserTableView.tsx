@@ -81,9 +81,9 @@ export default function UserTableView() {
             },
             {
               accessor: 'actions',
-              width: 45 * 3,
+              textAlign: 'right',
               render: (user) => (
-                <Group gap='sm'>
+                <Group gap='sm' justify='right' wrap='nowrap'>
                   <Tooltip label="View user's files">
                     <ActionIcon
                       component={Link}

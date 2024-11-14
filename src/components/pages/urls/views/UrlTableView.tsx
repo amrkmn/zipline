@@ -255,9 +255,9 @@ export default function UrlTableView() {
             },
             {
               accessor: 'actions',
-              width: 45 * 3,
+              textAlign: 'right',
               render: (url) => (
-                <Group gap='sm'>
+                <Group gap='sm' justify='right' wrap='nowrap'>
                   <Tooltip label='Copy URL'>
                     <ActionIcon
                       onClick={(e) => {

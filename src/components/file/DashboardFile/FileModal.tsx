@@ -48,7 +48,7 @@ import {
   IconUpload,
 } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 import DashboardFileType from '../DashboardFileType';
 import {
   addToFolder,
@@ -157,6 +157,7 @@ export default function FileModal({
     }
 
     mutateFiles();
+    mutate('/api/user/tags');
   };
 
   const triggerSave = async () => {

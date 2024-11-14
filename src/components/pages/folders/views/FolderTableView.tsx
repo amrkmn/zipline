@@ -86,9 +86,9 @@ export default function FolderTableView() {
             },
             {
               accessor: 'actions',
-              width: 45 * 4,
+              textAlign: 'right',
               render: (folder) => (
-                <Group gap='sm'>
+                <Group gap='sm' justify='right' wrap='nowrap'>
                   <Tooltip label='View files'>
                     <ActionIcon
                       onClick={(e) => {

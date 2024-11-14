@@ -22,6 +22,12 @@ export default function SettingsDashboard() {
   const [settings, update] = useSettingsStore((state) => [state.settings, state.update]);
   const themes = useThemes();
 
+  const sortedThemes = themes.sort((a, b) => {
+    if (a.colorScheme === 'light' && b.colorScheme === 'dark') return -1;
+    if (a.colorScheme === 'dark' && b.colorScheme === 'light') return 1;
+    return 0;
+  });
+
   return (
     <Paper withBorder p='sm'>
       <Title order={2}>Dashboard Settings</Title>
@@ -62,7 +68,7 @@ export default function SettingsDashboard() {
           description='The theme to use for the dashboard. This is only a visual change on your browser and does not change the theme for other users.'
           data={[
             { value: 'system', label: 'System' },
-            ...themes.map((theme) => ({ value: theme.id, label: theme.name })),
+            ...sortedThemes.map((theme) => ({ value: theme.id, label: theme.name })),
           ]}
           value={settings.theme}
           onChange={(value) => update('theme', value ?? 'builtin:dark_gray')}

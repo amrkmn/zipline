@@ -430,9 +430,8 @@ export default function FileTable({ id }: { id?: string }) {
             {
               accessor: 'actions',
               textAlign: 'right',
-              width: 45 * 4,
               render: (file) => (
-                <Group gap='sm'>
+                <Group gap='sm' justify='right' wrap='nowrap'>
                   <Tooltip label='More details'>
                     <ActionIcon>
                       <IconFile size='1rem' />
@@ -491,6 +490,7 @@ export default function FileTable({ id }: { id?: string }) {
           onCellClick={({ record }) => setSelectedFile(record)}
           selectedRecords={selectedFiles}
           onSelectedRecordsChange={setSelectedFiles}
+          paginationText={({ from, to, totalRecords }) => `${from} - ${to} / ${totalRecords} files`}
         />
       </Box>
     </>

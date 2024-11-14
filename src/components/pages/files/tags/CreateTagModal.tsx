@@ -2,7 +2,7 @@ import { Response } from '@/lib/api/response';
 import { Tag } from '@/lib/db/models/tag';
 import { fetchApi } from '@/lib/fetchApi';
 import { colorHash } from '@/lib/theme/color';
-import { ActionIcon, Button, ColorInput, Modal, Stack, Text, TextInput, Title, Tooltip } from '@mantine/core';
+import { ActionIcon, Button, ColorInput, Modal, Stack, TextInput, Title, Tooltip } from '@mantine/core';
 import { hasLength, useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { IconTag, IconTagOff, IconTextRecognition } from '@tabler/icons-react';
@@ -61,10 +61,6 @@ export default function CreateTagModal({ open, onClose }: { open: boolean; onClo
 
   return (
     <Modal opened={open} onClose={onClose} title={<Title>Create new tag</Title>} zIndex={3000}>
-      <Text size='sm' c='dimmed'>
-        Create a new tag that can be applied to files
-      </Text>
-
       <form onSubmit={form.onSubmit(onSubmit)}>
         <Stack gap='sm'>
           <TextInput label='Name' placeholder='Enter a name...' {...form.getInputProps('name')} />

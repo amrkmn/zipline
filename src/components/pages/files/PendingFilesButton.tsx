@@ -1,7 +1,19 @@
 import { Response } from '@/lib/api/response';
 import { IncompleteFile } from '@/lib/db/models/incompleteFile';
 import { fetchApi } from '@/lib/fetchApi';
-import { ActionIcon, Badge, Button, Card, Group, Modal, Stack, Text, Title, Tooltip } from '@mantine/core';
+import {
+  ActionIcon,
+  Badge,
+  Button,
+  Card,
+  Group,
+  Modal,
+  Paper,
+  Stack,
+  Text,
+  Title,
+  Tooltip,
+} from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IncompleteFileStatus } from '@prisma/client';
 import { IconFileDots, IconTrashFilled } from '@tabler/icons-react';
@@ -118,7 +130,11 @@ export default function PendingFilesButton() {
             </Card>
           ))}
 
-          {incompleteFiles?.length === 0 && <Text>Nothing here!</Text>}
+          {incompleteFiles?.length === 0 && (
+            <Paper withBorder px='sm' py='xs'>
+              No pending files
+            </Paper>
+          )}
         </Stack>
       </Modal>
 
