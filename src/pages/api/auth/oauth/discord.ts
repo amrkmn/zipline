@@ -6,8 +6,9 @@ import enabled from '@/lib/oauth/enabled';
 import { discordAuth } from '@/lib/oauth/providerUtil';
 import { fetchToDataURL } from '@/lib/base64';
 import Logger from '@/lib/logger';
+import { encrypt } from '@/lib/crypto';
 
-async function handler({ code, state, host }: OAuthQuery, logger: Logger): Promise<OAuthResponse> {
+async function handler({ code, host }: OAuthQuery, logger: Logger): Promise<OAuthResponse> {
   if (!config.features.oauthRegistration)
     return {
       error: 'OAuth registration is disabled.',
@@ -22,15 +23,18 @@ async function handler({ code, state, host }: OAuthQuery, logger: Logger): Promi
       error_code: 401,
     };
 
-  if (!code)
+  if (!code) {
+    const linkState = encrypt('link', config.core.secret);
+
     return {
       redirect: discordAuth.url(
         config.oauth.discord.clientId!,
         `${config.core.returnHttpsUrls ? 'https' : 'http'}://${host}`,
-        state,
+        linkState,
         config.oauth.discord.redirectUri ?? undefined,
       ),
     };
+  }
 
   const body = new URLSearchParams({
     client_id: config.oauth.discord.clientId!,

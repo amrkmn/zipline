@@ -1,4 +1,5 @@
 import { config } from '@/lib/config';
+import { encrypt } from '@/lib/crypto';
 import Logger from '@/lib/logger';
 import { combine } from '@/lib/middleware/combine';
 import { method } from '@/lib/middleware/method';
@@ -7,7 +8,7 @@ import { oidcAuth } from '@/lib/oauth/providerUtil';
 import { OAuthQuery, OAuthResponse, withOAuth } from '@/lib/oauth/withOAuth';
 
 // thanks to @danejur for this https://github.com/diced/zipline/pull/372
-async function handler({ code, state, host }: OAuthQuery, _logger: Logger): Promise<OAuthResponse> {
+async function handler({ code, host }: OAuthQuery, _logger: Logger): Promise<OAuthResponse> {
   if (!config.features.oauthRegistration)
     return {
       error: 'OAuth registration is disabled.',
@@ -22,16 +23,19 @@ async function handler({ code, state, host }: OAuthQuery, _logger: Logger): Prom
       error_code: 401,
     };
 
-  if (!code)
+  if (!code) {
+    const linkState = encrypt('link', config.core.secret);
+
     return {
       redirect: oidcAuth.url(
         config.oauth.oidc.clientId!,
         `${config.core.returnHttpsUrls ? 'https' : 'http'}://${host}`,
         config.oauth.oidc.authorizeUrl!,
-        state,
+        linkState,
         config.oauth.oidc.redirectUri ?? undefined,
       ),
     };
+  }
 
   const body = new URLSearchParams({
     client_id: config.oauth.oidc.clientId!,

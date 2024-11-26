@@ -2,7 +2,7 @@ import { NextApiReq, NextApiRes } from '@/lib/response';
 import { OAuthProviderType } from '@prisma/client';
 import { prisma } from '../db';
 import { findProvider } from './providerUtil';
-import { createToken } from '../crypto';
+import { createToken, decrypt } from '../crypto';
 import { config } from '../config';
 import { User } from '../db/models/user';
 import Logger, { log } from '../logger';
@@ -88,7 +88,14 @@ export const withOAuth =
 
     const userOauth = findProvider(provider, user?.oauthProviders ?? []);
 
-    if (state === 'link') {
+    let urlState;
+    try {
+      urlState = decrypt(decodeURIComponent(state ?? ''), config.core.secret);
+    } catch {
+      urlState = null;
+    }
+
+    if (urlState === 'link') {
       if (!user) return res.unauthorized('invalid session');
 
       if (findProvider(provider, user.oauthProviders))

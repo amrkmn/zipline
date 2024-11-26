@@ -1,5 +1,6 @@
 import { fetchToDataURL } from '@/lib/base64';
 import { config } from '@/lib/config';
+import { encrypt } from '@/lib/crypto';
 import Logger from '@/lib/logger';
 import { combine } from '@/lib/middleware/combine';
 import { method } from '@/lib/middleware/method';
@@ -7,7 +8,7 @@ import enabled from '@/lib/oauth/enabled';
 import { googleAuth } from '@/lib/oauth/providerUtil';
 import { OAuthQuery, OAuthResponse, withOAuth } from '@/lib/oauth/withOAuth';
 
-async function handler({ code, state, host }: OAuthQuery, _logger: Logger): Promise<OAuthResponse> {
+async function handler({ code, host }: OAuthQuery, _logger: Logger): Promise<OAuthResponse> {
   if (!config.features.oauthRegistration)
     return {
       error: 'OAuth registration is disabled.',
@@ -22,15 +23,18 @@ async function handler({ code, state, host }: OAuthQuery, _logger: Logger): Prom
       error_code: 401,
     };
 
-  if (!code)
+  if (!code) {
+    const linkState = encrypt('link', config.core.secret);
+
     return {
       redirect: googleAuth.url(
         config.oauth.google.clientId!,
         `${config.core.returnHttpsUrls ? 'https' : 'http'}://${host}`,
-        state,
+        linkState,
         config.oauth.google.redirectUri ?? undefined,
       ),
     };
+  }
 
   const body = new URLSearchParams({
     client_id: config.oauth.google.clientId!,
