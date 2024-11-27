@@ -51,8 +51,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            ghcr.io/diced/zipline:latest
-            ghcr.io/diced/zipline:${{ steps.version.outputs.zipline_version }}
+            ghcr.io/amrkmn/zipline:latest
+            ghcr.io/amrkmn/zipline:${{ steps.version.outputs.zipline_version }}
             ${{ secrets.DOCKERHUB_USERNAME }}/zipline:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/zipline:${{ steps.version.outputs.zipline_version }}
           cache-from: type=gha
