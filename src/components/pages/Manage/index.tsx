@@ -1,14 +1,17 @@
 import {
   ActionIcon,
+  Alert,
   Anchor,
   Box,
   Button,
   Card,
+  Code,
   ColorInput,
   CopyButton,
   FileInput,
   Group,
   Image,
+  List,
   PasswordInput,
   SimpleGrid,
   Space,
@@ -22,6 +25,7 @@ import { randomId, useInterval, useMediaQuery } from '@mantine/hooks';
 import { useModals } from '@mantine/modals';
 import { showNotification, updateNotification } from '@mantine/notifications';
 import {
+  IconAlertCircle,
   IconBrandDiscordFilled,
   IconBrandGithubFilled,
   IconBrandGoogle,
@@ -376,6 +380,129 @@ export default function Manage({ oauth_registration, oauth_providers: raw_oauth_
     }
   };
 
+  const startFullExport = () => {
+    modals.openConfirmModal({
+      title: <Title>Are you sure?</Title>,
+      size: 'xl',
+      children: (
+        <Box px='md'>
+          <Alert color='red' icon={<IconAlertCircle size='1rem' />} title='Warning'>
+            This export contains a significant amount of sensitive data, including user information,
+            passwords, metadata, and system details. It is crucial to handle this file with care to prevent
+            unauthorized access or misuse. Ensure it is stored securely and shared only with trusted parties.
+          </Alert>
+
+          <p>
+            The export provides a snapshot of Zipline&apos;s data and environment. Specifically, it includes:
+          </p>
+
+          <List>
+            <List.Item>
+              <b>User Data:</b> Information about users, avatars, passwords, and registered OAuth providers.
+            </List.Item>
+            <List.Item>
+              <b>Files:</b> Metadata about uploaded files including filenames, passwords, sizes, and
+              timestamps, linked users. <i>(Note: the actual contents of the files are not included.)</i>
+            </List.Item>
+            <List.Item>
+              <b>URLs:</b> Metadata about shortened URLs, including the original URL, short URL, and vanity.
+            </List.Item>
+            <List.Item>
+              <b>Folders:</b> Metadata about folders, including names, visibility settings, and files.
+            </List.Item>
+            <List.Item>
+              <b>Thumbnails:</b> Metadata about thumbnails, includes the name and creation timestamp.{' '}
+              <i>(Actual image data is excluded.)</i>
+            </List.Item>
+            <List.Item>
+              <b>Invites:</b> Metadata about invites, includes the invite code, creator, and expiration date.
+            </List.Item>
+            <List.Item>
+              <b>Statistics:</b> Usage data that is used on the statistics page, including upload counts and
+              such.
+            </List.Item>
+          </List>
+          <p>
+            Additionally, the export captures <b>system-specific information</b>:
+          </p>
+          <List>
+            <List.Item>
+              <b>CPU Count:</b> The number of processing cores available on the host system.
+            </List.Item>
+            <List.Item>
+              <b>Hostname:</b> The network identifier of the host system.
+            </List.Item>
+            <List.Item>
+              <b>Architecture:</b> The hardware architecture (e.g., <Code>x86</Code>, <Code>arm</Code>) on
+              which Zipline is running.
+            </List.Item>
+            <List.Item>
+              <b>Platform:</b> The operating system platform (e.g., <Code>linux</Code>, <Code>darwin</Code>)
+              on which Zipline is running.
+            </List.Item>
+            <List.Item>
+              <b>Version:</b> The current version of the operating system (kernel version)
+            </List.Item>
+            <List.Item>
+              <b>Environment Variables:</b> The configuration settings and variables defined at the time of
+              execution.
+            </List.Item>
+          </List>
+
+          <p>
+            <i>Note:</i> By omitting the actual contents of files and thumbnails while including their
+            metadata, the export ensures it captures enough detail for migration to another instance, or for
+            v4.
+          </p>
+        </Box>
+      ),
+      labels: { confirm: 'Yes', cancel: 'No' },
+      cancelProps: { color: 'red' },
+      onConfirm: async () => {
+        modals.closeAll();
+        showNotification({
+          title: 'Exporting all server data...',
+          message: 'This may take a while depending on the amount of data.',
+          loading: true,
+          id: 'export-all',
+          autoClose: false,
+        });
+
+        const res = await useFetch('/api/admin/export', 'GET');
+        if (res.error) {
+          updateNotification({
+            id: 'export-all',
+            title: 'Error exporting data',
+            message: res.error,
+            color: 'red',
+            icon: <IconFileExport size='1rem' />,
+            autoClose: true,
+          });
+        } else {
+          updateNotification({
+            title: 'Export created',
+            message: 'Your browser will prompt you to download a JSON file with all the server data.',
+            id: 'export-all',
+            color: 'green',
+            icon: <IconFileExport size='1rem' />,
+            autoClose: true,
+          });
+
+          const blob = new Blob([JSON.stringify(res)], { type: 'application/json' });
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          const url = URL.createObjectURL(blob);
+          console.log(url, res);
+          a.setAttribute('download', `zipline_export_${Date.now()}.json`);
+          a.setAttribute('href', url);
+          a.click();
+
+          URL.revokeObjectURL(url);
+        }
+      },
+    });
+  };
+
   const interval = useInterval(() => getExports(), 30000);
   useEffect(() => {
     getExports();
@@ -642,6 +769,11 @@ export default function Manage({ oauth_registration, oauth_providers: raw_oauth_
             >
               Delete all uploads
             </Button>
+            {user.superAdmin && (
+              <Button size='md' onClick={startFullExport} rightIcon={<IconFileExport size='1rem' />}>
+                Export all server data (JSON)
+              </Button>
+            )}
           </Group>
         </Box>
       )}
