@@ -8,10 +8,8 @@ export function sharex(token: string, type: 'file' | 'url', options: GeneratorOp
     DestinationType: 'ImageUploader, TextUploader, FileUploader',
     RequestMethod: 'POST',
     RequestURL: `${window.location.origin}/api/upload`,
-    Headers: {
-      authorization: token,
-    },
-    URL: '{json:files[0].url}',
+    Headers: {},
+    URL: options.sharex_xshareCompatibility ? '$json:files[0].url$' : '{json:files[0].url}',
     Body: 'MultipartFormData',
     FileFormName: 'file',
     Data: undefined,
@@ -27,7 +25,9 @@ export function sharex(token: string, type: 'file' | 'url', options: GeneratorOp
     (config as any).Data = JSON.stringify({ url: '{input}' });
   }
 
-  const toAddHeaders: UploadHeaders = {};
+  const toAddHeaders: UploadHeaders = {
+    authorization: token,
+  };
 
   if (options.deletesAt !== null && type === 'file') {
     toAddHeaders['x-zipline-deletes-at'] = options.deletesAt;

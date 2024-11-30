@@ -1,3 +1,4 @@
+import { Response } from '@/lib/api/response';
 import type { Config } from '@/lib/config/validate';
 import {
   Anchor,
@@ -16,10 +17,10 @@ import {
 import { IconDownload, IconEyeFilled, IconGlobe, IconPercentage, IconWriting } from '@tabler/icons-react';
 import Link from 'next/link';
 import React, { useReducer, useState } from 'react';
+import useSWR from 'swr';
 import { flameshot } from './generators/flameshot';
 import { sharex } from './generators/sharex';
 import { shell } from './generators/shell';
-import { useUserStore } from '@/lib/store/user';
 
 export type GeneratorOptions = {
   deletesAt: string | null;
@@ -29,6 +30,9 @@ export type GeneratorOptions = {
   addOriginalName: boolean | null;
   overrides_returnDomain: string | null;
   noJson: boolean | null;
+
+  // changes {json:...} to $json:...$ for the Xshare app on Android
+  sharex_xshareCompatibility: boolean | null;
 
   // echo instead of copying
   unix_useEcho: boolean | null;
@@ -69,6 +73,8 @@ export const defaultGeneratorOptions: GeneratorOptions = {
   overrides_returnDomain: null,
   noJson: null,
 
+  sharex_xshareCompatibility: null,
+
   unix_useEcho: null,
   mac_enableCompatibility: null,
   wl_enableCompatibility: null,
@@ -90,7 +96,6 @@ export default function GeneratorButton({
   icon: React.ReactNode;
   desc?: React.ReactNode;
 }) {
-  const user = useUserStore((state) => state.user);
   const [opened, setOpen] = useState(false);
 
   const [generatorType, setGeneratorType] = useState('file');
@@ -98,6 +103,8 @@ export default function GeneratorButton({
     (state: GeneratorOptions, action: Partial<GeneratorOptions>) => ({ ...state, ...action }),
     defaultGeneratorOptions,
   );
+
+  const { data: tokenData, isLoading, error } = useSWR<Response['/api/user/token']>('/api/user/token');
 
   const isUnixLike = name === 'Flameshot' || name === 'Shell Script';
   const onlyFile = generatorType === 'file';
@@ -204,6 +211,16 @@ export default function GeneratorButton({
             disabled={!onlyFile}
           />
 
+          {name === 'ShareX' && (
+            <Switch
+              label='Xshare Compatibility'
+              description='If you choose to use the Xshare app on Android, enable this option for compatibility. The genereated config will not work with ShareX.'
+              checked={options.sharex_xshareCompatibility ?? false}
+              onChange={(event) => setOption({ sharex_xshareCompatibility: event.currentTarget.checked })}
+              disabled={!onlyFile}
+            />
+          )}
+
           {isUnixLike && (
             <>
               <Switch
@@ -281,7 +298,7 @@ export default function GeneratorButton({
 
           <Button
             onClick={() =>
-              generators[name as keyof typeof generators](user!.token!, generatorType as any, options)
+              generators[name as keyof typeof generators](tokenData!.token!, generatorType as any, options)
             }
             fullWidth
             leftSection={<IconDownload size='1rem' />}
@@ -292,7 +309,7 @@ export default function GeneratorButton({
         </Stack>
       </Modal>
 
-      <Button size='sm' leftSection={icon} onClick={() => setOpen(true)}>
+      <Button size='sm' leftSection={icon} onClick={() => setOpen(true)} disabled={isLoading || error}>
         {name}
       </Button>
     </>

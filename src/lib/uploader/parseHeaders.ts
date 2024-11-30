@@ -60,6 +60,8 @@ export type UploadHeaders = {
   'x-zipline-p-identifier'?: string;
   'x-zipline-p-lastchunk'?: StringBoolean;
   'x-zipline-p-content-length'?: string;
+
+  authorization?: string;
 };
 
 export type UploadOptions = {
