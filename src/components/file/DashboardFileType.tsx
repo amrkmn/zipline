@@ -1,6 +1,15 @@
 import type { File as DbFile } from '@/lib/db/models/file';
 import { useSettingsStore } from '@/lib/store/settings';
-import { Box, Center, Image as MantineImage, Paper, Stack, Text } from '@mantine/core';
+import {
+  Box,
+  Center,
+  Loader,
+  LoadingOverlay,
+  Image as MantineImage,
+  Paper,
+  Stack,
+  Text,
+} from '@mantine/core';
 import { Icon, IconFileUnknown, IconPlayerPlay, IconShieldLockFilled } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { renderMode } from '../pages/upload/renderMode';
@@ -46,6 +55,20 @@ export default function DashboardFileType({
   const [type, setType] = useState<string>(file.type.split('/')[0]);
 
   const gettext = async () => {
+    if (file.size > 1 * 1024 * 1024) {
+      const res = await fetch(`/raw/${file.name}${password ? `?pw=${password}` : ''}`, {
+        headers: {
+          Range: 'bytes=0-' + 1 * 1024 * 1024, // 0 mb to 1 mb
+        },
+      });
+
+      const text = await res.text();
+      setFileContent(
+        text + '\n...\nThe file is too big to display click the download icon to view/download it.',
+      );
+      return;
+    }
+
     const res = await fetch(`/raw/${file.name}${password ? `?pw=${password}` : ''}`);
     const text = await res.text();
 
@@ -140,7 +163,25 @@ export default function DashboardFileType({
       );
     case 'text':
       return show ? (
-        <Render mode={renderIn} language={file.name.split('.').pop() || ''} code={fileContent} />
+        fileContent.trim() === '' ? (
+          <LoadingOverlay
+            visible={fileContent.trim() === ''}
+            loaderProps={{
+              children: (
+                <>
+                  <Center>
+                    <Loader />
+                  </Center>
+                  <Text ta='center' mt='xs' c='dimmed'>
+                    Loading file...
+                  </Text>
+                </>
+              ),
+            }}
+          />
+        ) : (
+          <Render mode={renderIn} language={file.name.split('.').pop() || ''} code={fileContent} />
+        )
       ) : (
         <Placeholder text={`Click to view text ${file.name}`} Icon={fileIcon(file.type)} />
       );

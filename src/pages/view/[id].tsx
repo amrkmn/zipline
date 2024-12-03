@@ -13,6 +13,8 @@ import { ZiplineTheme } from '@/lib/theme';
 import { readThemes } from '@/lib/theme/file';
 import { formatRootUrl } from '@/lib/url';
 import {
+  ActionIcon,
+  Box,
   Button,
   Center,
   Collapse,
@@ -24,7 +26,7 @@ import {
   Title,
   TypographyStylesProvider,
 } from '@mantine/core';
-import { IconFileDownload } from '@tabler/icons-react';
+import { IconDownload, IconInfoCircleFilled } from '@tabler/icons-react';
 import { sanitize } from 'isomorphic-dompurify';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
@@ -195,13 +197,25 @@ export default function ViewFileId({
   ) : code ? (
     <>
       {meta}
-      <Paper withBorder>
+      <Paper withBorder style={{ borderTop: 0, borderLeft: 0, borderRight: 0 }}>
         <Group justify='space-between' py={5} px='xs'>
           <Text c='dimmed'>{file.name}</Text>
 
-          <Button size='compact-sm' variant='outline' onClick={() => setDetailsOpen((o) => !o)}>
-            Toggle Details
-          </Button>
+          <Group>
+            <ActionIcon size='md' variant='outline' onClick={() => setDetailsOpen((o) => !o)}>
+              <IconInfoCircleFilled size='1rem' />
+            </ActionIcon>
+
+            <ActionIcon
+              size='md'
+              variant='outline'
+              component={Link}
+              href={`/raw/${file.name}?download=true${pw ? `&pw=${pw}` : ''}`}
+              target='_blank'
+            >
+              <IconDownload size='1rem' />
+            </ActionIcon>
+          </Group>
         </Group>
       </Paper>
 
@@ -233,9 +247,15 @@ export default function ViewFileId({
         </Paper>
       </Collapse>
 
-      <Paper m='md' p='md' withBorder>
-        <DashboardFileType file={file} password={pw} show code={code} />
-      </Paper>
+      {file.name.endsWith('.md') || file.name.endsWith('.tex') ? (
+        <Paper m='md' p='md' withBorder>
+          <DashboardFileType file={file} password={pw} show code={code} />
+        </Paper>
+      ) : (
+        <Box m='sm'>
+          <DashboardFileType file={file} password={pw} show code={code} />
+        </Box>
+      )}
     </>
   ) : (
     <>
@@ -254,17 +274,15 @@ export default function ViewFileId({
               )}
             </Group>
 
-            <Button
-              ml='sm'
+            <ActionIcon
+              size='md'
               variant='outline'
               component={Link}
               href={`/raw/${file.name}?download=true${pw ? `&pw=${pw}` : ''}`}
               target='_blank'
-              size='compact-sm'
-              leftSection={<IconFileDownload size='1rem' />}
             >
-              Download
-            </Button>
+              <IconDownload size='1rem' />
+            </ActionIcon>
           </Group>
 
           <DashboardFileType file={file} password={pw} show />
