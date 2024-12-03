@@ -55,13 +55,13 @@ export const schema = z.object({
           message: 'Secret must be changed from the default value',
         });
 
-      if (s.length <= 16) {
+      if (s.length <= 32) {
         return c.addIssue({
           code: 'too_small',
-          minimum: 16,
+          minimum: 32,
           type: 'string',
           inclusive: true,
-          message: 'Secret must contain at least 16 characters',
+          message: 'Secret must contain at least 32 characters',
           exact: false,
         });
       }
