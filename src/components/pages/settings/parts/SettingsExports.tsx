@@ -67,45 +67,52 @@ export default function SettingsExports() {
       <Title order={4} mt='sm'>
         Exports
       </Title>
-      <ScrollArea.Autosize mah={500} type='auto'>
-        <Table highlightOnHover stickyHeader>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>ID</Table.Th>
-              <Table.Th>Started On</Table.Th>
-              <Table.Th>Files</Table.Th>
-              <Table.Th>Size</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {isLoading && <Table.Tr>Loading...</Table.Tr>}
-            {data?.map((exportDb) => (
-              <Table.Tr key={exportDb.id}>
-                <Table.Td>{exportDb.id}</Table.Td>
-                <Table.Td>{new Date(exportDb.createdAt).toLocaleString()}</Table.Td>
-                <Table.Td>{exportDb.files}</Table.Td>
-                <Table.Td>{exportDb.completed ? bytes(Number(exportDb.size)) : ''}</Table.Td>
-                <Table.Td>
-                  <Group>
-                    <ActionIcon onClick={() => handleDelete(exportDb.id)}>
-                      <IconTrashFilled size='1rem' />
-                    </ActionIcon>
 
-                    <ActionIcon
-                      component={Link}
-                      target='_blank'
-                      href={`/api/user/export?id=${exportDb.id}`}
-                      disabled={!exportDb.completed}
-                    >
-                      <IconDownload size='1rem' />
-                    </ActionIcon>
-                  </Group>
-                </Table.Td>
+      {data?.length === 0 ? (
+        <Paper p='sm' mt='sm' withBorder>
+          No exports found. Click the button above to start a new export.
+        </Paper>
+      ) : (
+        <ScrollArea.Autosize mah={500} type='auto'>
+          <Table highlightOnHover stickyHeader>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>ID</Table.Th>
+                <Table.Th>Started On</Table.Th>
+                <Table.Th>Files</Table.Th>
+                <Table.Th>Size</Table.Th>
               </Table.Tr>
-            ))}
-          </Table.Tbody>
-        </Table>
-      </ScrollArea.Autosize>
+            </Table.Thead>
+            <Table.Tbody>
+              {isLoading && <Table.Tr>Loading...</Table.Tr>}
+              {data?.map((exportDb) => (
+                <Table.Tr key={exportDb.id}>
+                  <Table.Td>{exportDb.id}</Table.Td>
+                  <Table.Td>{new Date(exportDb.createdAt).toLocaleString()}</Table.Td>
+                  <Table.Td>{exportDb.files}</Table.Td>
+                  <Table.Td>{exportDb.completed ? bytes(Number(exportDb.size)) : ''}</Table.Td>
+                  <Table.Td>
+                    <Group>
+                      <ActionIcon onClick={() => handleDelete(exportDb.id)}>
+                        <IconTrashFilled size='1rem' />
+                      </ActionIcon>
+
+                      <ActionIcon
+                        component={Link}
+                        target='_blank'
+                        href={`/api/user/export?id=${exportDb.id}`}
+                        disabled={!exportDb.completed}
+                      >
+                        <IconDownload size='1rem' />
+                      </ActionIcon>
+                    </Group>
+                  </Table.Td>
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
+          </Table>
+        </ScrollArea.Autosize>
+      )}
     </Paper>
   );
 }
