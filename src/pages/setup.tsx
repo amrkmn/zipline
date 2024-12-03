@@ -109,6 +109,7 @@ export default function Setup() {
                 <Title order={2}>Documentation</Title>
                 <Text>Here are a couple of useful documentation links to get you started with Zipline.</Text>
 
+                {/* TODO: change these to actual links.. */}
                 <Text c='dimmed'>
                   <Anchor>[name]</Anchor>: desc
                 </Text>
