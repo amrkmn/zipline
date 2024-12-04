@@ -242,7 +242,7 @@ model File {
   updatedAt DateTime  @updatedAt
   deletesAt DateTime?
 
-  name         String // name & file saved on datasource
+  name         String  // name & file saved on datasource
   originalName String? // original name of file when uploaded
   size         BigInt
   type         String

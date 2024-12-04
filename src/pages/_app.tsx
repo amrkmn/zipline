@@ -46,8 +46,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <ModalsProvider
             modalProps={{
               overlayProps: {
-                blur: 3,
-                opacity: 0.5,
+                blur: 6,
               },
               centered: true,
             }}
