@@ -6,13 +6,16 @@ import fastifyPlugin from 'fastify-plugin';
 export type ApiUserRecentResponse = File[];
 
 type Query = {
-  page?: string;
+  take?: string;
 };
 
 export const PATH = '/api/user/recent';
 export default fastifyPlugin(
   (server, _, done) => {
     server.get<{ Querystring: Query }>(PATH, { preHandler: [userMiddleware] }, async (req, res) => {
+      const { take: rawTake } = req.query;
+      const take = rawTake ? parseInt(rawTake, 10) : undefined;
+
       const files = cleanFiles(
         await prisma.file.findMany({
           where: {
@@ -25,7 +28,7 @@ export default fastifyPlugin(
           orderBy: {
             createdAt: 'desc',
           },
-          take: 3,
+          take: take ?? 3,
         }),
       );
 
