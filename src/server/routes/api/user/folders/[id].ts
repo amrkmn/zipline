@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db';
 import { fileSelect } from '@/lib/db/models/file';
 import { Folder, cleanFolder } from '@/lib/db/models/folder';
+import { log } from '@/lib/logger';
 import { userMiddleware } from '@/server/middleware/user';
 import fastifyPlugin from 'fastify-plugin';
 
@@ -16,6 +17,8 @@ type Body = {
 
   delete?: 'file' | 'folder';
 };
+
+const logger = log('api').c('user').c('folders').c('[id]');
 
 export const PATH = '/api/user/folders/:id';
 export default fastifyPlugin(
@@ -89,6 +92,11 @@ export default fastifyPlugin(
             },
           });
 
+          logger.info('file added to folder', {
+            folder: folder.id,
+            file: id,
+          });
+
           return res.send(cleanFolder(nFolder));
         } else if (req.method === 'PATCH') {
           const { isPublic } = req.body;
@@ -111,6 +119,11 @@ export default fastifyPlugin(
             },
           });
 
+          logger.info('folder updated', {
+            folder: folder.id,
+            isPublic,
+          });
+
           return res.send(cleanFolder(nFolder));
         } else if (req.method === 'DELETE') {
           const { delete: del } = req.body;
@@ -128,6 +141,10 @@ export default fastifyPlugin(
                   },
                 },
               },
+            });
+
+            logger.info('folder deleted', {
+              folder: folder.id,
             });
 
             return res.send(cleanFolder(nFolder));
@@ -172,6 +189,11 @@ export default fastifyPlugin(
                   },
                 },
               },
+            });
+
+            logger.info('file removed from folder', {
+              folder: folder.id,
+              file: id,
             });
 
             return res.send(cleanFolder(nFolder));

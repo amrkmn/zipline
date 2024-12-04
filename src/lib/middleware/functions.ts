@@ -4,12 +4,6 @@ import { Handler } from './combine';
 export function functions() {
   return (handler: Handler) => {
     return async (req: NextApiReq, res: NextApiRes) => {
-      // res.json = (data?: any) => {
-      //   return res.send(
-      //     JSON.stringify(data, (key, value) => (typeof value === 'bigint' ? Number(value) : value)),
-      //   );
-      // };
-
       res.ok = (data?: any) => {
         return res.status(200).json(data);
       };

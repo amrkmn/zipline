@@ -1,6 +1,7 @@
 import { verifyPassword } from '@/lib/crypto';
 import { prisma } from '@/lib/db';
 import { User, userSelect } from '@/lib/db/models/user';
+import { log } from '@/lib/logger';
 import { verifyTotpCode } from '@/lib/totp';
 import { getSession, saveSession } from '@/server/session';
 import fastifyPlugin from 'fastify-plugin';
@@ -15,6 +16,8 @@ type Body = {
   password: string;
   code?: string;
 };
+
+const logger = log('api').c('auth').c('login');
 
 export const PATH = '/api/auth/login';
 export default fastifyPlugin(
@@ -49,11 +52,26 @@ export default fastifyPlugin(
 
         if (!user.password) return res.badRequest('User does not have a password, login through a provider');
         const valid = await verifyPassword(password, user.password);
-        if (!valid) return res.badRequest('Invalid password');
+        if (!valid) {
+          logger.warn('invalid login attempt', {
+            username,
+            ip: req.ip ?? 'unknown',
+            ua: req.headers['user-agent'],
+          });
+          return res.badRequest('Invalid password');
+        }
 
         if (user.totpSecret && code) {
           const valid = verifyTotpCode(code, user.totpSecret);
-          if (!valid) return res.badRequest('Invalid code');
+          if (!valid) {
+            logger.warn('invalid totp code', {
+              username,
+              ip: req.ip ?? 'unknown',
+              ua: req.headers['user-agent'],
+            });
+
+            return res.badRequest('Invalid code');
+          }
         }
 
         if (user.totpSecret && !code)
@@ -64,6 +82,12 @@ export default fastifyPlugin(
         await saveSession(session, user, false);
 
         delete (user as any).password;
+
+        logger.info('user logged in successfully', {
+          username,
+          ip: req.ip ?? 'unknown',
+          ua: req.headers['user-agent'],
+        });
 
         return res.send({
           user,

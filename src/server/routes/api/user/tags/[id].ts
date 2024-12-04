@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db';
 import { Tag, tagSelect } from '@/lib/db/models/tag';
+import { log } from '@/lib/logger';
 import { userMiddleware } from '@/server/middleware/user';
 import fastifyPlugin from 'fastify-plugin';
 
@@ -13,6 +14,8 @@ type Body = {
 type Params = {
   id: string;
 };
+
+const logger = log('api').c('user').c('tags').c('[id]');
 
 export const PATH = '/api/user/tags/:id';
 export default fastifyPlugin(
@@ -44,6 +47,12 @@ export default fastifyPlugin(
             select: tagSelect,
           });
 
+          logger.info('tag deleted', {
+            id: tag.id,
+            name: tag.name,
+            user: req.user.username,
+          });
+
           return res.send(tag);
         }
 
@@ -69,6 +78,12 @@ export default fastifyPlugin(
               ...(color && { color }),
             },
             select: tagSelect,
+          });
+
+          logger.info('tag updated', {
+            id: tag.id,
+            name: tag.name,
+            user: req.user.username,
           });
 
           return res.send(tag);

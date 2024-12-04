@@ -153,7 +153,7 @@ export default fastifyPlugin(
 
         logger.info(`${req.user.username} updated another user`, {
           username: updatedUser.username,
-          role: updatedUser.role,
+          updated: Object.keys(req.body),
         });
 
         return res.send(updatedUser);

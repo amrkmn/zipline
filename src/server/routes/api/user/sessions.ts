@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db';
+import { log } from '@/lib/logger';
 import { userMiddleware } from '@/server/middleware/user';
 import { getSession } from '@/server/session';
 import fastifyPlugin from 'fastify-plugin';
@@ -12,6 +13,8 @@ type Body = {
   sessionId?: string;
   all?: boolean;
 };
+
+const logger = log('api').c('user').c('sessions');
 
 export const PATH = '/api/user/sessions';
 export default fastifyPlugin(
@@ -40,6 +43,10 @@ export default fastifyPlugin(
           },
         });
 
+        logger.info('user logged out all logged in sessions', {
+          user: req.user.username,
+        });
+
         return res.send({
           current: currentSession.sessionId,
           other: [],
@@ -63,6 +70,11 @@ export default fastifyPlugin(
             set: sessionsWithout,
           },
         },
+      });
+
+      logger.info('user logged out of session', {
+        user: req.user.username,
+        session: req.body.sessionId,
       });
 
       return res.send({

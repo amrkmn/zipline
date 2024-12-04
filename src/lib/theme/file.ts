@@ -35,6 +35,10 @@ export async function readThemes(includeBuiltins: boolean = true): Promise<Zipli
     );
   }
 
+  logger.debug('loaded themes', {
+    themes: parsedThemes.map((t) => t.id),
+  });
+
   return parsedThemes;
 }
 

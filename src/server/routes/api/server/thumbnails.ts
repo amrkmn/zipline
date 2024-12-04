@@ -1,3 +1,4 @@
+import { log } from '@/lib/logger';
 import { administratorMiddleware } from '@/server/middleware/administrator';
 import { userMiddleware } from '@/server/middleware/user';
 import fastifyPlugin from 'fastify-plugin';
@@ -9,6 +10,8 @@ export type ApiServerThumbnailsResponse = {
 type Body = {
   rerun: boolean;
 };
+
+const logger = log('api').c('server').c('thumbnails');
 
 export const PATH = '/api/server/thumbnails';
 export default fastifyPlugin(
@@ -25,6 +28,11 @@ export default fastifyPlugin(
         thumbnailTask.logger.debug('manually running thumbnails task');
 
         await server.tasks.runJob(thumbnailTask.id, !!req.body.rerun);
+
+        logger.info('thumbnails task manually run', {
+          requester: req.user.username,
+          rerun: !!req.body.rerun,
+        });
 
         return res.send({
           status: `Thumbnails are being generated${

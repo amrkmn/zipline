@@ -42,8 +42,15 @@ export default fastifyPlugin(
         if (!file.password) return res.notFound();
 
         const verified = await verifyPassword(req.body.password, file.password);
-        if (!verified) return res.forbidden('Incorrect password');
+        if (!verified) {
+          logger.warn('invalid password for file', {
+            file: file.name,
+            ip: req.ip ?? 'unknown',
+            ua: req.headers['user-agent'],
+          });
 
+          return res.forbidden('Incorrect password');
+        }
         logger.info(`${file.name} was accessed with the correct password`, { ua: req.headers['user-agent'] });
 
         return res.send({ success: true });

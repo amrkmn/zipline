@@ -1,3 +1,4 @@
+import { log } from '@/lib/logger';
 import { requerySize } from '@/lib/server-util/requerySize';
 import { administratorMiddleware } from '@/server/middleware/administrator';
 import { userMiddleware } from '@/server/middleware/user';
@@ -12,6 +13,8 @@ type Body = {
   forceUpdate?: boolean;
 };
 
+const logger = log('api').c('server').c('requery_size');
+
 export const PATH = '/api/server/requery_size';
 export default fastifyPlugin(
   (server, _, done) => {
@@ -22,6 +25,13 @@ export default fastifyPlugin(
       },
       async (req, res) => {
         const status = await requerySize({
+          forceDelete: req.body.forceDelete || false,
+          forceUpdate: req.body.forceUpdate || false,
+        });
+
+        logger.info('requerying size', {
+          status,
+          requester: req.user.username,
           forceDelete: req.body.forceDelete || false,
           forceUpdate: req.body.forceUpdate || false,
         });

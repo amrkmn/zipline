@@ -1,6 +1,7 @@
 import { hashPassword } from '@/lib/crypto';
 import { prisma } from '@/lib/db';
 import { User, userSelect } from '@/lib/db/models/user';
+import { log } from '@/lib/logger';
 import { userMiddleware } from '@/server/middleware/user';
 import { getSession, saveSession } from '@/server/session';
 import fastifyPlugin from 'fastify-plugin';
@@ -25,6 +26,8 @@ type Body = {
     showMimetype?: boolean;
   };
 };
+
+const logger = log('api').c('user');
 
 export const PATH = '/api/user';
 export default fastifyPlugin(
@@ -84,6 +87,10 @@ export default fastifyPlugin(
       await saveSession(session, user);
 
       delete (user as any).password;
+
+      logger.info(`${req.user.username} updated their user`, {
+        updated: Object.keys(req.body),
+      });
 
       return res.send({ user, token: req.cookies.zipline_token });
     });

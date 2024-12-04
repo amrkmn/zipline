@@ -90,7 +90,10 @@ export default fastifyPlugin(
             select: fileSelect,
           });
 
-          logger.info(`${req.user.username} updated file ${newFile.name}`, { favorite: newFile.favorite });
+          logger.info(`${req.user.username} updated file ${newFile.name}`, {
+            updated: Object.keys(req.body),
+            id: newFile.id,
+          });
 
           return res.send(newFile);
         } else if (req.method === 'DELETE') {

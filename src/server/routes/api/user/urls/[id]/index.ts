@@ -89,7 +89,7 @@ export default fastifyPlugin(
         });
 
         logger.info(`${req.user.username} updated URL ${updatedUrl.id}`, {
-          body: req.body,
+          updated: Object.keys(req.body),
         });
 
         return res.send(updatedUrl);
@@ -115,6 +115,10 @@ export default fastifyPlugin(
         omit: {
           password: true,
         },
+      });
+
+      logger.info(`${req.user.username} deleted URL ${deletedUrl.id}`, {
+        dest: deletedUrl.destination,
       });
 
       return res.send(deletedUrl);

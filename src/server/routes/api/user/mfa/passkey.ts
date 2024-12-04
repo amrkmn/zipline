@@ -5,6 +5,7 @@ import { prisma } from '@/lib/db';
 import { User } from '@/lib/db/models/user';
 import { userMiddleware } from '@/server/middleware/user';
 import fastifyPlugin from 'fastify-plugin';
+import { log } from '@/lib/logger';
 
 export type ApiUserMfaPasskeyResponse = User | User['passkeys'];
 
@@ -14,6 +15,8 @@ type Body = {
 
   id?: string;
 };
+
+const logger = log('api').c('user').c('mfa').c('passkey');
 
 export const PATH = '/api/user/mfa/passkey';
 export default fastifyPlugin(
@@ -45,6 +48,12 @@ export default fastifyPlugin(
             },
           });
 
+          logger.info('user created a new passkey', {
+            user: user.username,
+            name,
+            reg: reg.id,
+          });
+
           return res.send(user);
         } else if (req.method === 'DELETE') {
           const { id } = req.body;
@@ -57,6 +66,11 @@ export default fastifyPlugin(
                 delete: { id },
               },
             },
+          });
+
+          logger.info('user deleted a passkey', {
+            user: user.username,
+            id,
           });
 
           return res.send(user);

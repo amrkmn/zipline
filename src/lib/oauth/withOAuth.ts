@@ -41,6 +41,9 @@ export const withOAuth =
     const session = await getSession(req, res);
 
     if (response.error) {
+      logger.warn('invalid oauth request', {
+        error: response.error,
+      });
       return res.serverError(response.error, {
         oauth: response.error_code,
       });
@@ -156,6 +159,11 @@ export const withOAuth =
 
       await saveSession(session, user);
 
+      logger.info('updated oauth account', {
+        provider,
+        user: user.id,
+      });
+
       return res.redirect('/dashboard');
     } else if (existingOauth) {
       const login = await prisma.oAuthProvider.update({
@@ -182,6 +190,10 @@ export const withOAuth =
 
       return res.redirect('/dashboard');
     } else if (config.oauth.loginOnly) {
+      logger.warn('user tried to create account with oauth, but login only is enabled', {
+        oauth: response.username || 'unknown',
+        ua: req.headers['user-agent'],
+      });
       return res.badRequest("Can't create users through oauth.");
     } else if (existingUser) {
       return res.badRequest('This username is already taken');
@@ -216,6 +228,15 @@ export const withOAuth =
     } catch (e) {
       if ((e as { code: string }).code === 'P2002') {
         // already linked can't create, last failsafe lol
+        logger.warn('user tried to create account with oauth, but already linked', {
+          oauth: response.username || 'unknown',
+          ua: req.headers['user-agent'],
+        });
+        logger.debug('oauth create error', {
+          error: e,
+          response,
+        });
+
         return res.badRequest('Cant create user, already linked with this provider');
       } else throw e;
     }

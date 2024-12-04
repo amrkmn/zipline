@@ -41,6 +41,8 @@ export async function onUpload({ user, file, link }: Parameters<typeof discordOn
     if (!res.ok) {
       const text = await res.text();
       logger.error('webhook failed', { response: text, status: res.status });
+    } else {
+      logger.info('http upload webhook sent successfully', { status: res.status });
     }
   } catch (e) {
     logger.error('error while sending webhook', { error: (e as TypeError).message });
@@ -85,6 +87,8 @@ export async function onShorten({ user, url, link }: Parameters<typeof discordOn
     if (!res.ok) {
       const text = await res.text();
       logger.error('webhook failed', { response: text, status: res.status });
+    } else {
+      logger.info('http shorten webhook sent successfully', { status: res.status });
     }
   } catch (e) {
     logger.error('error while sending webhook', { error: (e as TypeError).message });

@@ -2,6 +2,7 @@ import { bytes } from '@/lib/bytes';
 import { reloadSettings } from '@/lib/config';
 import { readDatabaseSettings } from '@/lib/config/read';
 import { prisma } from '@/lib/db';
+import { log } from '@/lib/logger';
 import { readThemes } from '@/lib/theme/file';
 import { administratorMiddleware } from '@/server/middleware/administrator';
 import { userMiddleware } from '@/server/middleware/user';
@@ -51,6 +52,8 @@ const discordEmbed = z
   .transform((value) =>
     typeof value === 'object' ? (Object.keys(value || {}).length ? value : null) : value,
   );
+
+const logger = log('api').c('server').c('settings');
 
 export const PATH = '/api/server/settings';
 export default fastifyPlugin(
@@ -293,6 +296,10 @@ export default fastifyPlugin(
 
         const result = settingsBodySchema.safeParse(req.body);
         if (!result.success) {
+          logger.warn('invalid settings update', {
+            issues: result.error.issues,
+          });
+
           return res.status(400).send({
             statusCode: 400,
             issues: result.error.issues,
@@ -316,6 +323,11 @@ export default fastifyPlugin(
         });
 
         await reloadSettings();
+
+        logger.info('settings updated', {
+          updated: Object.keys(result.data),
+          by: req.user.username,
+        });
 
         return res.send(newSettings);
       },

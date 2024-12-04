@@ -2,6 +2,7 @@ import { config } from '@/lib/config';
 import { createToken, encryptToken } from '@/lib/crypto';
 import { prisma } from '@/lib/db';
 import { User, userSelect } from '@/lib/db/models/user';
+import { log } from '@/lib/logger';
 import { userMiddleware } from '@/server/middleware/user';
 import fastifyPlugin from 'fastify-plugin';
 
@@ -9,6 +10,8 @@ export type ApiUserTokenResponse = {
   user?: User;
   token?: string;
 };
+
+const logger = log('api').c('user').c('token');
 
 export const PATH = '/api/user/token';
 export default fastifyPlugin(
@@ -45,6 +48,10 @@ export default fastifyPlugin(
       });
 
       delete (user as any).password;
+
+      logger.info('user reset their token', {
+        user: user.username,
+      });
 
       return res.send({
         user,

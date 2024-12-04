@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db';
+import { log } from '@/lib/logger';
 import { userMiddleware } from '@/server/middleware/user';
 import { getSession } from '@/server/session';
 import fastifyPlugin from 'fastify-plugin';
@@ -6,6 +7,8 @@ import fastifyPlugin from 'fastify-plugin';
 export type ApiLogoutResponse = {
   loggedOut?: boolean;
 };
+
+const logger = log('api').c('auth').c('logout');
 
 export const PATH = '/api/auth/logout';
 export default fastifyPlugin(
@@ -25,6 +28,13 @@ export default fastifyPlugin(
       });
 
       current.destroy();
+
+      logger.info('user logged out', {
+        user: req.user.username,
+        ip: req.ip ?? 'unknown',
+        ua: req.headers['user-agent'],
+      });
+
       return res.send({ loggedOut: true });
     });
 

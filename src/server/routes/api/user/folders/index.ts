@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db';
 import { fileSelect } from '@/lib/db/models/file';
 import { Folder, cleanFolder, cleanFolders } from '@/lib/db/models/folder';
+import { log } from '@/lib/logger';
 import { userMiddleware } from '@/server/middleware/user';
 import fastifyPlugin from 'fastify-plugin';
 
@@ -16,6 +17,8 @@ type Body = {
 type Query = {
   noincl?: boolean;
 };
+
+const logger = log('api').c('user').c('folders');
 
 export const PATH = '/api/user/folders';
 export default fastifyPlugin(
@@ -73,6 +76,12 @@ export default fastifyPlugin(
                 },
               },
             }),
+          });
+
+          logger.info('folder created', {
+            folder: folder.name,
+            user: req.user.username,
+            files: files?.length || undefined,
           });
 
           return res.send(cleanFolder(folder));

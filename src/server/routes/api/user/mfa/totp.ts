@@ -1,6 +1,7 @@
 import { config } from '@/lib/config';
 import { prisma } from '@/lib/db';
 import { User, userSelect } from '@/lib/db/models/user';
+import { log } from '@/lib/logger';
 import { generateKey, totpQrcode, verifyTotpCode } from '@/lib/totp';
 import { userMiddleware } from '@/server/middleware/user';
 import fastifyPlugin from 'fastify-plugin';
@@ -11,6 +12,8 @@ type Body = {
   code?: string;
   secret?: string;
 };
+
+const logger = log('api').c('user').c('mfa').c('totp');
 
 export const PATH = '/api/user/mfa/totp';
 export default fastifyPlugin(
@@ -40,6 +43,10 @@ export default fastifyPlugin(
             select: userSelect,
           });
 
+          logger.info('user disabled TOTP', {
+            user: user.username,
+          });
+
           return res.send(user);
         } else if (req.method === 'POST') {
           const { code, secret } = req.body;
@@ -57,6 +64,10 @@ export default fastifyPlugin(
             select: userSelect,
           });
 
+          logger.info('user enabled TOTP', {
+            user: user.username,
+          });
+
           return res.send(user);
         }
 
@@ -66,6 +77,10 @@ export default fastifyPlugin(
             issuer: config.mfa.totp.issuer,
             username: req.user.username,
             secret,
+          });
+
+          logger.info('user generated TOTP secret', {
+            user: req.user.username,
           });
 
           return res.send({

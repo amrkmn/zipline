@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db';
 import { Tag, tagSelect } from '@/lib/db/models/tag';
+import { log } from '@/lib/logger';
 import { userMiddleware } from '@/server/middleware/user';
 import fastifyPlugin from 'fastify-plugin';
 
@@ -9,6 +10,8 @@ type Body = {
   name: string;
   color: string;
 };
+
+const logger = log('api').c('user').c('tags');
 
 export const PATH = '/api/user/tags';
 export default fastifyPlugin(
@@ -34,6 +37,12 @@ export default fastifyPlugin(
           userId: req.user.id,
         },
         select: tagSelect,
+      });
+
+      logger.info('tag created', {
+        id: tag.id,
+        name: tag.name,
+        user: req.user.username,
       });
 
       return res.send(tag);

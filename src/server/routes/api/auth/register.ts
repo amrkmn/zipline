@@ -5,6 +5,7 @@ import { User, userSelect } from '@/lib/db/models/user';
 import { getSession, saveSession } from '@/server/session';
 import fastifyPlugin from 'fastify-plugin';
 import { ApiLoginResponse } from './login';
+import { log } from '@/lib/logger';
 
 export type ApiAuthRegisterResponse = ApiLoginResponse;
 
@@ -13,6 +14,9 @@ type Body = {
   password: string;
   code?: string;
 };
+
+const logger = log('api').c('auth').c('register');
+
 export const PATH = '/api/auth/register';
 export default fastifyPlugin(
   (server, _, done) => {
@@ -60,6 +64,11 @@ export default fastifyPlugin(
               uses: invite.uses + 1,
             },
           });
+
+          logger.info('invite used', {
+            user: username,
+            invite: invite.id,
+          });
         }
 
         const user = await prisma.user.create({
@@ -79,6 +88,12 @@ export default fastifyPlugin(
         await saveSession(session, <User>user);
 
         delete (user as any).password;
+
+        logger.info('user registered successfully', {
+          username,
+          ip: req.ip ?? 'unknown',
+          ua: req.headers['user-agent'],
+        });
 
         return res.send({
           user,

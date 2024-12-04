@@ -195,6 +195,8 @@ export default fastifyPlugin(
 
       zip.end();
 
+      logger.info(`export for ${req.user.id} started`);
+
       return res.send({ running: true });
     });
 

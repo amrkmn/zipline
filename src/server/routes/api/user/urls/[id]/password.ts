@@ -35,7 +35,15 @@ export default fastifyPlugin(
       if (!url.password) return res.notFound();
 
       const verified = await verifyPassword(req.body.password, url.password);
-      if (!verified) return res.forbidden('Incorrect password');
+      if (!verified) {
+        logger.warn('invalid password for URL', {
+          url: url.id,
+          ip: req.ip ?? 'unknown',
+          ua: req.headers['user-agent'],
+        });
+
+        return res.forbidden('Incorrect password');
+      }
 
       logger.info(`url ${url.id} was accessed with the correct password`, { ua: req.headers['user-agent'] });
 
