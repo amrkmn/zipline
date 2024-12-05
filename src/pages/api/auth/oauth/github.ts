@@ -61,6 +61,15 @@ async function handler({ code, state }: OAuthQuery, logger: Logger): Promise<OAu
 
   const json = await res.json();
 
+  if (json.error) {
+    logger.error('failed to fetch access token', {
+      error: json.error_description ?? json.error_uri ?? json.error ?? 'unknown gh error',
+    });
+    logger.debug('failed to fetch access token', { json, status: res.status });
+
+    return { error: 'there was an error while processing github request' };
+  }
+
   if (!json.access_token) return { error: 'No access token in response' };
 
   const userJson = await githubAuth.user(json.access_token);
