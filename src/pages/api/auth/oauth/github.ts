@@ -8,7 +8,7 @@ import enabled from '@/lib/oauth/enabled';
 import { githubAuth } from '@/lib/oauth/providerUtil';
 import { OAuthQuery, OAuthResponse, withOAuth } from '@/lib/oauth/withOAuth';
 
-async function handler({ code }: OAuthQuery, logger: Logger): Promise<OAuthResponse> {
+async function handler({ code, state }: OAuthQuery, logger: Logger): Promise<OAuthResponse> {
   if (!config.features.oauthRegistration)
     return {
       error: 'OAuth registration is disabled.',
@@ -29,7 +29,7 @@ async function handler({ code }: OAuthQuery, logger: Logger): Promise<OAuthRespo
     return {
       redirect: githubAuth.url(
         config.oauth.github.clientId!,
-        linkState,
+        state === 'link' ? linkState : undefined,
         config.oauth.github.redirectUri ?? undefined,
       ),
     };

@@ -8,7 +8,7 @@ import { fetchToDataURL } from '@/lib/base64';
 import Logger from '@/lib/logger';
 import { encrypt } from '@/lib/crypto';
 
-async function handler({ code, host }: OAuthQuery, logger: Logger): Promise<OAuthResponse> {
+async function handler({ code, host, state }: OAuthQuery, logger: Logger): Promise<OAuthResponse> {
   if (!config.features.oauthRegistration)
     return {
       error: 'OAuth registration is disabled.',
@@ -30,7 +30,7 @@ async function handler({ code, host }: OAuthQuery, logger: Logger): Promise<OAut
       redirect: discordAuth.url(
         config.oauth.discord.clientId!,
         `${config.core.returnHttpsUrls ? 'https' : 'http'}://${host}`,
-        linkState,
+        state === 'link' ? linkState : undefined,
         config.oauth.discord.redirectUri ?? undefined,
       ),
     };

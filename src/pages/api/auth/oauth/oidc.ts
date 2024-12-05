@@ -8,7 +8,7 @@ import { oidcAuth } from '@/lib/oauth/providerUtil';
 import { OAuthQuery, OAuthResponse, withOAuth } from '@/lib/oauth/withOAuth';
 
 // thanks to @danejur for this https://github.com/diced/zipline/pull/372
-async function handler({ code, host }: OAuthQuery, _logger: Logger): Promise<OAuthResponse> {
+async function handler({ code, host, state }: OAuthQuery, _logger: Logger): Promise<OAuthResponse> {
   if (!config.features.oauthRegistration)
     return {
       error: 'OAuth registration is disabled.',
@@ -31,7 +31,7 @@ async function handler({ code, host }: OAuthQuery, _logger: Logger): Promise<OAu
         config.oauth.oidc.clientId!,
         `${config.core.returnHttpsUrls ? 'https' : 'http'}://${host}`,
         config.oauth.oidc.authorizeUrl!,
-        linkState,
+        state === 'link' ? linkState : undefined,
         config.oauth.oidc.redirectUri ?? undefined,
       ),
     };
