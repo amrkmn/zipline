@@ -9,6 +9,7 @@ import { ApiAuthWebauthnResponse } from '@/server/routes/api/auth/webauthn';
 import { ApiHealthcheckResponse } from '@/server/routes/api/healthcheck';
 import { ApiServerClearTempResponse } from '@/server/routes/api/server/clear_temp';
 import { ApiServerClearZerosResponse } from '@/server/routes/api/server/clear_zeros';
+import { ApiServerImportV3 } from '@/server/routes/api/server/import/v3';
 import { ApiServerRequerySizeResponse } from '@/server/routes/api/server/requery_size';
 import { ApiServerSettingsResponse } from '@/server/routes/api/server/settings';
 import { ApiServerThumbnailsResponse } from '@/server/routes/api/server/thumbnails';
@@ -72,6 +73,7 @@ export type Response = {
   '/api/server/requery_size': ApiServerRequerySizeResponse;
   '/api/server/settings': ApiServerSettingsResponse;
   '/api/server/thumbnails': ApiServerThumbnailsResponse;
+  '/api/server/import/v3': ApiServerImportV3;
   '/api/healthcheck': ApiHealthcheckResponse;
   '/api/setup': ApiSetupResponse;
   '/api/upload': ApiUploadResponse;

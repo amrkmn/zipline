@@ -1,8 +1,9 @@
 import { Group, Paper, Text, Title } from '@mantine/core';
-import ClearZerosButton from './ClearZerosButton';
 import ClearTempButton from './ClearTempButton';
-import RequerySizeButton from './RequerySizeButton';
+import ClearZerosButton from './ClearZerosButton';
 import GenThumbsButton from './GenThumbsButton';
+import RequerySizeButton from './RequerySizeButton';
+import ImportButton from './ImportButton';
 
 export default function SettingsServerActions() {
   return (
@@ -17,6 +18,7 @@ export default function SettingsServerActions() {
         <ClearTempButton />
         <RequerySizeButton />
         <GenThumbsButton />
+        <ImportButton />
       </Group>
     </Paper>
   );
