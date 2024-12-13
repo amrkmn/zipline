@@ -41,7 +41,8 @@ BigInt.prototype.toJSON = function () {
 };
 
 async function main() {
-  logger.info('starting zipline', { mode: MODE, version: version });
+  const argv = process.argv.slice(2);
+  logger.info('starting zipline', { mode: MODE, version: version, argv });
   logger.info('reading settings...');
   await reloadSettings();
 
@@ -141,19 +142,20 @@ async function main() {
     server.get(config.urls.route === '/' ? '/:id' : `${config.urls.route}/:id`, urlsRoute);
   }
 
-  await server.register(next, {
-    dev: MODE === 'development',
-    quiet: MODE === 'production',
-    hostname: config.core.hostname,
-    port: config.core.port,
-    dir: '.',
-  });
+  if (!argv.includes('--skip-next'))
+    await server.register(next, {
+      dev: MODE === 'development',
+      quiet: MODE === 'production',
+      hostname: config.core.hostname,
+      port: config.core.port,
+      dir: '.',
+    });
 
   const routes = await loadRoutes();
   const routesOptions = Object.values(routes);
   Promise.all(routesOptions.map((route) => server.register(route)));
 
-  server.next('/*', ALL_METHODS);
+  if (!argv.includes('--skip-next')) server.next('/*', ALL_METHODS);
   server.get('/', (_, res) => res.redirect('/dashboard'));
 
   // TODO: no longer need this when all the api routes are handled by fastify :)
