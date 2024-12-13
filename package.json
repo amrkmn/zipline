@@ -13,7 +13,7 @@
     "dev:ctl": "tsup --config tsup.ctl.config.ts --watch",
     "start": "NODE_ENV=production node --require dotenv/config --enable-source-maps ./build/server",
     "start:inspector": "NODE_ENV=production node --require dotenv/config --inspect=0.0.0.0:9229 --enable-source-maps ./build/server",
-    "ctl": "NODE_ENV=production node --require dotenv/config --enable-source-maps ./build/ctl.js",
+    "ctl": "NODE_ENV=production node --require dotenv/config --enable-source-maps ./build/ctl",
     "validate": "pnpm run \"/^validate:.*/\"",
     "validate:lint": "eslint --cache --ignore-path .gitignore --fix .",
     "validate:format": "prettier --write --ignore-path .gitignore .",
