@@ -52,7 +52,7 @@ export default fastifyPlugin(
 
         if (!user) return res.notFound('User not found');
 
-        return res.send(req.user);
+        return res.send(user);
       },
     );
 
