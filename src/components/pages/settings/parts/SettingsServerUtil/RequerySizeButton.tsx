@@ -1,7 +1,6 @@
 import { Response } from '@/lib/api/response';
 import { fetchApi } from '@/lib/fetchApi';
 import { Button, Group, Modal, Stack, Switch, Title } from '@mantine/core';
-import { modals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
 import { IconFileSearch } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -12,7 +11,9 @@ export default function RequerySizeButton() {
   const [open, setOpen] = useState(false);
 
   const handle = async () => {
-    modals.closeAll();
+    setOpen(false);
+    setForceUpdate(false);
+    setForceDelete(false);
 
     const { data, error } = await fetchApi<Response['/api/server/requery_size']>(
       '/api/server/requery_size',
@@ -28,8 +29,6 @@ export default function RequerySizeButton() {
         message: data.status,
         icon: <IconFileSearch size='1rem' />,
       });
-
-      modals.closeAll();
     }
   };
 

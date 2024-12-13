@@ -1,7 +1,6 @@
 import { Response } from '@/lib/api/response';
 import { fetchApi } from '@/lib/fetchApi';
 import { Button, Group, Modal, Stack, Switch, Title } from '@mantine/core';
-import { modals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
 import { IconVideo, IconVideoOff } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -11,8 +10,6 @@ export default function GenThumbsButton() {
   const [open, setOpen] = useState(false);
 
   const handle = async () => {
-    modals.closeAll();
-
     const { data, error } = await fetchApi<Response['/api/server/thumbnails']>(
       '/api/server/thumbnails',
       'POST',
@@ -27,7 +24,7 @@ export default function GenThumbsButton() {
         icon: <IconVideoOff size='1rem' />,
       });
 
-      modals.closeAll();
+      setOpen(false);
     }
   };
 
