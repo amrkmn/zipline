@@ -1,5 +1,6 @@
 {
   "name": "Dark Blue",
+  "id": "builtin:dark_blue",
   "colorScheme": "dark",
   "colors": {
     "blue": [

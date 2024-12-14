@@ -5,12 +5,22 @@ import { exists } from '../fs';
 
 import dark_gray from './builtins/dark_gray.theme.json';
 import light_gray from './builtins/light_gray.theme.json';
+import black_dark from './builtins/black_dark.theme.json';
+
+import light_blue from './builtins/light_blue.theme.json';
+import dark_blue from './builtins/dark_blue.theme.json';
+
+import cat_frappe from './builtins/catppuccin_frappe.theme.json';
+import cat_latte from './builtins/catppuccin_latte.theme.json';
+import cat_macchiato from './builtins/catppuccin_macchiato.theme.json';
+import cat_mocha from './builtins/catppuccin_mocha.theme.json';
+
 import { log } from '../logger';
 
 const THEMES_DIR = './themes';
 const logger = log('theme');
 
-export async function readThemes(includeBuiltins: boolean = true): Promise<ZiplineTheme[]> {
+export async function readThemes(): Promise<ZiplineTheme[]> {
   const themes = await readThemesDir();
   const parsedThemes = await parseThemes(themes);
 
@@ -25,19 +35,22 @@ export async function readThemes(includeBuiltins: boolean = true): Promise<Zipli
           : 'color-mix(in srgb, var(--mantine-color-gray-9), black 45%)'; // darken(--mantine-color-gray-9 45%)
     }
 
-    parsedThemes[i] = await handleOverrideColors(parsedThemes[i]);
+    parsedThemes[i] = handleOverrideColors(parsedThemes[i]);
   }
 
-  if (includeBuiltins) {
-    parsedThemes.push(
-      await handleOverrideColors(dark_gray as ZiplineTheme),
-      await handleOverrideColors(light_gray as ZiplineTheme),
-    );
-  }
+  parsedThemes.push(
+    handleOverrideColors(dark_gray as ZiplineTheme),
+    handleOverrideColors(light_gray as unknown as ZiplineTheme),
+    handleOverrideColors(black_dark as unknown as ZiplineTheme),
+    handleOverrideColors(light_blue as unknown as ZiplineTheme),
+    handleOverrideColors(dark_blue as unknown as ZiplineTheme),
+    handleOverrideColors(cat_frappe as unknown as ZiplineTheme),
+    handleOverrideColors(cat_latte as unknown as ZiplineTheme),
+    handleOverrideColors(cat_macchiato as unknown as ZiplineTheme),
+    handleOverrideColors(cat_mocha as unknown as ZiplineTheme),
+  );
 
-  logger.debug('loaded themes', {
-    themes: parsedThemes.map((t) => t.id),
-  });
+  console.log(parsedThemes);
 
   return parsedThemes;
 }
@@ -66,7 +79,7 @@ export async function parseThemes(themes: string[]): Promise<ZiplineTheme[]> {
   return parsedThemes;
 }
 
-export async function handleOverrideColors(theme: ZiplineTheme) {
+export function handleOverrideColors(theme: ZiplineTheme) {
   return {
     ...theme,
     colors: {

@@ -1,5 +1,6 @@
 {
   "name": "Light Blue",
+  "id": "builtin:light_blue",
   "colorScheme": "light",
   "colors": {
     "blue": [

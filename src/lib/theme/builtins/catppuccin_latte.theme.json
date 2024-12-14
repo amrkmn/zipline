@@ -1,5 +1,6 @@
 {
   "name": "Catppuccin Latte",
+  "id": "builtin:cat_latte",
   "colorScheme": "light",
   "colors": {
     "blue": [

@@ -37,6 +37,8 @@ const names = {
 function OAuthButton({ provider, linked }: { provider: OAuthProviderType; linked: boolean }) {
   const t = useMantineTheme();
 
+  console.log(t);
+
   const unlink = async () => {
     const { error } = await fetchApi<Response['/api/auth/oauth']>('/api/auth/oauth', 'DELETE', {
       provider,
@@ -66,7 +68,7 @@ function OAuthButton({ provider, linked }: { provider: OAuthProviderType; linked
     leftSection: icons[provider],
     color: linked ? 'red' : `${provider.toLowerCase()}.0`,
     style: {
-      '--z-bol-color': darken(t.colors[provider.toLowerCase()][0], 0.2, t),
+      '--z-bol-color': darken(t.colors?.[provider.toLowerCase()]?.[0] ?? '', 0.2, t),
     },
     className: !linked ? styles.button : undefined,
   };
