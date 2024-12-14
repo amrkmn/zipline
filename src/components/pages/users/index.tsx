@@ -75,7 +75,7 @@ export default function DashboardUsers() {
     if (error) {
       notifications.show({
         title: 'Failed to create user',
-        message: error.message,
+        message: error.error,
         color: 'red',
         icon: <IconUserCancel size='1rem' />,
       });

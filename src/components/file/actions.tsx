@@ -60,7 +60,7 @@ export async function handleDeleteFile(file: File, setOpen: (open: boolean) => v
   if (error) {
     notifications.show({
       title: 'Error',
-      message: error.message,
+      message: error.error,
       color: 'red',
       icon: <IconTrashXFilled size='1rem' />,
     });
@@ -90,7 +90,7 @@ export async function favoriteFile(file: File) {
   if (error) {
     notifications.show({
       title: 'Error',
-      message: error.message,
+      message: error.error,
       color: 'red',
       icon: <IconStar size='1rem' />,
     });
@@ -114,7 +114,7 @@ export function createFolderAndAdd(file: File, folderName: string | null) {
     if (error) {
       notifications.show({
         title: 'Error while creating folder',
-        message: error.message,
+        message: error.error,
         color: 'red',
         icon: <IconFolderOff size='1rem' />,
       });
@@ -147,7 +147,7 @@ export async function removeFromFolder(file: File) {
   if (error) {
     notifications.show({
       title: 'Error while removing from folder',
-      message: error.message,
+      message: error.error,
       color: 'red',
       icon: <IconFolderOff size='1rem' />,
     });
@@ -178,7 +178,7 @@ export async function addToFolder(file: File, folderId: string | null) {
   if (error) {
     notifications.show({
       title: 'Error while adding to folder',
-      message: error.message,
+      message: error.error,
       color: 'red',
       icon: <IconFolderOff size='1rem' />,
     });
@@ -210,7 +210,7 @@ export async function addMultipleToFolder(files: File[], folderId: string | null
   if (error) {
     notifications.show({
       title: 'Error while adding files to folder',
-      message: error.message,
+      message: error.error,
       color: 'red',
       icon: <IconFolderOff size='1rem' />,
     });

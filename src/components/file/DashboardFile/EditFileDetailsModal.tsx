@@ -32,7 +32,7 @@ export default function EditFileDetailsModal({
     if (error) {
       showNotification({
         title: 'Failed to remove password...',
-        message: error.message,
+        message: error.error,
         color: 'red',
         icon: <IconPencilOff size='1rem' />,
       });
@@ -66,7 +66,7 @@ export default function EditFileDetailsModal({
     if (error) {
       showNotification({
         title: 'Failed to save changes...',
-        message: error.message,
+        message: error.error,
         color: 'red',
         icon: <IconPencilOff size='1rem' />,
       });

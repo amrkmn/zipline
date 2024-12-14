@@ -56,7 +56,7 @@ export default function SettingsAvatar() {
     if (!data && error) {
       notifications.show({
         title: 'Error while updating avatar',
-        message: error.message,
+        message: error.error,
         color: 'red',
         icon: <IconPhotoCancel size='1rem' />,
       });
@@ -83,7 +83,7 @@ export default function SettingsAvatar() {
     if (!data && error) {
       notifications.show({
         title: 'Error while updating avatar',
-        message: error.message,
+        message: error.error,
         color: 'red',
         icon: <IconPhotoCancel size='1rem' />,
       });

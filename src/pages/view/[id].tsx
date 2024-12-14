@@ -55,6 +55,8 @@ export default function ViewFileId({
 
   const router = useRouter();
 
+  console.log(file);
+
   const [passwordValue, setPassword] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string>('');
   const [detailsOpen, setDetailsOpen] = useState<boolean>(false);
@@ -74,7 +76,7 @@ export default function ViewFileId({
 
   const meta = (
     <Head>
-      {user?.view.embedTitle && user?.view.embed && (
+      {/* {user?.view.embedTitle && user?.view.embed && (
         <meta
           property='og:title'
           content={parseString(user.view.embedTitle, { file: file, user, ...metrics }) ?? ''}
@@ -97,7 +99,7 @@ export default function ViewFileId({
           property='theme-color'
           content={parseString(user.view.embedColor, { file, user, ...metrics }) ?? ''}
         />
-      )}
+      )} */}
 
       {file.type.startsWith('image') && (
         <>
@@ -112,29 +114,24 @@ export default function ViewFileId({
 
       {file.type.startsWith('video') && (
         <>
-          <meta name='twitter:card' content='player' />
+          {/* <meta name='twitter:card' content='player' />
           <meta name='twitter:player' content={`${host}/raw/${file.name}`} />
           <meta name='twitter:player:stream' content={`${host}/raw/${file.name}`} />
           <meta name='twitter:player:width' content='720' />
           <meta name='twitter:player:height' content='480' />
           <meta name='twitter:player:stream:content_type' content={file.type} />
-          <meta name='twitter:title' content={file.name} />
-          {/* 
-          {file.thumbnail && (
-            <>
-              <meta name='twitter:image' content={`${host}/raw/${file.thumbnail.name}`} />
-              <meta property='og:image' content={`${host}/raw/${file.thumbnail.name}`} />
-            </>
-          )} */}
+          <meta name='twitter:title' content={file.name} /> */}
 
-          <meta property='og:url' content={`${host}/raw/${file.name}`} />
-          <meta property='og:video' content={`${host}/raw/${file.name}`} />
-          <meta property='og:video:url' content={`${host}/raw/${file.name}`} />
-          <meta property='og:video:secure_url' content={`${host}/raw/${file.name}`} />
-          <meta property='og:video:type' content={file.type} />
-          <meta property='og:video:width' content='720' />
-          <meta property='og:video:height' content='480' />
+          {file.thumbnail && <meta property='og:image' content={`${host}/raw/${file.thumbnail.path}`} />}
+
           <meta property='og:type' content='video.other' />
+          {/* <meta property='og:url' content={`${host}/raw/${file.name}`} /> */}
+          {/* <meta property='og:video' content={`${host}/raw/${file.name}`} /> */}
+          <meta property='og:video:url' content={`${host}/raw/${file.name}`} />
+          {/* <meta property='og:video:secure_url' content={`${host}/raw/${file.name}`} /> */}
+          {/* <meta property='og:video:type' content={file.type} /> */}
+          <meta property='og:video:width' content='1920' />
+          <meta property='og:video:height' content='1080' />
         </>
       )}
 
@@ -343,6 +340,11 @@ export const getServerSideProps: GetServerSideProps<{
       password: true,
       userId: true,
       tags: false,
+      thumbnail: {
+        select: {
+          path: true,
+        },
+      },
     },
   });
   if (!file || !file.userId) return { notFound: true };

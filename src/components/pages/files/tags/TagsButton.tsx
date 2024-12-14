@@ -27,7 +27,7 @@ export default function TagsButton() {
     if (error) {
       showNotification({
         title: 'Error',
-        message: `Failed to delete tag: ${error.message}`,
+        message: `Failed to delete tag: ${error.error}`,
         color: 'red',
         icon: <IconTagOff size='1rem' />,
       });

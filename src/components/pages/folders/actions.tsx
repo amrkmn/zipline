@@ -51,7 +51,7 @@ export async function editFolderVisibility(folder: Folder, isPublic: boolean) {
   if (error) {
     notifications.show({
       title: 'Failed to edit folder visibility',
-      message: error.message,
+      message: error.error,
       color: 'red',
       icon: <IconFolderOff size='1rem' />,
     });
@@ -79,7 +79,7 @@ async function handleDeleteFolder(folder: Folder) {
   if (error) {
     notifications.show({
       title: 'Failed to delete folder',
-      message: error.message,
+      message: error.error,
       color: 'red',
       icon: <IconFolderOff size='1rem' />,
     });

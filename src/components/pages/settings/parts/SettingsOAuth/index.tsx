@@ -45,7 +45,7 @@ function OAuthButton({ provider, linked }: { provider: OAuthProviderType; linked
     if (error) {
       notifications.show({
         title: 'Failed to unlink account',
-        message: error.message,
+        message: error.error,
         color: 'red',
         icon: <IconUserExclamation size='1rem' />,
       });

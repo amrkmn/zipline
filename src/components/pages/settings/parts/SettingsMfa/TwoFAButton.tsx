@@ -55,7 +55,7 @@ export default function TwoFAButton() {
     );
 
     if (error) {
-      setPinError(error.message!);
+      setPinError(error.error!);
       setPinDisabled(false);
     } else {
       setTotpOpen(false);
@@ -84,7 +84,7 @@ export default function TwoFAButton() {
     );
 
     if (error) {
-      setPinError(error.message!);
+      setPinError(error.error!);
       setPinDisabled(false);
     } else {
       setTotpOpen(false);

@@ -45,7 +45,7 @@ async function handleDeleteUrl(url: Url) {
   if (error) {
     notifications.show({
       title: 'Failed to delete url',
-      message: error.message,
+      message: error.error,
       color: 'red',
       icon: <IconLinkOff size='1rem' />,
     });

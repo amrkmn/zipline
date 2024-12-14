@@ -65,7 +65,7 @@ export default function PendingFilesButton() {
     if (error) {
       showNotification({
         title: 'Error',
-        message: `Failed to delete pending file: ${error.message}`,
+        message: `Failed to delete pending file: ${error.error}`,
         color: 'red',
         icon: <IconFileDots size='1rem' />,
       });

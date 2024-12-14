@@ -48,7 +48,7 @@ export async function bulkDelete(ids: string[], setSelectedFiles: (files: File[]
       if (error) {
         notifications.update({
           title: 'Error while deleting files',
-          message: error.message,
+          message: error.error,
           color: 'red',
           icon: <IconFilesOff size='1rem' />,
           id: 'bulk-delete',
@@ -111,7 +111,7 @@ export async function bulkFavorite(ids: string[]) {
       if (error) {
         notifications.update({
           title: 'Error while favoriting files',
-          message: error.message,
+          message: error.error,
           color: 'red',
           icon: <IconStarsOff size='1rem' />,
           id: 'bulk-favorite',

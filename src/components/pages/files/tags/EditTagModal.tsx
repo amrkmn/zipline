@@ -50,7 +50,7 @@ export default function EditTagModal({
     if (error) {
       showNotification({
         title: 'Failed to edit tag',
-        message: error.message,
+        message: error.error,
         color: 'red',
         icon: <IconTagOff size='1rem' />,
       });

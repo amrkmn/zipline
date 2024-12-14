@@ -92,9 +92,9 @@ export default function Login({ config }: InferGetServerSidePropsType<typeof get
     });
 
     if (error) {
-      if (error.message === 'Invalid username') form.setFieldError('username', 'Invalid username');
-      else if (error.message === 'Invalid password') form.setFieldError('password', 'Invalid password');
-      else if (error.message === 'Invalid code') setPinError(error.message!);
+      if (error.error === 'Invalid username') form.setFieldError('username', 'Invalid username');
+      else if (error.error === 'Invalid password') form.setFieldError('password', 'Invalid password');
+      else if (error.error === 'Invalid code') setPinError(error.error!);
       setPinDisabled(false);
     } else {
       if (data!.totp) {
@@ -128,7 +128,7 @@ export default function Login({ config }: InferGetServerSidePropsType<typeof get
         setPasskeyLoading(false);
         notifications.show({
           title: 'Error while authenticating with passkey',
-          message: error.message,
+          message: error.error,
           color: 'red',
         });
       } else {

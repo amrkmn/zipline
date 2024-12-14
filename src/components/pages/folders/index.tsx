@@ -39,7 +39,7 @@ export default function DashboardFolders() {
 
     if (error) {
       notifications.show({
-        message: error.message,
+        message: error.error,
         color: 'red',
       });
     } else {

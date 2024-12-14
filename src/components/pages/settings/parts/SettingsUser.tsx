@@ -65,12 +65,12 @@ export default function SettingsUser() {
     const { data, error } = await fetchApi<Response['/api/user']>('/api/user', 'PATCH', send);
 
     if (!data && error) {
-      if (error.message === 'Username already exists') {
-        form.setFieldError('username', error.message);
+      if (error.error === 'Username already exists') {
+        form.setFieldError('username', error.error);
       } else {
         notifications.show({
           title: 'Error while updating user',
-          message: error.message,
+          message: error.error,
           color: 'red',
           icon: <IconUserCancel size='1rem' />,
         });

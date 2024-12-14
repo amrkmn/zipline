@@ -41,7 +41,7 @@ async function handleDeleteInvite(invite: Invite) {
   if (error) {
     notifications.show({
       title: 'Failed to delete invite',
-      message: error.message,
+      message: error.error,
       color: 'red',
       icon: <IconTagOff size='1rem' />,
     });

@@ -143,7 +143,7 @@ export default function FileModal({
     if (error) {
       showNotification({
         title: 'Failed to save tags',
-        message: error.message,
+        message: error.error,
         color: 'red',
         icon: <IconTagsOff size='1rem' />,
       });

@@ -41,7 +41,7 @@ export default function CreateTagModal({ open, onClose }: { open: boolean; onClo
     if (error) {
       showNotification({
         title: 'Failed to create tag',
-        message: error.message,
+        message: error.error,
         color: 'red',
         icon: <IconTagOff size='1rem' />,
       });

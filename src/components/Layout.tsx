@@ -166,7 +166,7 @@ export default function Layout({ children, config }: { children: React.ReactNode
         if (error) {
           showNotification({
             title: 'Error',
-            message: error.message,
+            message: error.error,
             color: 'red',
             icon: <IconClipboardCopy size='1rem' />,
           });
@@ -199,7 +199,7 @@ export default function Layout({ children, config }: { children: React.ReactNode
         if (error) {
           showNotification({
             title: 'Error',
-            message: error.message,
+            message: error.error,
             color: 'red',
             icon: <IconRefreshDot size='1rem' />,
           });

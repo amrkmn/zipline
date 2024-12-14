@@ -50,7 +50,7 @@ export default function PasskeyButton() {
 
       notifications.show({
         title: 'Error while saving passkey',
-        message: error.message,
+        message: error.error,
         color: 'red',
         icon: <IconKeyOff size='1rem' />,
       });
@@ -90,7 +90,7 @@ export default function PasskeyButton() {
         if (error) {
           notifications.show({
             title: 'Error while removing passkey',
-            message: error.message,
+            message: error.error,
             color: 'red',
             icon: <IconKeyOff size='1rem' />,
           });

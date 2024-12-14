@@ -41,7 +41,7 @@ async function handleDeleteUser(user: User, deleteFiles: boolean = false) {
   if (error) {
     notifications.show({
       title: 'Failed to delete user',
-      message: error.message,
+      message: error.error,
       color: 'red',
       icon: <IconUserCancel size='1rem' />,
     });

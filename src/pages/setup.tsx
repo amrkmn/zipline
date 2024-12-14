@@ -56,7 +56,7 @@ export default function Setup() {
     if (error) {
       notifications.show({
         title: 'Error',
-        message: error.message,
+        message: error.error,
         color: 'red',
         icon: <IconX size='1rem' />,
       });
@@ -79,7 +79,7 @@ export default function Setup() {
       if (error) {
         notifications.show({
           title: 'Error',
-          message: error.message,
+          message: error.error,
           color: 'red',
           icon: <IconX size='1rem' />,
         });

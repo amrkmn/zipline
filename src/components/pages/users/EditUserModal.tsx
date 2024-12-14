@@ -122,7 +122,7 @@ export default function EditUserModal({
     if (error) {
       notifications.show({
         title: 'Failed to edit user',
-        message: error.message,
+        message: error.error,
         color: 'red',
         icon: <IconUserCancel size='1rem' />,
       });

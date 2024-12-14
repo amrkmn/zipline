@@ -68,7 +68,7 @@ export default function DashboardURLs() {
     if (error) {
       notifications.show({
         title: 'Failed to shorten URL',
-        message: error.message,
+        message: error.error,
         color: 'red',
         icon: <IconLinkOff size='1rem' />,
       });

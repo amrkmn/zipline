@@ -21,7 +21,7 @@ export function settingsOnSubmit(router: NextRouter, form: ReturnType<typeof use
         title: 'Failed to save settings',
         message: error.issues
           ? error.issues.map((x: { message: string }) => x.message).join('\n')
-          : error.message,
+          : error.error,
         color: 'red',
       });
 

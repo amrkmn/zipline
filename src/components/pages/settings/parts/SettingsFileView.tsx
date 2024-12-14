@@ -71,7 +71,7 @@ export default function SettingsFileView() {
     if (!data && error) {
       notifications.show({
         title: 'Error while updating view settings',
-        message: error.message,
+        message: error.error,
         color: 'red',
         icon: <IconFileX size='1rem' />,
       });
