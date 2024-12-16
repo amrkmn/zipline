@@ -1,6 +1,6 @@
 import { Response } from '@/lib/api/response';
 import type { Url } from '@/lib/db/models/url';
-import { Center, Group, LoadingOverlay, Paper, SimpleGrid, Stack, Text, Title } from '@mantine/core';
+import { Center, Group, Paper, SimpleGrid, Skeleton, Stack, Text, Title } from '@mantine/core';
 import { IconLink } from '@tabler/icons-react';
 import { useState } from 'react';
 import useSWR from 'swr';
@@ -16,9 +16,20 @@ export default function UrlGridView() {
       <EditUrlModal url={selectedUrl} onClose={() => setSelectedUrl(null)} open={!!selectedUrl} />
 
       {isLoading ? (
-        <Paper withBorder h={200}>
-          <LoadingOverlay visible />
-        </Paper>
+        <SimpleGrid
+          my='sm'
+          spacing='md'
+          cols={{
+            base: 1,
+            md: 2,
+            lg: 4,
+          }}
+          pos='relative'
+        >
+          {[...Array(4)].map((_, i) => (
+            <Skeleton key={i} height={120} animate />
+          ))}
+        </SimpleGrid>
       ) : (urls?.length ?? 0 !== 0) ? (
         <SimpleGrid
           my='sm'

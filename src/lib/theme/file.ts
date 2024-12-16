@@ -50,8 +50,6 @@ export async function readThemes(): Promise<ZiplineTheme[]> {
     handleOverrideColors(cat_mocha as unknown as ZiplineTheme),
   );
 
-  console.log(parsedThemes);
-
   return parsedThemes;
 }
 

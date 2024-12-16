@@ -1,10 +1,12 @@
-import { Box, Button, Group, Loader, Modal, Paper, SimpleGrid, Text, Title, Tooltip } from '@mantine/core';
+import { Box, Button, Group, Modal, Paper, SimpleGrid, Text, Title, Tooltip } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { IconCalendarSearch, IconCalendarTime } from '@tabler/icons-react';
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import FilesUrlsCountGraph from './parts/FilesUrlsCountGraph';
 import { useApiStats } from './useStats';
-import dynamic from 'next/dynamic';
+import { StatsCardsSkeleton } from './parts/StatsCards';
+import { StatsTablesSkeleton } from './parts/StatsTables';
 
 const StatsCards = dynamic(() => import('./parts/StatsCards'));
 const StatsTables = dynamic(() => import('./parts/StatsTables'));
@@ -92,7 +94,11 @@ export default function DashboardMetrics() {
 
       <Box pos='relative' mih={300} my='sm'>
         {isLoading ? (
-          <Loader />
+          <div>
+            <StatsCardsSkeleton />
+
+            <StatsTablesSkeleton />
+          </div>
         ) : data?.length ? (
           <div>
             <StatsCards data={data!} />

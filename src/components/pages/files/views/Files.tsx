@@ -1,15 +1,5 @@
 import DashboardFile from '@/components/file/DashboardFile';
-import {
-  Button,
-  Center,
-  Group,
-  LoadingOverlay,
-  Pagination,
-  Paper,
-  SimpleGrid,
-  Stack,
-  Title,
-} from '@mantine/core';
+import { Button, Center, Group, Pagination, Paper, SimpleGrid, Skeleton, Stack, Title } from '@mantine/core';
 import { IconFileUpload, IconFilesOff } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -51,9 +41,7 @@ export default function Files({ id }: { id?: string }) {
         pos='relative'
       >
         {isLoading ? (
-          <Paper withBorder h={200}>
-            <LoadingOverlay visible />
-          </Paper>
+          [...Array(9)].map((_, i) => <Skeleton key={i} height={350} animate />)
         ) : (data?.page?.length ?? 0 > 0) ? (
           data?.page.map((file) => <DashboardFile key={file.id} file={file} />)
         ) : (

@@ -3,7 +3,7 @@ import Stat from '@/components/Stat';
 import type { Response } from '@/lib/api/response';
 import { bytes } from '@/lib/bytes';
 import useLogin from '@/lib/hooks/useLogin';
-import { LoadingOverlay, Paper, ScrollArea, SimpleGrid, Table, Text, Title } from '@mantine/core';
+import { Paper, ScrollArea, SimpleGrid, Skeleton, Table, Text, Title } from '@mantine/core';
 import { IconDeviceSdCard, IconEyeFilled, IconFiles, IconLink, IconStarFilled } from '@tabler/icons-react';
 import useSWR from 'swr';
 
@@ -17,9 +17,13 @@ export default function DashboardHome() {
       <Title order={1}>
         Welcome back, <b>{user?.username}</b>
       </Title>
-      <Text size='sm' c='dimmed'>
-        You have <b>{statsLoading ? '...' : stats?.filesUploaded}</b> files uploaded.
-      </Text>
+
+      <Skeleton visible={statsLoading} animate>
+        <Text size='sm' c='dimmed'>
+          You have <b>{statsLoading ? '...' : stats?.filesUploaded}</b> files uploaded.
+        </Text>
+      </Skeleton>
+
       {user?.quota && (user.quota.maxBytes || user.quota.maxFiles) ? (
         <Text size='sm' c='dimmed'>
           {user.quota.filesQuota === 'BY_BYTES' ? (
@@ -47,9 +51,11 @@ export default function DashboardHome() {
       </Title>
 
       {recentLoading ? (
-        <Paper withBorder p='md' radius='md' pos='relative' h={300}>
-          <LoadingOverlay visible />
-        </Paper>
+        <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 'sm', md: 'md' }}>
+          {[...Array(3)].map((i) => (
+            <Skeleton key={i} height={350} />
+          ))}
+        </SimpleGrid>
       ) : recent?.length !== 0 ? (
         <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 'sm', md: 'md' }}>
           {recent!.map((file) => (
@@ -70,9 +76,46 @@ export default function DashboardHome() {
       </Text>
 
       {statsLoading ? (
-        <Paper withBorder p='md' radius='md' pos='relative' h={300}>
-          <LoadingOverlay visible />
-        </Paper>
+        <>
+          <SimpleGrid cols={{ base: 1, md: 2, lg: 4 }} spacing={{ base: 'sm', md: 'md' }}>
+            {[...Array(8)].map((i) => (
+              <Skeleton key={i} height={105} />
+            ))}
+          </SimpleGrid>
+
+          <Title order={3} mt='lg' mb='xs'>
+            File types
+          </Title>
+
+          <Paper radius='sm' withBorder>
+            <ScrollArea.Autosize mah={400} type='auto'>
+              <Table highlightOnHover>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>File Type</Table.Th>
+                    <Table.Th>Count</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <Table.Tr key={i}>
+                      <Table.Td>
+                        <Skeleton animate>
+                          <Text>...</Text>
+                        </Skeleton>
+                      </Table.Td>
+                      <Table.Td>
+                        <Skeleton animate>
+                          <Text>...</Text>
+                        </Skeleton>
+                      </Table.Td>
+                    </Table.Tr>
+                  ))}
+                </Table.Tbody>
+              </Table>
+            </ScrollArea.Autosize>
+          </Paper>
+        </>
       ) : (
         <>
           <SimpleGrid cols={{ base: 1, md: 2, lg: 4 }} spacing={{ base: 'sm', md: 'md' }}>

@@ -1,7 +1,116 @@
 import { bytes } from '@/lib/bytes';
 import { Metric } from '@/lib/db/models/metric';
-import { Paper, ScrollArea, SimpleGrid, Table } from '@mantine/core';
+import { Paper, ScrollArea, SimpleGrid, Skeleton, Table, Text } from '@mantine/core';
 import TypesPieChart from './TypesPieChart';
+
+function SkeletonText() {
+  return (
+    <Table.Td>
+      <Skeleton animate>
+        <Text>...</Text>
+      </Skeleton>
+    </Table.Td>
+  );
+}
+
+export function StatsTablesSkeleton() {
+  return (
+    <>
+      <SimpleGrid cols={{ base: 1, md: 2 }}>
+        <Paper radius='sm' withBorder>
+          <ScrollArea.Autosize mah={500} type='auto'>
+            <Table highlightOnHover stickyHeader>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>User</Table.Th>
+                  <Table.Th>Files</Table.Th>
+                  <Table.Th>Storage Used</Table.Th>
+                  <Table.Th>Views</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {[...Array(5)].map((i) => (
+                  <Table.Tr key={i}>
+                    <Table.Td>
+                      <SkeletonText />
+                    </Table.Td>
+                    <Table.Td>
+                      <SkeletonText />
+                    </Table.Td>
+                    <Table.Td>
+                      <SkeletonText />
+                    </Table.Td>
+                    <Table.Td>
+                      <SkeletonText />
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          </ScrollArea.Autosize>
+        </Paper>
+
+        <Paper radius='sm' withBorder mah={500}>
+          <ScrollArea.Autosize mah={500} type='auto'>
+            <Table highlightOnHover stickyHeader>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>User</Table.Th>
+                  <Table.Th>URLs</Table.Th>
+                  <Table.Th>Views</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {[...Array(5)].map((i) => (
+                  <Table.Tr key={i}>
+                    <Table.Td>
+                      <SkeletonText />
+                    </Table.Td>
+                    <Table.Td>
+                      <SkeletonText />
+                    </Table.Td>
+                    <Table.Td>
+                      <SkeletonText />
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          </ScrollArea.Autosize>
+        </Paper>
+
+        <Paper radius='sm' withBorder>
+          <ScrollArea.Autosize mah={500} type='auto'>
+            <Table highlightOnHover stickyHeader>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Type</Table.Th>
+                  <Table.Th>Files</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {[...Array(5)].map((i) => (
+                  <Table.Tr key={i}>
+                    <Table.Td>
+                      <SkeletonText />
+                    </Table.Td>
+                    <Table.Td>
+                      <SkeletonText />
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          </ScrollArea.Autosize>
+        </Paper>
+
+        <Paper radius='sm' withBorder p='sm'>
+          <Skeleton height={500} />
+        </Paper>
+      </SimpleGrid>
+    </>
+  );
+}
 
 export default function StatsTables({ data }: { data: Metric[] }) {
   if (!data.length) return null;

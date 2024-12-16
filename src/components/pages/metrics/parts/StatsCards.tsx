@@ -1,6 +1,6 @@
 import { bytes } from '@/lib/bytes';
 import { Metric } from '@/lib/db/models/metric';
-import { Group, Paper, SimpleGrid, Text, Title } from '@mantine/core';
+import { Group, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
 import {
   IconDatabase,
   IconEyeFilled,
@@ -23,6 +23,23 @@ function StatCard({ title, value, Icon }: { title: string; value: number | strin
 
       <Title order={1}>{value}</Title>
     </Paper>
+  );
+}
+
+export function StatsCardsSkeleton() {
+  return (
+    <SimpleGrid
+      cols={{
+        base: 1,
+        md: 2,
+        lg: 3,
+      }}
+      mb='sm'
+    >
+      {[...Array(6)].map((_, i) => (
+        <Skeleton key={i} height={100} animate />
+      ))}
+    </SimpleGrid>
   );
 }
 

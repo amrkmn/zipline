@@ -19,7 +19,7 @@ import fileIcon from './fileIcon';
 function PlaceholderContent({ text, Icon }: { text: string; Icon: Icon }) {
   return (
     <Stack align='center'>
-      <Icon size={48} />
+      <Icon size='4rem' stroke={2} style={{ filter: 'drop-shadow(0 0 10px rgba(0, 0, 0, 0.9))' }} />
       <Text size='md' ta='center'>
         {text}
       </Text>
@@ -126,7 +126,11 @@ export default function DashboardFileType({
               transform: 'translate(-50%, -50%)',
             }}
           >
-            <IconPlayerPlay size='4rem' stroke={3} />
+            <IconPlayerPlay
+              size='4rem'
+              stroke={3}
+              style={{ filter: 'drop-shadow(0 0 10px rgba(0, 0, 0, 0.9))' }}
+            />
           </Center>
         </Box>
       ) : (

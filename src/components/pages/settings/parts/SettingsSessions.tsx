@@ -1,9 +1,10 @@
 import { Response } from '@/lib/api/response';
 import { fetchApi } from '@/lib/fetchApi';
-import { Button, Paper, Text, Title } from '@mantine/core';
+import { Button, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
 import { IconLogout } from '@tabler/icons-react';
+import Link from 'next/link';
 import useSWR from 'swr';
 
 export default function SettingsSessions() {
@@ -39,20 +40,31 @@ export default function SettingsSessions() {
     <Paper withBorder p='sm'>
       <Title order={2}>Sessions</Title>
 
-      <Text c='dimmed' mt='sm'>
-        You are currently logged into {isLoading ? '...' : (data?.other?.length ?? '...')} other devices
-      </Text>
+      <Skeleton visible={isLoading} animate mt='sm'>
+        <Text c='dimmed'>
+          You are currently logged into {isLoading ? '...' : (data?.other?.length ?? '...')} other devices
+        </Text>
+      </Skeleton>
 
-      <Button
-        fullWidth
-        color='red'
-        mt='md'
-        disabled={isLoading || !data?.other?.length}
-        onClick={handleLogOutOfAllDevices}
-        leftSection={<IconLogout size='1rem' />}
+      <SimpleGrid
+        cols={{
+          xs: 1,
+          sm: 2,
+        }}
+        mt='sm'
       >
-        Log out everywhere
-      </Button>
+        <Button
+          color='red'
+          disabled={isLoading || !data?.other?.length}
+          onClick={handleLogOutOfAllDevices}
+          leftSection={<IconLogout size='1rem' />}
+        >
+          Log out everywhere
+        </Button>
+        <Button color='yellow' component={Link} href='/auth/logout' leftSection={<IconLogout size='1rem' />}>
+          Log out of this browser
+        </Button>
+      </SimpleGrid>
     </Paper>
   );
 }
