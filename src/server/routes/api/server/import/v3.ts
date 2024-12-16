@@ -123,7 +123,7 @@ export default fastifyPlugin(
         const filesImportedToId: Record<string, string> = {};
 
         for (const [id, file] of Object.entries(export3.files)) {
-          const user = usersImportedToId[file.user || ''];
+          const user = file.user ? usersImportedToId[file.user] : undefined;
           if (!user) {
             logger.warn('failed to find user for file, skipping', { file: id });
 
@@ -170,7 +170,7 @@ export default fastifyPlugin(
         const foldersImportedToId: Record<string, string> = {};
 
         for (const [id, folder] of Object.entries(export3.folders)) {
-          const user = usersImportedToId[folder.user];
+          const user = folder.user ? usersImportedToId[folder.user] : undefined;
           if (!user) {
             logger.warn('failed to find user for folder, skipping', { folder: id });
 
@@ -207,7 +207,7 @@ export default fastifyPlugin(
         const urlsImportedToId: Record<string, string> = {};
 
         for (const [id, url] of Object.entries(export3.urls)) {
-          const user = usersImportedToId[url.user];
+          const user = url.user ? usersImportedToId[url.user] : undefined;
           if (!user) {
             logger.warn('failed to find user for url, skipping', { url: id });
 

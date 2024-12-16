@@ -181,7 +181,7 @@ export const export3Schema = z.object({
     z.object({
       username: z.string(),
       password: z.string(),
-      avatar: z.string(),
+      avatar: z.string().optional().nullable(),
       administrator: z.boolean(),
       super_administrator: z.boolean(),
       embed: z.object({
@@ -206,12 +206,12 @@ export const export3Schema = z.object({
   files: z.record(
     z.object({
       name: z.string(),
-      original_name: z.string().nullable(),
+      original_name: z.string().optional().nullable(),
       type: z.string(),
       size: z.union([z.number(), z.bigint()]),
-      user: z.string().nullable(),
+      user: z.string().optional().nullable(),
       thumbnail: z.string().optional().nullable(),
-      max_views: z.number().nullable(),
+      max_views: z.number().optional().nullable(),
       views: z.number(),
       expires_at: z.string().optional().nullable(),
       created_at: z.string(),
@@ -232,7 +232,7 @@ export const export3Schema = z.object({
       name: z.string(),
       public: z.boolean(),
       created_at: z.string(),
-      user: z.string(),
+      user: z.string().optional().nullable(),
       files: z.array(z.string()),
     }),
   ),
@@ -243,19 +243,19 @@ export const export3Schema = z.object({
       vanity: z.string().optional().nullable(),
       code: z.string(),
       created_at: z.string(),
-      max_views: z.number(),
+      max_views: z.number().optional().nullable(),
       views: z.number(),
-      user: z.string(),
+      user: z.string().optional().nullable(),
     }),
   ),
 
   invites: z.record(
     z.object({
       code: z.string(),
-      expites_at: z.string().optional().nullable(),
+      expires_at: z.string().optional().nullable(),
       created_at: z.string(),
       used: z.boolean(),
-      created_by_user: z.string(),
+      created_by_user: z.string().optional().nullable(),
     }),
   ),
 
