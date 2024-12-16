@@ -71,7 +71,7 @@ export default function Export3Details({ export3 }: { export3: Export3 }) {
   const folderRows = Object.entries(export3.folders).map(([id, folder]) => (
     <Table.Tr key={id}>
       <Table.Td>{folder.name}</Table.Td>
-      <Table.Td>{findUser(export3, folder.user)?.username ?? 'unknown'}</Table.Td>
+      <Table.Td>{findUser(export3, folder?.user)?.username ?? 'unknown'}</Table.Td>
       <Table.Td>{folder.public ? <IconCheck size='1rem' /> : <IconX size='1rem' />}</Table.Td>
       <Table.Td>{new Date(folder.created_at).toLocaleString()}</Table.Td>
       <Table.Td>{findFilesByUser(export3, id).length}</Table.Td>

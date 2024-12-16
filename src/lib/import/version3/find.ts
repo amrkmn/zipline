@@ -1,6 +1,8 @@
 import { Export3 } from './validateExport';
 
-export function findUser(export3: Export3, id: string) {
+export function findUser(export3: Export3, id: string | undefined | null) {
+  if (!id) return null;
+
   return export3.users[id];
 }
 
