@@ -4,14 +4,16 @@ import { User } from '@/lib/db/models/user';
 import { randomCharacters } from '@/lib/random';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { IncomingMessage, ServerResponse } from 'http';
-import { getIronSession } from 'iron-session';
+import { getIronSession, type SessionOptions } from 'iron-session';
 
-const cookieOptions = {
+const cookieOptions: SessionOptions['cookieOptions'] = {
   // week
   maxAge: 60 * 60 * 24 * 7,
   expires: new Date(Date.now() + 60 * 60 * 24 * 7 * 1000),
   path: '/',
   sameSite: 'lax',
+  httpOnly: false,
+  secure: false,
 };
 
 export type ZiplineSession = {
