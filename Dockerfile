@@ -22,7 +22,6 @@ COPY tsup.config.ts ./tsup.config.ts
 COPY tsconfig.json ./tsconfig.json
 COPY mimes.json ./mimes.json
 COPY code.json ./code.json
-COPY themes ./themes
 
 ENV NEXT_TELEMETRY_DISABLED=1 \
   NODE_ENV=production
