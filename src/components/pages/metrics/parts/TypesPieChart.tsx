@@ -1,21 +1,27 @@
 import { Metric } from '@/lib/db/models/metric';
-import dynamic from 'next/dynamic';
-
-const Pie = dynamic(() => import('@ant-design/plots').then(({ Pie }) => Pie), { ssr: false });
+import { colorHash } from '@/lib/theme/color';
+import { PieChart } from '@mantine/charts';
 
 export default function TypesPieChart({ metric }: { metric: Metric }) {
   return (
-    <Pie
-      data={metric.data.types}
-      angleField='sum'
-      colorField='type'
-      radius={0.8}
-      label={{
-        type: 'outer',
-        content: '{name} - {percentage}',
+    <PieChart
+      data={metric.data.types.map((type) => ({
+        name: type.type,
+        value: type.sum,
+        color: colorHash(type.type),
+      }))}
+      withLabels
+      labelsPosition='outside'
+      labelsType='value'
+      withTooltip
+      tooltipDataSource='segment'
+      pieProps={{
+        label: ({ name }) => name,
       }}
-      legend={false}
-      interactions={[{ type: 'pie-legend-active' }, { type: 'element-active' }]}
+      w='100%'
+      size={200}
     />
   );
+
+  return null;
 }

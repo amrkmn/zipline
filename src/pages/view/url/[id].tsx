@@ -1,7 +1,7 @@
 import { verifyPassword } from '@/lib/crypto';
 import { prisma } from '@/lib/db';
 import { fetchApi } from '@/lib/fetchApi';
-import { Button, Modal, PasswordInput, Title } from '@mantine/core';
+import { Button, Modal, PasswordInput } from '@mantine/core';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -26,13 +26,7 @@ export default function ViewUrlId({ url, password }: InferGetServerSidePropsType
   };
 
   return password ? (
-    <Modal
-      onClose={() => {}}
-      opened={true}
-      withCloseButton={false}
-      centered
-      title={<Title>Password required</Title>}
-    >
+    <Modal onClose={() => {}} opened={true} withCloseButton={false} centered title='Password required'>
       <PasswordInput
         description='This link is password protected, enter password to view it'
         required

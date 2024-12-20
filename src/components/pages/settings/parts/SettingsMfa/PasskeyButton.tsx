@@ -3,7 +3,7 @@ import { fetchApi } from '@/lib/fetchApi';
 import { registerWeb } from '@/lib/passkey';
 import { useUserStore } from '@/lib/store/user';
 import { RegistrationResponseJSON } from '@github/webauthn-json/dist/types/browser-ponyfill';
-import { ActionIcon, Button, Group, Modal, Paper, Stack, Text, TextInput, Title } from '@mantine/core';
+import { ActionIcon, Button, Group, Modal, Paper, Stack, Text, TextInput } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import { UserPasskey } from '@prisma/client';
@@ -27,7 +27,7 @@ export default function PasskeyButton() {
       const res = await registerWeb(user!);
       setNamerShown(true);
       setSavedKey(res.toJSON());
-    } catch (e) {
+    } catch {
       setPasskeyErrored(true);
       setPasskeyLoading(false);
       setSavedKey(null);
@@ -73,7 +73,7 @@ export default function PasskeyButton() {
 
   const removePasskey = async (passkey: UserPasskey) => {
     modals.openConfirmModal({
-      title: <Title>Are you sure?</Title>,
+      title: 'Are you sure?',
       children: `Your browser and device may still show "${passkey.name}" as an option to log in. If you want to remove it, you'll have to do so manually through your device's settings.`,
       labels: {
         confirm: `Remove "${passkey.name}"`,
@@ -118,11 +118,7 @@ export default function PasskeyButton() {
 
   return (
     <>
-      <Modal
-        title={<Title>Manage passkeys</Title>}
-        opened={passkeyOpen}
-        onClose={() => setPasskeyOpen(false)}
-      >
+      <Modal title='Manage passkeys' opened={passkeyOpen} onClose={() => setPasskeyOpen(false)}>
         <Stack gap='sm'>
           <>
             {user?.passkeys?.map((passkey, i) => (

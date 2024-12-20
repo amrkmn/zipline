@@ -29,20 +29,12 @@ export function StatsTablesSkeleton() {
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
-                {[...Array(5)].map((i) => (
+                {[...Array(5)].map((_, i) => (
                   <Table.Tr key={i}>
-                    <Table.Td>
-                      <SkeletonText />
-                    </Table.Td>
-                    <Table.Td>
-                      <SkeletonText />
-                    </Table.Td>
-                    <Table.Td>
-                      <SkeletonText />
-                    </Table.Td>
-                    <Table.Td>
-                      <SkeletonText />
-                    </Table.Td>
+                    <SkeletonText />
+                    <SkeletonText />
+                    <SkeletonText />
+                    <SkeletonText />
                   </Table.Tr>
                 ))}
               </Table.Tbody>
@@ -61,17 +53,11 @@ export function StatsTablesSkeleton() {
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
-                {[...Array(5)].map((i) => (
+                {[...Array(5)].map((_, i) => (
                   <Table.Tr key={i}>
-                    <Table.Td>
-                      <SkeletonText />
-                    </Table.Td>
-                    <Table.Td>
-                      <SkeletonText />
-                    </Table.Td>
-                    <Table.Td>
-                      <SkeletonText />
-                    </Table.Td>
+                    <SkeletonText />
+                    <SkeletonText />
+                    <SkeletonText />
                   </Table.Tr>
                 ))}
               </Table.Tbody>
@@ -89,14 +75,10 @@ export function StatsTablesSkeleton() {
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
-                {[...Array(5)].map((i) => (
+                {[...Array(5)].map((_, i) => (
                   <Table.Tr key={i}>
-                    <Table.Td>
-                      <SkeletonText />
-                    </Table.Td>
-                    <Table.Td>
-                      <SkeletonText />
-                    </Table.Td>
+                    <SkeletonText />
+                    <SkeletonText />
                   </Table.Tr>
                 ))}
               </Table.Tbody>

@@ -2,8 +2,8 @@ import { Response } from '@/lib/api/response';
 import { Tag } from '@/lib/db/models/tag';
 import { fetchApi } from '@/lib/fetchApi';
 import { colorHash } from '@/lib/theme/color';
-import { ActionIcon, Button, ColorInput, Modal, Stack, TextInput, Title, Tooltip } from '@mantine/core';
-import { hasLength, useForm } from '@mantine/form';
+import { ActionIcon, Button, ColorInput, Modal, Stack, TextInput, Tooltip } from '@mantine/core';
+import { useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { IconTag, IconTagOff, IconTextRecognition } from '@tabler/icons-react';
 import { mutate } from 'swr';
@@ -18,7 +18,7 @@ export default function CreateTagModal({ open, onClose }: { open: boolean; onClo
       color: '',
     },
     validate: {
-      name: hasLength({ min: 1 }, 'Name is required'),
+      name: (value) => (value.length < 1 ? 'Name is required' : null),
     },
   });
 
@@ -60,7 +60,7 @@ export default function CreateTagModal({ open, onClose }: { open: boolean; onClo
   };
 
   return (
-    <Modal opened={open} onClose={onClose} title={<Title>Create new tag</Title>} zIndex={3000}>
+    <Modal opened={open} onClose={onClose} title='Create new tag' zIndex={3000}>
       <form onSubmit={form.onSubmit(onSubmit)}>
         <Stack gap='sm'>
           <TextInput label='Name' placeholder='Enter a name...' {...form.getInputProps('name')} />

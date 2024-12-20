@@ -27,6 +27,7 @@ import ToUploadFile from './ToUploadFile';
 import { bytes } from '@/lib/bytes';
 import { uploadPartialFiles } from '../uploadPartialFiles';
 import { humanizeDuration } from '@/lib/relativeTime';
+import { useShallow } from 'zustand/shallow';
 
 export default function UploadFile() {
   const theme = useMantineTheme();
@@ -34,11 +35,9 @@ export default function UploadFile() {
   const clipboard = useClipboard();
   const config = useConfig();
 
-  const [options, ephemeral, clearEphemeral] = useUploadOptionsStore((state) => [
-    state.options,
-    state.ephemeral,
-    state.clearEphemeral,
-  ]);
+  const [options, ephemeral, clearEphemeral] = useUploadOptionsStore(
+    useShallow((state) => [state.options, state.ephemeral, state.clearEphemeral]),
+  );
 
   const [files, setFiles] = useState<File[]>([]);
   const [progress, setProgress] = useState<{ percent: number; remaining: number; speed: number }>({

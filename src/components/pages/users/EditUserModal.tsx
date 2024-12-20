@@ -154,7 +154,7 @@ export default function EditUserModal({
   }, [user]);
 
   return (
-    <Modal centered title={<Title>Edit {user?.username ?? ''}</Title>} onClose={onClose} opened={opened}>
+    <Modal centered title={`Edit ${user?.username ?? ''}`} onClose={onClose} opened={opened}>
       <Text size='sm' c='dimmed'>
         Any fields that are blank will be omitted, and will not be updated.
       </Text>

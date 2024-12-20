@@ -13,16 +13,16 @@ import {
   PinInput,
   Stack,
   Text,
-  Title,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconShieldLockFilled } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import useSWR, { mutate } from 'swr';
+import { useShallow } from 'zustand/shallow';
 
 export default function TwoFAButton() {
-  const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
+  const [user, setUser] = useUserStore(useShallow((state) => [state.user, state.setUser]));
 
   const [totpOpen, setTotpOpen] = useState(false);
   const {
@@ -112,7 +112,7 @@ export default function TwoFAButton() {
 
   return (
     <>
-      <Modal title={<Title>Enable 2FA</Title>} opened={totpOpen} onClose={() => setTotpOpen(false)}>
+      <Modal title='Enable 2FA' opened={totpOpen} onClose={() => setTotpOpen(false)}>
         <Stack gap='sm'>
           {user?.totpSecret ? (
             <Text size='sm' c='dimmed'>

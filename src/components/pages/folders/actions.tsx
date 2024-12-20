@@ -1,7 +1,7 @@
 import { Response } from '@/lib/api/response';
 import { Folder } from '@/lib/db/models/folder';
 import { fetchApi } from '@/lib/fetchApi';
-import { Anchor, Title } from '@mantine/core';
+import { Anchor } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
@@ -12,7 +12,7 @@ import { mutate } from 'swr';
 export async function deleteFolder(folder: Folder) {
   modals.openConfirmModal({
     centered: true,
-    title: <Title>Delete {folder.name}?</Title>,
+    title: `Delete ${folder.name}?`,
     children: `Are you sure you want to delete ${folder.name}? This action cannot be undone.`,
     labels: {
       cancel: 'Cancel',

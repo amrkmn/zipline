@@ -1,10 +1,14 @@
-import DashboardFile from '@/components/file/DashboardFile';
 import { Button, Center, Group, Pagination, Paper, SimpleGrid, Skeleton, Stack, Title } from '@mantine/core';
 import { IconFileUpload, IconFilesOff } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useApiPagination } from '../useApiPagination';
+import dynamic from 'next/dynamic';
+
+const DashboardFile = dynamic(() => import('@/components/file/DashboardFile'), {
+  loading: () => <Skeleton height={350} animate />,
+});
 
 export default function Files({ id }: { id?: string }) {
   const router = useRouter();
@@ -35,7 +39,7 @@ export default function Files({ id }: { id?: string }) {
         cols={{
           base: 1,
           md: 2,
-          lg: (data?.page.length ?? 0 > 0) ? 3 : 1,
+          lg: (data?.page.length ?? 0 > 0) || isLoading ? 3 : 1,
         }}
         spacing='md'
         pos='relative'

@@ -1,6 +1,6 @@
 import { Response } from '@/lib/api/response';
 import { fetchApi } from '@/lib/fetchApi';
-import { Button, Group, Modal, Stack, Switch, Title } from '@mantine/core';
+import { Button, Group, Modal, Stack, Switch } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IconFileSearch } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -34,7 +34,7 @@ export default function RequerySizeButton() {
 
   return (
     <>
-      <Modal title={<Title>Are you sure?</Title>} opened={open} onClose={() => setOpen(false)}>
+      <Modal title='Are you sure?' opened={open} onClose={() => setOpen(false)}>
         <Stack mb='md'>
           <span>
             This will requery the size of every file stored within the database. Additionally you can use the

@@ -34,7 +34,6 @@ function getDatasource(conf?: typeof config): void {
   }
 }
 
-// eslint-disable-next-line prefer-const
 datasource = global.__datasource__;
 
 if (!global.__datasource__ && !datasource) {

@@ -12,6 +12,7 @@ import { useClipboard } from '@mantine/hooks';
 import { useSettingsStore } from '@/lib/store/settings';
 import { formatRootUrl } from '@/lib/url';
 import EditUrlModal from '../EditUrlModal';
+import { useShallow } from 'zustand/shallow';
 
 const NAMES = {
   code: 'Code',
@@ -104,10 +105,9 @@ export default function UrlTableView() {
       destination: '',
     },
   );
-  const [warnDeletion, searchThreshold] = useSettingsStore((s) => [
-    s.settings.warnDeletion,
-    s.settings.searchThreshold,
-  ]);
+  const [warnDeletion, searchThreshold] = useSettingsStore(
+    useShallow((state) => [state.settings.warnDeletion, state.settings.searchThreshold]),
+  );
 
   const { data, isLoading } = useSWR<Extract<Response['/api/user/urls'], Url[]>>(
     {

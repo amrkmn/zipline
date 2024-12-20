@@ -1,7 +1,10 @@
 import GridTableSwitcher from '@/components/GridTableSwitcher';
 import { Response } from '@/lib/api/response';
+import { readToDataURL } from '@/lib/base64';
 import { User } from '@/lib/db/models/user';
 import { fetchApi } from '@/lib/fetchApi';
+import { canInteract } from '@/lib/role';
+import { useUserStore } from '@/lib/store/user';
 import { useViewStore } from '@/lib/store/view';
 import {
   ActionIcon,
@@ -16,16 +19,13 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { hasLength, useForm } from '@mantine/form';
+import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { IconPhotoMinus, IconUserCancel, IconUserPlus } from '@tabler/icons-react';
 import { useState } from 'react';
 import { mutate } from 'swr';
 import UserGridView from './views/UserGridView';
 import UserTableView from './views/UserTableView';
-import { readToDataURL } from '@/lib/base64';
-import { canInteract } from '@/lib/role';
-import { useUserStore } from '@/lib/store/user';
 
 export default function DashboardUsers() {
   const currentUser = useUserStore((state) => state.user);
@@ -45,8 +45,8 @@ export default function DashboardUsers() {
       avatar: null,
     },
     validate: {
-      username: hasLength({ min: 1 }, 'Username is required'),
-      password: hasLength({ min: 1 }, 'Password is required'),
+      username: (value) => (value.length < 1 ? 'Username is required' : null),
+      password: (value) => (value.length < 1 ? 'Password is required' : null),
     },
   });
 
@@ -95,7 +95,7 @@ export default function DashboardUsers() {
 
   return (
     <>
-      <Modal centered opened={open} onClose={() => setOpen(false)} title={<Title>Create a new user</Title>}>
+      <Modal centered opened={open} onClose={() => setOpen(false)} title='Create a new user'>
         <form onSubmit={form.onSubmit(onSubmit)}>
           <Stack gap='sm'>
             <TextInput

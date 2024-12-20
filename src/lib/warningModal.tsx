@@ -1,4 +1,3 @@
-import { Title } from '@mantine/core';
 import { modals } from '@mantine/modals';
 
 type WarningModalOptions = {
@@ -9,7 +8,7 @@ type WarningModalOptions = {
 
 export function openWarningModal(options: WarningModalOptions) {
   modals.openConfirmModal({
-    title: <Title order={3}>Are you sure?</Title>,
+    title: 'Are you sure?',
     labels: {
       cancel: 'Cancel',
       confirm: options.confirmLabel,

@@ -15,7 +15,7 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { hasLength, useForm } from '@mantine/form';
+import { useForm } from '@mantine/form';
 import { useClipboard } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
@@ -45,7 +45,7 @@ export default function DashboardURLs() {
       password: '',
     },
     validate: {
-      url: hasLength({ min: 1 }, 'URL is required'),
+      url: (value) => (value.length < 1 ? 'URL is required' : null),
     },
   });
 
@@ -91,7 +91,7 @@ export default function DashboardURLs() {
       };
 
       modals.open({
-        title: <Title>Shortened URL</Title>,
+        title: 'Shortened URL',
         size: 'auto',
         children: (
           <Group justify='space-between'>
@@ -123,7 +123,7 @@ export default function DashboardURLs() {
 
   return (
     <>
-      <Modal centered opened={open} onClose={() => setOpen(false)} title={<Title>Shorten a URL</Title>}>
+      <Modal centered opened={open} onClose={() => setOpen(false)} title='Shorten URL'>
         <form onSubmit={form.onSubmit(onSubmit)}>
           <Stack gap='sm'>
             <TextInput label='URL' placeholder='https://example.com' {...form.getInputProps('url')} />

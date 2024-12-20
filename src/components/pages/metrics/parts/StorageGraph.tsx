@@ -1,37 +1,51 @@
 import { bytes } from '@/lib/bytes';
 import { Metric } from '@/lib/db/models/metric';
+import { LineChart, ChartTooltip } from '@mantine/charts';
 import { Paper, Title } from '@mantine/core';
-import dynamic from 'next/dynamic';
-
-const Line = dynamic(() => import('@ant-design/plots').then(({ Line }) => Line), { ssr: false });
 
 export default function StorageGraph({ metrics }: { metrics: Metric[] }) {
+  const sortedMetrics = metrics.sort(
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+  );
+
   return (
     <Paper radius='sm' withBorder p='sm' mt='md'>
       <Title order={3} mb='sm'>
         Storage Used
       </Title>
 
-      <Line
-        data={metrics.map((metric) => ({
-          date: metric.createdAt,
+      <LineChart
+        mt='xs'
+        h={400}
+        data={sortedMetrics.map((metric) => ({
+          date: new Date(metric.createdAt).getTime(),
           storage: metric.data.storage,
         }))}
-        xField='date'
-        yField='storage'
-        xAxis={{
-          type: 'time',
-          mask: 'YYYY-MM-DD HH:mm:ss',
-        }}
-        yAxis={{
-          label: {
-            formatter: (v) => bytes(Number(v)),
+        series={[
+          {
+            name: 'storage',
+            label: 'Storage Used',
           },
+        ]}
+        dataKey='date'
+        curveType='natural'
+        valueFormatter={(v) => bytes(Number(v))}
+        lineChartProps={{ syncId: 'datedStatistics' }}
+        xAxisProps={{
+          tickFormatter: (v) => new Date(v).toLocaleString(),
         }}
-        tooltip={{
-          formatter: (v) => ({ name: 'Storage Used', value: bytes(Number(v.storage)) }),
+        tooltipProps={{
+          content: ({ label, payload }) => (
+            <ChartTooltip
+              label={new Date(label).toLocaleString()}
+              payload={payload}
+              valueFormatter={(v) => bytes(Number(v))}
+              series={[{ name: 'storage', label: 'Storage Used' }]}
+            />
+          ),
         }}
-        smooth
+        connectNulls
+        withDots={false}
       />
     </Paper>
   );

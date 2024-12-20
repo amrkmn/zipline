@@ -10,7 +10,10 @@ import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/dropzone/styles.css';
 import '@mantine/notifications/styles.css';
+import '@mantine/charts/styles.css';
 import 'mantine-datatable/styles.css';
+
+import '@/styles/global.css';
 
 import '@/components/render/code/HighlightCode.theme.css';
 
@@ -35,6 +38,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>Zipline</title>
         <meta name='viewport' content='minimum-scale=1, initial-scale=1, width=device-width' />
         <link rel='manifest' href='/manifest.json' />
+        <link rel='icon' type='image/png' href='/favicon' />
       </Head>
 
       <SWRConfig

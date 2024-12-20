@@ -184,9 +184,9 @@ export default function FileModal({
         opened={open}
         onClose={() => setOpen(false)}
         title={
-          <Title order={3} fw={700}>
+          <Text size='xl' fw={700}>
             {file?.name ?? ''}
-          </Title>
+          </Text>
         }
         size='auto'
         centered

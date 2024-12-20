@@ -125,7 +125,7 @@ function modifier(mod: string, value: unknown, tzlocale?: string): string {
         try {
           Intl.DateTimeFormat.supportedLocalesOf(locale);
           args[0] = locale;
-        } catch (e) {
+        } catch {
           args[0] = undefined;
           logger.error(`invalid locale provided ${locale}`);
         }

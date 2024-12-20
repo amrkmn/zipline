@@ -37,8 +37,6 @@ const names = {
 function OAuthButton({ provider, linked }: { provider: OAuthProviderType; linked: boolean }) {
   const t = useMantineTheme();
 
-  console.log(t);
-
   const unlink = async () => {
     const { error } = await fetchApi<Response['/api/auth/oauth']>('/api/auth/oauth', 'DELETE', {
       provider,

@@ -11,7 +11,7 @@ export default function ExternalAuthButton({
 }: {
   provider: string;
   alpha: number;
-  leftSection: JSX.Element;
+  leftSection: React.ReactNode;
 }) {
   const theme = useMantineTheme();
   const colorHover = darken(`${provider.toLowerCase()}.0`, alpha, theme);

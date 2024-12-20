@@ -4,7 +4,7 @@ import { Folder } from '@/lib/db/models/folder';
 import { fetchApi } from '@/lib/fetchApi';
 import { useViewStore } from '@/lib/store/view';
 import { ActionIcon, Button, Group, Modal, Stack, Switch, TextInput, Title, Tooltip } from '@mantine/core';
-import { hasLength, useForm } from '@mantine/form';
+import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { IconFolderPlus, IconPlus } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -23,7 +23,7 @@ export default function DashboardFolders() {
       isPublic: false,
     },
     validate: {
-      name: hasLength({ min: 1 }, 'Name is required'),
+      name: (value) => (value.length < 1 ? 'Name is required' : null),
     },
   });
 
@@ -51,7 +51,7 @@ export default function DashboardFolders() {
 
   return (
     <>
-      <Modal centered opened={open} onClose={() => setOpen(false)} title={<Title>Create a folder</Title>}>
+      <Modal centered opened={open} onClose={() => setOpen(false)} title='Create a folder'>
         <form onSubmit={form.onSubmit(onSubmit)}>
           <Stack gap='sm'>
             <TextInput label='Name' placeholder='Enter a name...' {...form.getInputProps('name')} />

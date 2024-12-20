@@ -1,11 +1,15 @@
-import DashboardFile from '@/components/file/DashboardFile';
 import Stat from '@/components/Stat';
 import type { Response } from '@/lib/api/response';
 import { bytes } from '@/lib/bytes';
 import useLogin from '@/lib/hooks/useLogin';
 import { Paper, ScrollArea, SimpleGrid, Skeleton, Table, Text, Title } from '@mantine/core';
 import { IconDeviceSdCard, IconEyeFilled, IconFiles, IconLink, IconStarFilled } from '@tabler/icons-react';
+import dynamic from 'next/dynamic';
 import useSWR from 'swr';
+
+const DashboardFile = dynamic(() => import('@/components/file/DashboardFile'), {
+  loading: () => <Skeleton height={350} animate />,
+});
 
 export default function DashboardHome() {
   const { user } = useLogin();
@@ -14,7 +18,7 @@ export default function DashboardHome() {
 
   return (
     <>
-      <Title order={1}>
+      <Title>
         Welcome back, <b>{user?.username}</b>
       </Title>
 
@@ -52,14 +56,14 @@ export default function DashboardHome() {
 
       {recentLoading ? (
         <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 'sm', md: 'md' }}>
-          {[...Array(3)].map((i) => (
-            <Skeleton key={i} height={350} />
+          {[...Array(3)].map((_, i) => (
+            <Skeleton key={i} height={350} animate />
           ))}
         </SimpleGrid>
       ) : recent?.length !== 0 ? (
         <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 'sm', md: 'md' }}>
-          {recent!.map((file) => (
-            <DashboardFile key={file.id} file={file} />
+          {recent!.map((file, i) => (
+            <DashboardFile key={i} file={file} />
           ))}
         </SimpleGrid>
       ) : (
@@ -78,7 +82,7 @@ export default function DashboardHome() {
       {statsLoading ? (
         <>
           <SimpleGrid cols={{ base: 1, md: 2, lg: 4 }} spacing={{ base: 'sm', md: 'md' }}>
-            {[...Array(8)].map((i) => (
+            {[...Array(8)].map((_, i) => (
               <Skeleton key={i} height={105} />
             ))}
           </SimpleGrid>
@@ -97,7 +101,7 @@ export default function DashboardHome() {
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
-                  {[1, 2, 3, 4, 5].map((i) => (
+                  {[...Array(5)].map((_, i) => (
                     <Table.Tr key={i}>
                       <Table.Td>
                         <Skeleton animate>
@@ -147,8 +151,8 @@ export default function DashboardHome() {
                     <Table.Tbody>
                       {Object.entries(stats!.sortTypeCount)
                         .sort(([, a], [, b]) => b - a)
-                        .map(([type, count]) => (
-                          <Table.Tr key={type}>
+                        .map(([type, count], i) => (
+                          <Table.Tr key={i}>
                             <Table.Td>{type}</Table.Td>
                             <Table.Td>{count}</Table.Td>
                           </Table.Tr>

@@ -2,7 +2,6 @@ import { mutateFiles } from '@/components/file/actions';
 import { Response } from '@/lib/api/response';
 import { File } from '@/lib/db/models/file';
 import { fetchApi } from '@/lib/fetchApi';
-import { Title } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import { IconFilesOff, IconStarsFilled, IconStarsOff, IconTrashFilled } from '@tabler/icons-react';
@@ -10,11 +9,7 @@ import { IconFilesOff, IconStarsFilled, IconStarsOff, IconTrashFilled } from '@t
 export async function bulkDelete(ids: string[], setSelectedFiles: (files: File[]) => void) {
   modals.openConfirmModal({
     centered: true,
-    title: (
-      <Title>
-        Delete {ids.length} file{ids.length === 1 ? '' : 's'}?
-      </Title>
-    ),
+    title: `Delete ${ids.length} file${ids.length === 1 ? '' : 's'}?`,
     children: `You are about to delete ${ids.length} file${
       ids.length === 1 ? '' : 's'
     }. This action cannot be undone.`,
@@ -76,11 +71,7 @@ export async function bulkDelete(ids: string[], setSelectedFiles: (files: File[]
 export async function bulkFavorite(ids: string[]) {
   modals.openConfirmModal({
     centered: true,
-    title: (
-      <Title>
-        Favorite {ids.length} file{ids.length === 1 ? '' : 's'}?
-      </Title>
-    ),
+    title: `Favorite ${ids.length} file${ids.length === 1 ? '' : 's'}?`,
     children: `You are about to favorite ${ids.length} file${ids.length === 1 ? '' : 's'}.`,
     labels: {
       cancel: 'Cancel',

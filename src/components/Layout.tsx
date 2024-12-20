@@ -146,18 +146,14 @@ export default function Layout({ children, config }: { children: React.ReactNode
   const router = useRouter();
   const modals = useModals();
   const clipboard = useClipboard();
-  const [setUser] = useUserStore((s) => [s.setUser]);
+  const setUser = useUserStore((s) => s.setUser);
 
   const { user, mutate } = useLogin();
   const { avatar } = useAvatar();
 
   const copyToken = () => {
     modals.openConfirmModal({
-      title: (
-        <Title order={4} fw={700}>
-          Copy token?
-        </Title>
-      ),
+      title: 'Copy token?',
       children:
         'Are you sure you want to copy your token? Your token can interact with all parts of Zipline. Do not share this token with anyone.',
       labels: { confirm: 'Copy', cancel: 'No, close this popup' },
@@ -185,11 +181,7 @@ export default function Layout({ children, config }: { children: React.ReactNode
 
   const refreshToken = () => {
     modals.openConfirmModal({
-      title: (
-        <Title order={4} fw={700}>
-          Refresh token?
-        </Title>
-      ),
+      title: 'Refresh token?',
 
       children:
         'Are you sure you want to refresh your token? Once you refresh/reset your token, you will need to update any scripts or applications that use your token.',

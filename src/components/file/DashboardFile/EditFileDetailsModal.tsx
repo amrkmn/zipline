@@ -1,6 +1,6 @@
 import { File } from '@/lib/db/models/file';
 import { fetchApi } from '@/lib/fetchApi';
-import { Button, Divider, Modal, NumberInput, PasswordInput, Stack, TextInput, Title } from '@mantine/core';
+import { Button, Divider, Modal, NumberInput, PasswordInput, Stack, TextInput } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IconEye, IconKey, IconPencil, IconPencilOff, IconTrashFilled } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -86,12 +86,7 @@ export default function EditFileDetailsModal({
   };
 
   return (
-    <Modal
-      zIndex={300}
-      title={<Title>Editing &quot;{file.name}&quot;</Title>}
-      onClose={onClose}
-      opened={open}
-    >
+    <Modal zIndex={300} title={`Editing "${file.name}"`} onClose={onClose} opened={open}>
       <Stack gap='xs' my='sm'>
         <NumberInput
           label='Max Views'

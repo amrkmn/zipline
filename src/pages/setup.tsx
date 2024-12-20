@@ -15,7 +15,7 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { hasLength, useForm } from '@mantine/form';
+import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { IconArrowBackUp, IconArrowForwardUp, IconCheck, IconX } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
@@ -40,8 +40,8 @@ export default function Setup() {
       password: '',
     },
     validate: {
-      username: hasLength({ min: 1 }, 'Username is required'),
-      password: hasLength({ min: 1 }, 'Password is required'),
+      username: (value) => (value.length < 1 ? 'Username is required' : null),
+      password: (value) => (value.length < 1 ? 'Password is required' : null),
     },
   });
 

@@ -38,6 +38,7 @@ import { Folder } from '@/lib/db/models/folder';
 import TagPill from '../tags/TagPill';
 import { Tag } from '@/lib/db/models/tag';
 import Link from 'next/link';
+import { useShallow } from 'zustand/shallow';
 
 type ReducerQuery = {
   state: { name: string; originalName: string; type: string; tags: string };
@@ -173,10 +174,9 @@ function TagsFilter({
 export default function FileTable({ id }: { id?: string }) {
   const router = useRouter();
   const clipboard = useClipboard();
-  const [searchThreshold, warnDeletion] = useSettingsStore((state) => [
-    state.settings.searchThreshold,
-    state.settings.warnDeletion,
-  ]);
+  const [searchThreshold, warnDeletion] = useSettingsStore(
+    useShallow((state) => [state.settings.searchThreshold, state.settings.warnDeletion]),
+  );
 
   const { data: folders } = useSWR<Extract<Response['/api/user/folders'], Folder[]>>(
     '/api/user/folders?noincl=true',

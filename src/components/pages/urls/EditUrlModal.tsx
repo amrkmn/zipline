@@ -1,6 +1,6 @@
 import { Url } from '@/lib/db/models/url';
 import { fetchApi } from '@/lib/fetchApi';
-import { Button, Divider, Modal, NumberInput, PasswordInput, Stack, TextInput, Title } from '@mantine/core';
+import { Button, Divider, Modal, NumberInput, PasswordInput, Stack, TextInput } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IconEye, IconKey, IconPencil, IconPencilOff, IconTrashFilled } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -87,11 +87,7 @@ export default function EditUrlModal({
   };
 
   return (
-    <Modal
-      title={<Title>Editing &quot;{url.vanity ?? url.code}&quot;</Title>}
-      opened={open}
-      onClose={onClose}
-    >
+    <Modal title={`Editing "${url.vanity ?? url.code}"`} opened={open} onClose={onClose}>
       <Stack gap='xs' my='sm'>
         <NumberInput
           label='Max Views'

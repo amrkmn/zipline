@@ -4,6 +4,7 @@ import useSWR from 'swr';
 import type { Response } from '../api/response';
 import { useUserStore } from '../store/user';
 import { isAdministrator } from '../role';
+import { useShallow } from 'zustand/shallow';
 
 export default function useLogin(administratorOnly: boolean = false) {
   const router = useRouter();
@@ -11,7 +12,7 @@ export default function useLogin(administratorOnly: boolean = false) {
     fallbackData: { user: undefined },
   });
 
-  const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
+  const [user, setUser] = useUserStore(useShallow((state) => [state.user, state.setUser]));
 
   useEffect(() => {
     if (data?.user) {

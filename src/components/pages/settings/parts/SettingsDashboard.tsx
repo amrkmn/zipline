@@ -2,6 +2,7 @@ import { useThemes } from '@/components/ThemeProvider';
 import { useSettingsStore } from '@/lib/store/settings';
 import { Group, NumberInput, Paper, Select, Stack, Switch, Text, Title } from '@mantine/core';
 import { IconMoonFilled, IconPaintFilled, IconPercentage, IconSunFilled } from '@tabler/icons-react';
+import { useShallow } from 'zustand/shallow';
 
 const renderThemeOption =
   (themes: ReturnType<typeof useThemes>) =>
@@ -19,7 +20,7 @@ const renderThemeOption =
   );
 
 export default function SettingsDashboard() {
-  const [settings, update] = useSettingsStore((state) => [state.settings, state.update]);
+  const [settings, update] = useSettingsStore(useShallow((state) => [state.settings, state.update]));
   const themes = useThemes();
 
   const sortedThemes = themes.sort((a, b) => {

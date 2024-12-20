@@ -29,7 +29,7 @@ export default function DashboardMetrics() {
 
   return (
     <>
-      <Modal title={<Title>Change Range</Title>} opened={open} onClose={() => setOpen(false)} size='auto'>
+      <Modal title='Change range' opened={open} onClose={() => setOpen(false)} size='auto'>
         <Paper withBorder>
           <DatePicker
             type='range'

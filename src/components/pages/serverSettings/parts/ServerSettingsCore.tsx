@@ -19,7 +19,7 @@ export default function ServerSettingsCore({
   }>({
     initialValues: {
       coreReturnHttpsUrls: false,
-      coreDefaultDomain: null,
+      coreDefaultDomain: '',
       coreTempDirectory: '/tmp/zipline',
     },
   });
@@ -37,7 +37,7 @@ export default function ServerSettingsCore({
   useEffect(() => {
     form.setValues({
       coreReturnHttpsUrls: data?.coreReturnHttpsUrls ?? false,
-      coreDefaultDomain: data?.coreDefaultDomain ?? null,
+      coreDefaultDomain: data?.coreDefaultDomain ?? '',
       coreTempDirectory: data?.coreTempDirectory ?? '/tmp/zipline',
     });
   }, [data]);

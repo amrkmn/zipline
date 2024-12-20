@@ -1,7 +1,7 @@
 import { Response } from '@/lib/api/response';
 import { ErrorBody } from '@/lib/response';
 import { UploadOptionsStore } from '@/lib/store/uploadOptions';
-import { ActionIcon, Anchor, Button, Group, Stack, Table, Title, Tooltip } from '@mantine/core';
+import { ActionIcon, Anchor, Button, Group, Stack, Table, Tooltip } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
@@ -34,7 +34,7 @@ export function filesModal(
   };
 
   modals.open({
-    title: <Title>Uploaded Files</Title>,
+    title: 'Uploaded files',
     size: 'auto',
     children: (
       <Table withTableBorder={false} withColumnBorders={false} highlightOnHover horizontalSpacing={'sm'}>

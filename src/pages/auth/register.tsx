@@ -16,7 +16,7 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { hasLength, useForm } from '@mantine/form';
+import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { IconPlus, IconX } from '@tabler/icons-react';
 import { InferGetServerSidePropsType } from 'next';
@@ -49,8 +49,8 @@ export default function Register({ config, invite }: InferGetServerSidePropsType
       tos: false,
     },
     validate: {
-      username: hasLength({ min: 1 }, 'Username is required'),
-      password: hasLength({ min: 1 }, 'Password is required'),
+      username: (value) => (value.length < 1 ? 'Username is required' : null),
+      password: (value) => (value.length < 1 ? 'Password is required' : null),
     },
   });
 

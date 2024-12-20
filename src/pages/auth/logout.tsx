@@ -6,7 +6,7 @@ import { mutate } from 'swr';
 
 export default function Login() {
   const router = useRouter();
-  const [setUser] = useUserStore((state) => [state.setUser]);
+  const setUser = useUserStore((state) => state.setUser);
 
   useEffect(() => {
     (async () => {

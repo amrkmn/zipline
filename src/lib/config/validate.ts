@@ -1,4 +1,4 @@
-import { ZodError, ZodIssue, z } from 'zod';
+import { type ZodIssue, z } from 'zod';
 import { PROP_TO_ENV, ParsedConfig } from './read';
 import { log } from '../logger';
 import { join, resolve } from 'path';
@@ -328,30 +328,20 @@ export function validateConfigObject(env: ParsedConfig): Config {
     return {};
   }
 
-  try {
-    const validated = schema.parse(env);
+  const validated = schema.safeParse(env);
+  if (!validated.success) {
+    logger.error('There was an error while validating the environment.');
 
-    if (!validated) {
-      logger.error('There was an error while validating the environment.');
-      process.exit(1);
+    for (const error of validated.error.errors) {
+      handleError(error);
     }
 
-    logger.debug('reloaded config');
-
-    return validated;
-  } catch (e) {
-    if (e instanceof ZodError) {
-      logger.error(`There were ${e.errors.length} error(s) while validating the environment.`);
-
-      for (const error of e.errors) {
-        handleError(error);
-      }
-
-      process.exit(1);
-    }
-
-    throw e;
+    process.exit(1);
   }
+
+  logger.debug('reloaded config');
+
+  return validated.data;
 }
 
 function handleError(error: ZodIssue) {

@@ -1,19 +1,7 @@
 import { Response } from '@/lib/api/response';
 import { IncompleteFile } from '@/lib/db/models/incompleteFile';
 import { fetchApi } from '@/lib/fetchApi';
-import {
-  ActionIcon,
-  Badge,
-  Button,
-  Card,
-  Group,
-  Modal,
-  Paper,
-  Stack,
-  Text,
-  Title,
-  Tooltip,
-} from '@mantine/core';
+import { ActionIcon, Badge, Button, Card, Group, Modal, Paper, Stack, Text, Tooltip } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IncompleteFileStatus } from '@prisma/client';
 import { IconFileDots, IconTrashFilled } from '@tabler/icons-react';
@@ -91,7 +79,7 @@ export default function PendingFilesButton() {
 
   return (
     <>
-      <Modal opened={open} onClose={() => setOpen(false)} title={<Title>Pending Files</Title>}>
+      <Modal opened={open} onClose={() => setOpen(false)} title='Pending Files'>
         <Stack gap='xs'>
           {incompleteFiles?.map((incompleteFile) => (
             <Card key={incompleteFile.id} withBorder>

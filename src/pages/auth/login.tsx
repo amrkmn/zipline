@@ -21,7 +21,7 @@ import {
   Title,
   Image,
 } from '@mantine/core';
-import { hasLength, useForm } from '@mantine/form';
+import { useForm } from '@mantine/form';
 import { notifications, showNotification } from '@mantine/notifications';
 import {
   IconBrandDiscordFilled,
@@ -74,8 +74,8 @@ export default function Login({ config }: InferGetServerSidePropsType<typeof get
       password: '',
     },
     validate: {
-      username: hasLength({ min: 1 }, 'Username is required'),
-      password: hasLength({ min: 1 }, 'Password is required'),
+      username: (value) => (value.length > 1 ? null : 'Username is required'),
+      password: (value) => (value.length > 1 ? null : 'Password is required'),
     },
   });
 
@@ -134,7 +134,7 @@ export default function Login({ config }: InferGetServerSidePropsType<typeof get
       } else {
         mutate(data as Response['/api/user']);
       }
-    } catch (e) {
+    } catch {
       setPasskeyErrored(true);
       setPasskeyLoading(false);
     }
@@ -171,12 +171,7 @@ export default function Login({ config }: InferGetServerSidePropsType<typeof get
     <>
       {willRedirect && !showLocalLogin && <LoadingOverlay visible />}
 
-      <Modal
-        onClose={() => {}}
-        title={<Title order={3}>Enter code</Title>}
-        opened={totpOpen}
-        withCloseButton={false}
-      >
+      <Modal onClose={() => {}} title='Enter code' opened={totpOpen} withCloseButton={false}>
         <Center>
           <PinInput
             data-autofocus

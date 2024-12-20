@@ -60,7 +60,7 @@ export default function DashboardInvites() {
 
   return (
     <>
-      <Modal centered opened={open} onClose={() => setOpen(false)} title={<Title>Create an invite</Title>}>
+      <Modal centered opened={open} onClose={() => setOpen(false)} title='Create an invite'>
         <form onSubmit={form.onSubmit(onSubmit)}>
           <Stack gap='sm'>
             <Select

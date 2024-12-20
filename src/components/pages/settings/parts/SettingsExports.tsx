@@ -14,7 +14,7 @@ export default function SettingsExports() {
 
   const handleNewExport = async () => {
     modals.openConfirmModal({
-      title: <Title>New Export?</Title>,
+      title: 'New export?',
       children:
         'Are you sure you want to start a new export? If you have a lot of files, this may take a while.',
       onConfirm: async () => {

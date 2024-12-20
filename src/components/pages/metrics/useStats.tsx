@@ -25,9 +25,6 @@ const fetcher = async ([url, options]: [string, ApiStatsOptions]) => {
 };
 
 export function useApiStats(options: ApiStatsOptions = {}) {
-  if (!options.from && !options.to)
-    return { data: undefined, error: undefined, isLoading: false, mutate: () => {} };
-
   const { data, error, isLoading, mutate } = useSWR<Response['/api/stats']>(['/api/stats', options], {
     fetcher,
   });

@@ -1,6 +1,6 @@
 import DashboardFile from '@/components/file/DashboardFile';
 import { Folder } from '@/lib/db/models/folder';
-import { Modal, Paper, SimpleGrid, Title } from '@mantine/core';
+import { Modal, Paper, SimpleGrid } from '@mantine/core';
 
 export default function ViewFilesModal({
   folder,
@@ -16,7 +16,7 @@ export default function ViewFilesModal({
       size='auto'
       zIndex={100}
       centered
-      title={<Title>{folder?.name}</Title>}
+      title={`Files in ${folder?.name}`}
       opened={opened}
       onClose={onClose}
     >

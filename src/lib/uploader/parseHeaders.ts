@@ -103,7 +103,7 @@ export function humanTime(string: StringValue | string): Date | null {
     if (!mil) return null;
 
     return new Date(Date.now() + mil);
-  } catch (_) {
+  } catch {
     return null;
   }
 }

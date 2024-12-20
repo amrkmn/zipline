@@ -6,14 +6,12 @@ export default defineConfig(async (_) => {
     {
       platform: 'node',
       format: 'cjs',
-      treeshake: true,
-      clean: false,
+      clean: true,
       sourcemap: true,
-      entryPoints: await glob('./src/**/*.ts', {
+      entry: await glob('./src/**/*.ts', {
         ignore: ['./src/components/**/*.ts', './src/pages/**/*.ts'],
       }),
       outDir: 'build',
-      external: ['argon2'],
     },
   ];
 });

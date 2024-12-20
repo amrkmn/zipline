@@ -12,7 +12,6 @@ import {
   Switch,
   Text,
   TextInput,
-  Title,
 } from '@mantine/core';
 import { IconDownload, IconEyeFilled, IconGlobe, IconPercentage, IconWriting } from '@tabler/icons-react';
 import Link from 'next/link';
@@ -111,7 +110,7 @@ export default function GeneratorButton({
 
   return (
     <>
-      <Modal opened={opened} onClose={() => setOpen(false)} title={<Title>Generate {name}</Title>}>
+      <Modal opened={opened} onClose={() => setOpen(false)} title={`Generate ${name}`}>
         {desc && (
           <Text size='sm' c='dimmed'>
             {desc}

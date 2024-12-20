@@ -48,7 +48,7 @@ export default function ServerSettingsWebsite({
       // @ts-ignore
       try {
         sendValues.websiteExternalLinks = JSON.parse(values.websiteExternalLinks);
-      } catch (e) {
+      } catch {
         form.setFieldError('websiteExternalLinks', 'Invalid JSON');
       }
     }

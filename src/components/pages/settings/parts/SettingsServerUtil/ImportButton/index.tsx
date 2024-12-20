@@ -1,5 +1,8 @@
+import { Response } from '@/lib/api/response';
+import { fetchApi } from '@/lib/fetchApi';
 import { Export3, validateExport } from '@/lib/import/version3/validateExport';
-import { Alert, Button, Code, FileButton, Modal, Stack, Title } from '@mantine/core';
+import { Alert, Button, Code, FileButton, Modal, Stack } from '@mantine/core';
+import { modals } from '@mantine/modals';
 import { showNotification, updateNotification } from '@mantine/notifications';
 import {
   IconCheck,
@@ -11,9 +14,6 @@ import {
 } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import Export3Details from './Export3Details';
-import { modals } from '@mantine/modals';
-import { fetchApi } from '@/lib/fetchApi';
-import { Response } from '@/lib/api/response';
 
 export default function ImportButton() {
   const [open, setOpen] = useState(false);
@@ -51,7 +51,7 @@ export default function ImportButton() {
 
   const handleImport = async () => {
     modals.openConfirmModal({
-      title: <Title>Are you sure?</Title>,
+      title: 'Are you sure?',
       children:
         'This process will NOT overwrite existing data but will append to it. In case of conflicts, the imported data will be skipped and logged. If using a version 3 export, the entire importing process should be completed immediately after setting up Zipline.',
       labels: {
@@ -132,7 +132,7 @@ export default function ImportButton() {
 
           if (Object.keys(data?.files ?? {}).length > 0) {
             modals.open({
-              title: <Title>Next Steps</Title>,
+              title: 'Are you sure?',
               children: (
                 <>
                   <p>
@@ -190,7 +190,7 @@ export default function ImportButton() {
 
   return (
     <>
-      <Modal opened={open} onClose={() => setOpen(false)} title={<Title>Import Data</Title>} size='xl'>
+      <Modal opened={open} onClose={() => setOpen(false)} title='Import data' size='xl'>
         {export3 ? (
           <Button
             onClick={() => {

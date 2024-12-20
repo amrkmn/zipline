@@ -36,8 +36,7 @@ export default fastifyPlugin(
 
         if (!file.completed) return res.badRequest('Export is not completed');
 
-        const path = join(config.core.tempDirectory, file.path);
-        return res.sendFile(path);
+        return res.sendFile(file.path);
       }
 
       return res.send(exports);

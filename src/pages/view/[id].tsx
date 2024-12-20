@@ -23,7 +23,6 @@ import {
   Paper,
   PasswordInput,
   Text,
-  Title,
   TypographyStylesProvider,
 } from '@mantine/core';
 import { IconDownload, IconInfoCircleFilled } from '@tabler/icons-react';
@@ -54,8 +53,6 @@ export default function ViewFileId({
   }
 
   const router = useRouter();
-
-  console.log(file);
 
   const [passwordValue, setPassword] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string>('');
@@ -165,13 +162,7 @@ export default function ViewFileId({
   useEffect(() => setMounted(true), []);
 
   return password && !pw ? (
-    <Modal
-      onClose={() => {}}
-      opened={true}
-      withCloseButton={false}
-      centered
-      title={<Title>Password required</Title>}
-    >
+    <Modal onClose={() => {}} opened={true} withCloseButton={false} centered title='Password required'>
       <PasswordInput
         description='This file is password protected, enter password to view it'
         required
@@ -372,7 +363,7 @@ export const getServerSideProps: GetServerSideProps<{
     )
       host = `https://${host}`;
     else host = `http://${host}`;
-  } catch (e) {
+  } catch {
     if (proto === 'https' || zConfig.core.returnHttpsUrls) host = `https://${host}`;
     else host = `http://${host}`;
   }

@@ -12,7 +12,7 @@ export default function SettingsSessions() {
 
   const handleLogOutOfAllDevices = async () => {
     modals.openConfirmModal({
-      title: <Title>Log out of all devices</Title>,
+      title: 'Log out of all devices?',
       children:
         'Are you sure you want to log out of all devices? This will log you out of all devices except the current one.',
       onConfirm: async () => {

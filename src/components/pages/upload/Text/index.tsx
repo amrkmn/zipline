@@ -22,6 +22,7 @@ import { renderMode } from '../renderMode';
 import { uploadFiles } from '../uploadFiles';
 
 import styles from './index.module.css';
+import { useShallow } from 'zustand/shallow';
 
 export default function UploadText({
   codeMeta,
@@ -30,11 +31,9 @@ export default function UploadText({
 }) {
   const clipboard = useClipboard();
 
-  const [options, ephemeral, clearEphemeral] = useUploadOptionsStore((state) => [
-    state.options,
-    state.ephemeral,
-    state.clearEphemeral,
-  ]);
+  const [options, ephemeral, clearEphemeral] = useUploadOptionsStore(
+    useShallow((state) => [state.options, state.ephemeral, state.clearEphemeral]),
+  );
 
   const [selectedLanguage, setSelectedLanguage] = useState('txt');
   const [text, setText] = useState('');

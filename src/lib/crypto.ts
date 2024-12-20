@@ -79,7 +79,7 @@ export function decryptToken(encryptedToken: string, secret: string): [number, s
     const encrypted = Buffer.from(encrypted64, 'base64').toString('ascii');
 
     return [date, decrypt(encrypted, key)];
-  } catch (e) {
+  } catch {
     return null;
   }
 }

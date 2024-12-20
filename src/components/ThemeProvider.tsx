@@ -5,6 +5,7 @@ import { ZiplineTheme, findTheme, themeComponents } from '@/lib/theme';
 import { MantineProvider, createTheme } from '@mantine/core';
 import { useColorScheme } from '@mantine/hooks';
 import { createContext, useContext } from 'react';
+import { useShallow } from 'zustand/shallow';
 
 const ThemeContext = createContext<{
   themes: ZiplineTheme[];
@@ -29,11 +30,9 @@ export default function Theming({
   defaultTheme?: Config['website']['theme'];
 }) {
   const user = useUserStore((state) => state.user);
-  const [userTheme, preferredDark, preferredLight] = useSettingsStore((state) => [
-    state.settings.theme,
-    state.settings.themeDark,
-    state.settings.themeLight,
-  ]);
+  const [userTheme, preferredDark, preferredLight] = useSettingsStore(
+    useShallow((state) => [state.settings.theme, state.settings.themeDark, state.settings.themeLight]),
+  );
   const systemTheme = useColorScheme();
   const currentTheme = user ? userTheme : (defaultTheme?.default ?? 'system');
 

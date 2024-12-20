@@ -1,6 +1,6 @@
 import { Response } from '@/lib/api/response';
 import { fetchApi } from '@/lib/fetchApi';
-import { Button, Group, Modal, Stack, Switch, Title } from '@mantine/core';
+import { Button, Group, Modal, Stack, Switch } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IconVideo, IconVideoOff } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -30,7 +30,7 @@ export default function GenThumbsButton() {
 
   return (
     <>
-      <Modal title={<Title>Are you sure?</Title>} opened={open} onClose={() => setOpen(false)}>
+      <Modal title='Are you sure?' opened={open} onClose={() => setOpen(false)}>
         <Stack mb='md'>
           <span>
             This will generate thumbnails for all files that do not have a thumbnail set. Additionally you can

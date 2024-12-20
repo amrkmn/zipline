@@ -85,7 +85,7 @@ async function main() {
 
   await server.register(fastifyStatic, {
     serve: false,
-    root: '/',
+    root: config.core.tempDirectory,
   });
 
   if (config.ratelimit.enabled) {
@@ -225,3 +225,10 @@ declare module 'fastify' {
     tasks: Tasks;
   }
 }
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.log('AAA', reason, promise);
+});
+process.on('uncaughtException', (reason) => {
+  console.log('aaa', reason);
+});

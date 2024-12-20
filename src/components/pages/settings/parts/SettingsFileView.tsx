@@ -27,6 +27,7 @@ import {
   IconFileX,
 } from '@tabler/icons-react';
 import { mutate } from 'swr';
+import { useShallow } from 'zustand/shallow';
 
 const alignIcons: Record<string, React.ReactNode> = {
   left: <IconAlignLeft size='1rem' />,
@@ -35,7 +36,7 @@ const alignIcons: Record<string, React.ReactNode> = {
 };
 
 export default function SettingsFileView() {
-  const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
+  const [user, setUser] = useUserStore(useShallow((state) => [state.user, state.setUser]));
 
   const form = useForm({
     initialValues: {

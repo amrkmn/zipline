@@ -16,7 +16,6 @@ import {
   Switch,
   Text,
   TextInput,
-  Title,
   useCombobox,
 } from '@mantine/core';
 import {
@@ -31,27 +30,28 @@ import {
   IconTrashFilled,
   IconWriting,
 } from '@tabler/icons-react';
+import ms from 'ms';
 import Link from 'next/link';
 import { useState } from 'react';
 import useSWR from 'swr';
-import ms from 'ms';
+import { useShallow } from 'zustand/shallow';
 
 export default function UploadOptionsButton({ numFiles }: { numFiles: number }) {
   const config = useConfig();
 
   const [opened, setOpen] = useState(false);
-  const [options, ephemeral, setOption, setEphemeral, changes] = useUploadOptionsStore((state) => [
-    state.options,
-    state.ephemeral,
-    state.setOption,
-    state.setEphemeral,
-    state.changes,
-  ]);
-
-  const [clearEphemeral, clearOptions] = useUploadOptionsStore((state) => [
-    state.clearEphemeral,
-    state.clearOptions,
-  ]);
+  const [options, ephemeral, setOption, setEphemeral, changes, clearEphemeral, clearOptions] =
+    useUploadOptionsStore(
+      useShallow((state) => [
+        state.options,
+        state.ephemeral,
+        state.setOption,
+        state.setEphemeral,
+        state.changes,
+        state.clearEphemeral,
+        state.clearOptions,
+      ]),
+    );
 
   const clearSettings = () => {
     clearEphemeral();
@@ -66,7 +66,7 @@ export default function UploadOptionsButton({ numFiles }: { numFiles: number }) 
 
   return (
     <>
-      <Modal centered opened={opened} onClose={() => setOpen(false)} title={<Title>Upload Options</Title>}>
+      <Modal centered opened={opened} onClose={() => setOpen(false)} title='Upload Options'>
         <Text size='sm' c='dimmed'>
           These options will be applied to all files you upload and are saved in your browser.
         </Text>

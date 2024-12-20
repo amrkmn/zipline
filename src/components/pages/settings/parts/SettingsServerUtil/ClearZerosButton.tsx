@@ -1,6 +1,6 @@
 import { Response } from '@/lib/api/response';
 import { fetchApi } from '@/lib/fetchApi';
-import { Button, Title } from '@mantine/core';
+import { Button } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
 import { IconTrashFilled } from '@tabler/icons-react';
@@ -11,7 +11,7 @@ export default function ClearZerosButton() {
 
   const openModal = () =>
     modals.openConfirmModal({
-      title: <Title>Are you sure?</Title>,
+      title: 'Are you sure?',
       children: `This will delete ${data?.files?.length ?? 0} files from the database and datasource.`,
       labels: { confirm: 'Yes, delete', cancel: 'Cancel' },
       confirmProps: { color: 'red' },

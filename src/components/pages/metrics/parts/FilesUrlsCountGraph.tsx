@@ -1,39 +1,56 @@
 import { Metric } from '@/lib/db/models/metric';
+import { ChartTooltip, LineChart } from '@mantine/charts';
 import { Paper, Title } from '@mantine/core';
-import dynamic from 'next/dynamic';
-
-const Line = dynamic(() => import('@ant-design/plots').then(({ Line }) => Line), { ssr: false });
 
 export default function FilesUrlsCountGraph({ metrics }: { metrics: Metric[] }) {
+  const sortedMetrics = metrics.sort(
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+  );
+
   return (
     <Paper radius='sm' withBorder p='sm'>
       <Title order={3}>Count</Title>
 
-      <Line
-        data={[
-          ...metrics.map((metric) => ({
-            date: metric.createdAt,
-            sum: metric.data.files,
-            type: 'Files',
-          })),
-          ...metrics.map((metric) => ({
-            date: metric.createdAt,
-            sum: metric.data.urls,
-            type: 'URLs',
-          })),
+      <LineChart
+        mt='xs'
+        h={400}
+        data={sortedMetrics.map((metric) => ({
+          date: new Date(metric.createdAt).getTime(),
+          files: metric.data.files,
+          urls: metric.data.urls,
+        }))}
+        series={[
+          {
+            name: 'files',
+            label: 'Files',
+            color: 'blue',
+          },
+          {
+            name: 'urls',
+            label: 'URLs',
+            color: 'green',
+          },
         ]}
-        xField='date'
-        yField='sum'
-        seriesField='type'
-        xAxis={{
-          type: 'time',
-          mask: 'YYYY-MM-DD HH:mm:ss',
+        dataKey='date'
+        curveType='natural'
+        lineChartProps={{ syncId: 'datedStatistics' }}
+        xAxisProps={{
+          tickFormatter: (v) => new Date(v).toLocaleString(),
         }}
-        legend={{
-          position: 'top',
+        tooltipProps={{
+          content: ({ label, payload }) => (
+            <ChartTooltip
+              label={new Date(label).toLocaleString()}
+              payload={payload}
+              series={[
+                { name: 'files', label: 'Files' },
+                { name: 'urls', label: 'URLs' },
+              ]}
+            />
+          ),
         }}
-        padding='auto'
-        smooth
+        connectNulls
+        withDots={false}
       />
     </Paper>
   );

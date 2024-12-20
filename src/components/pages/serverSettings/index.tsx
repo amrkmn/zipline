@@ -1,20 +1,54 @@
 import { Response } from '@/lib/api/response';
-import { Group, SimpleGrid, Stack, Title } from '@mantine/core';
+import { Group, SimpleGrid, Skeleton, Stack, Title } from '@mantine/core';
 import useSWR from 'swr';
-import ServerSettingsChunks from './parts/ServerSettingsChunks';
-import ServerSettingsCore from './parts/ServerSettingsCore';
-import ServerSettingsDiscord from './parts/ServerSettingsDiscord';
-import ServerSettingsFeatures from './parts/ServerSettingsFeatures';
-import ServerSettingsFiles from './parts/ServerSettingsFiles';
-import ServerSettingsHttpWebhook from './parts/ServerSettingsHttpWebhook';
-import ServerSettingsInvites from './parts/ServerSettingsInvites';
-import ServerSettingsMfa from './parts/ServerSettingsMfa';
-import ServerSettingsOauth from './parts/ServerSettingsOauth';
-import ServerSettingsRatelimit from './parts/ServerSettingsRatelimit';
-import ServerSettingsTasks from './parts/ServerSettingsTasks';
-import ServerSettingsUrls from './parts/ServerSettingsUrls';
-import ServerSettingsWebsite from './parts/ServerSettingsWebsite';
-import ServerSettingsPWA from './parts/ServerSettingsPWA';
+import dynamic from 'next/dynamic';
+
+function SettingsSkeleton() {
+  return <Skeleton height={280} animate />;
+}
+
+const ServerSettingsCore = dynamic(() => import('./parts/ServerSettingsCore'), {
+  loading: () => <SettingsSkeleton />,
+});
+const ServerSettingsChunks = dynamic(() => import('./parts/ServerSettingsChunks'), {
+  loading: () => <SettingsSkeleton />,
+});
+const ServerSettingsDiscord = dynamic(() => import('./parts/ServerSettingsDiscord'), {
+  loading: () => <SettingsSkeleton />,
+});
+const ServerSettingsFeatures = dynamic(() => import('./parts/ServerSettingsFeatures'), {
+  loading: () => <SettingsSkeleton />,
+});
+const ServerSettingsFiles = dynamic(() => import('./parts/ServerSettingsFiles'), {
+  loading: () => <SettingsSkeleton />,
+});
+const ServerSettingsHttpWebhook = dynamic(() => import('./parts/ServerSettingsHttpWebhook'), {
+  loading: () => <SettingsSkeleton />,
+});
+const ServerSettingsInvites = dynamic(() => import('./parts/ServerSettingsInvites'), {
+  loading: () => <SettingsSkeleton />,
+});
+const ServerSettingsMfa = dynamic(() => import('./parts/ServerSettingsMfa'), {
+  loading: () => <SettingsSkeleton />,
+});
+const ServerSettingsOauth = dynamic(() => import('./parts/ServerSettingsOauth'), {
+  loading: () => <SettingsSkeleton />,
+});
+const ServerSettingsRatelimit = dynamic(() => import('./parts/ServerSettingsRatelimit'), {
+  loading: () => <SettingsSkeleton />,
+});
+const ServerSettingsTasks = dynamic(() => import('./parts/ServerSettingsTasks'), {
+  loading: () => <SettingsSkeleton />,
+});
+const ServerSettingsUrls = dynamic(() => import('./parts/ServerSettingsUrls'), {
+  loading: () => <SettingsSkeleton />,
+});
+const ServerSettingsWebsite = dynamic(() => import('./parts/ServerSettingsWebsite'), {
+  loading: () => <SettingsSkeleton />,
+});
+const ServerSettingsPWA = dynamic(() => import('./parts/ServerSettingsPWA'), {
+  loading: () => <SettingsSkeleton />,
+});
 
 export default function DashboardSettings() {
   const { data, isLoading, error } = useSWR<Response['/api/server/settings']>('/api/server/settings');

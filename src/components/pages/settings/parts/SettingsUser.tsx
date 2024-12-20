@@ -13,7 +13,7 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { hasLength, useForm } from '@mantine/form';
+import { useForm } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import {
   IconAsteriskSimple,
@@ -26,9 +26,10 @@ import {
 } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { mutate } from 'swr';
+import { useShallow } from 'zustand/shallow';
 
 export default function SettingsUser() {
-  const [user, setUser] = useUserStore((state) => [state.user, state.setUser]);
+  const [user, setUser] = useUserStore(useShallow((state) => [state.user, state.setUser]));
 
   const [tokenShown, setTokenShown] = useState(false);
   const [token, setToken] = useState('');
@@ -49,7 +50,7 @@ export default function SettingsUser() {
       password: '',
     },
     validate: {
-      username: hasLength({ min: 1 }, 'Username is required'),
+      username: (value) => (value.length < 1 ? 'Username is required' : null),
     },
   });
 

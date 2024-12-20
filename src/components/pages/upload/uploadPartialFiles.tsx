@@ -3,7 +3,7 @@ import { Response } from '@/lib/api/response';
 import { randomCharacters } from '@/lib/random';
 import { ErrorBody } from '@/lib/response';
 import { UploadOptionsStore } from '@/lib/store/uploadOptions';
-import { ActionIcon, Anchor, Group, Stack, Table, Text, Title, Tooltip } from '@mantine/core';
+import { ActionIcon, Anchor, Group, Stack, Table, Text, Tooltip } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
 import { modals } from '@mantine/modals';
 import { hideNotification, notifications } from '@mantine/notifications';
@@ -36,7 +36,7 @@ export function filesModal(
   };
 
   modals.open({
-    title: <Title>Uploaded Files</Title>,
+    title: 'Uploaded files',
     size: 'auto',
     children: (
       <Table withTableBorder={false} withColumnBorders={false} highlightOnHover horizontalSpacing={'sm'}>

@@ -1,7 +1,6 @@
 import { Response } from '@/lib/api/response';
 import { User } from '@/lib/db/models/user';
 import { fetchApi } from '@/lib/fetchApi';
-import { Title } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import { IconUserCancel, IconUserMinus } from '@tabler/icons-react';
@@ -10,7 +9,7 @@ import { mutate } from 'swr';
 export async function deleteUser(user: User) {
   modals.openConfirmModal({
     centered: true,
-    title: <Title>Delete {user.username}?</Title>,
+    title: `Delete ${user.username}?`,
     children: `Are you sure you want to delete ${user.username}? This action cannot be undone.`,
     labels: {
       cancel: 'Cancel',
@@ -19,7 +18,7 @@ export async function deleteUser(user: User) {
     onConfirm: () =>
       modals.openConfirmModal({
         centered: true,
-        title: <Title>Delete {user.username}&apos;s data?</Title>,
+        title: `Delete ${user.username}'s data?`,
         children: `Would you like to delete ${user.username}'s files and urls? This action cannot be undone.`,
         labels: {
           cancel: 'No, keep everything & only delete user',
