@@ -26,6 +26,7 @@ function getDatasource(conf?: typeof config): void {
         secretAccessKey: config.datasource.s3!.secretAccessKey,
         region: config.datasource.s3?.region,
         bucket: config.datasource.s3!.bucket,
+        endpoint: config.datasource.s3?.endpoint,
       });
       break;
     default:

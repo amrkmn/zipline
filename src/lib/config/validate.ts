@@ -110,6 +110,7 @@ export const schema = z.object({
           secretAccessKey: z.string(),
           region: z.string(),
           bucket: z.string(),
+          endpoint: z.string().nullable().default(null),
         })
         .optional(),
       local: z

@@ -23,9 +23,12 @@ export class S3Datasource extends Datasource {
       secretAccessKey: string;
       region?: string;
       bucket: string;
+      endpoint?: string | null;
     },
   ) {
     super();
+
+    console.log(options);
 
     this.client = new S3Client({
       credentials: {
@@ -33,6 +36,7 @@ export class S3Datasource extends Datasource {
         secretAccessKey: this.options.secretAccessKey,
       },
       region: this.options.region ?? undefined,
+      endpoint: this.options.endpoint ?? undefined,
     });
 
     this.ensureBucketExists();

@@ -225,10 +225,3 @@ declare module 'fastify' {
     tasks: Tasks;
   }
 }
-
-process.on('unhandledRejection', (reason, promise) => {
-  console.log('AAA', reason, promise);
-});
-process.on('uncaughtException', (reason) => {
-  console.log('aaa', reason);
-});

@@ -155,6 +155,7 @@ export const PROP_TO_ENV = {
   'datasource.s3.secretAccessKey': 'DATASOURCE_S3_SECRET_ACCESS_KEY',
   'datasource.s3.region': 'DATASOURCE_S3_REGION',
   'datasource.s3.bucket': 'DATASOURCE_S3_BUCKET',
+  'datasource.s3.endpoint': 'DATASOURCE_S3_ENDPOINT',
 
   'datasource.local.directory': 'DATASOURCE_LOCAL_DIRECTORY',
 
@@ -319,6 +320,7 @@ export function readEnv() {
     env('datasource.s3.secretAccessKey', 'string'),
     env('datasource.s3.region', 'string'),
     env('datasource.s3.bucket', 'string'),
+    env('datasource.s3.endpoint', 'string'),
 
     env('datasource.local.directory', 'string'),
 
