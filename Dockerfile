@@ -41,4 +41,6 @@ COPY --from=builder /zipline/code.json ./code.json
 # clean
 RUN rm -rf /tmp/* /root/*
 
+ENV NODE_ENV=production
+
 CMD ["node", "--enable-source-maps", "build/server"]
