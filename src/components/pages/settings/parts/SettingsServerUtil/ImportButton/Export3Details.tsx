@@ -2,7 +2,18 @@ import HighlightCode from '@/components/render/code/HighlightCode';
 import { bytes } from '@/lib/bytes';
 import { findFilesByUser, findUser } from '@/lib/import/version3/find';
 import { Export3 } from '@/lib/import/version3/validateExport';
-import { Accordion, Anchor, Avatar, Button, Center, Collapse, Paper, Stack, Table } from '@mantine/core';
+import {
+  Accordion,
+  Anchor,
+  Avatar,
+  Button,
+  Center,
+  Collapse,
+  Paper,
+  Stack,
+  Table,
+  Text,
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
   IconCheck,
@@ -102,6 +113,11 @@ export default function Export3Details({ export3 }: { export3: Export3 }) {
 
   return (
     <>
+      <Text c='dimmed' size='sm' my='xs'>
+        This data is not sent to the server. It is parsed and displayed in the browser. Data is only sent to
+        the server when you click the &quot;Import&quot; button.
+      </Text>
+
       <Accordion defaultValue='version' variant='contained'>
         <Accordion.Item value='version'>
           <Accordion.Control icon={<IconVersions size='1rem' />}>Version Details</Accordion.Control>

@@ -11,10 +11,13 @@ export type ApiServerImportV3 = {
   files: Record<string, string>;
   folders: Record<string, string>;
   urls: Record<string, string>;
+  settings: string[];
 };
 
 type Body = {
   export3: Export3;
+
+  importFromUser?: string;
 };
 
 const parseDate = (date: string) => (isNaN(Date.parse(date)) ? new Date() : new Date(date));
@@ -51,6 +54,16 @@ export default fastifyPlugin(
 
         const users = Object.entries(export3.users);
         for (const [id, user] of users) {
+          let importFrom = false;
+          if (req.body.importFromUser && id === req.body.importFromUser) {
+            logger.info('importing to current user', {
+              user: req.user.username,
+              from: req.body.importFromUser,
+            });
+
+            importFrom = true;
+          }
+
           // determines a users role
           const role =
             (user.super_administrator && 'SUPERADMIN') || (user.administrator && 'ADMIN') || 'USER';
@@ -61,7 +74,7 @@ export default fastifyPlugin(
             },
           });
 
-          if (existing) {
+          if (!importFrom && existing) {
             logger.warn('user already exists, skipping importing', {
               id,
               conflict: existing.id,
@@ -94,6 +107,29 @@ export default fastifyPlugin(
               oauthId: provider.oauth_id!,
               username: provider.username!,
             });
+          }
+
+          if (importFrom) {
+            const updated = await prisma.user.update({
+              where: {
+                id: req.user.id,
+              },
+              data: {
+                avatar: user.avatar ?? null,
+                totpSecret: user.totp_secret ?? null,
+                ...(user.oauth.length > 0 && {
+                  oauthProviders: {
+                    createMany: {
+                      data: oauthProviders,
+                    },
+                  },
+                }),
+              },
+            });
+
+            usersImportedToId[id] = updated.id;
+
+            continue;
           }
 
           const created = await prisma.user.create({

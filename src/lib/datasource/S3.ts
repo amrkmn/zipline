@@ -28,8 +28,6 @@ export class S3Datasource extends Datasource {
   ) {
     super();
 
-    console.log(options);
-
     this.client = new S3Client({
       credentials: {
         accessKeyId: this.options.accessKeyId,

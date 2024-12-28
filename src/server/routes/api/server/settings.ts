@@ -10,6 +10,7 @@ import fastifyPlugin from 'fastify-plugin';
 import { statSync } from 'fs';
 import ms from 'ms';
 import { cpus } from 'os';
+import { resolve } from 'path';
 import { z } from 'zod';
 
 type Settings = Awaited<ReturnType<typeof readDatabaseSettings>>;
@@ -161,7 +162,10 @@ export default fastifyPlugin(
               ])
               .transform((value) => (typeof value === 'string' ? JSON.parse(value) : value)),
             websiteLoginBackground: z.string().url().nullable(),
-            websiteDefaultAvatar: z.string().url().nullable(),
+            websiteDefaultAvatar: z
+              .string()
+              .transform((s) => resolve(s))
+              .nullable(),
             websiteTos: z
               .string()
               .nullable()

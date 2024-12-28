@@ -1,6 +1,11 @@
 import { Response } from '@/lib/api/response';
 import { fetchApi } from '@/lib/fetchApi';
-import { Export3, validateExport } from '@/lib/import/version3/validateExport';
+import {
+  Export3,
+  V3_COMPATIBLE_SETTINGS,
+  V3_SETTINGS_TRANSFORM,
+  validateExport,
+} from '@/lib/import/version3/validateExport';
 import { Alert, Button, Code, FileButton, Modal, Stack } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { showNotification, updateNotification } from '@mantine/notifications';
@@ -8,17 +13,23 @@ import {
   IconCheck,
   IconDatabaseImport,
   IconDatabaseOff,
+  IconDeviceFloppy,
   IconExclamationMark,
   IconUpload,
   IconX,
 } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import Export3Details from './Export3Details';
+import Export3ImportSettings from './Export3ImportSettings';
+import Export3UserChoose from './Export3UserChoose';
 
 export default function ImportButton() {
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [export3, setExport3] = useState<Export3 | null>(null);
+
+  const [importFrom, setImportFrom] = useState('');
+  const [importSettings, setImportSettings] = useState(false);
 
   const onContent = (content: string) => {
     if (!content) return console.error('no content');
@@ -49,6 +60,44 @@ export default function ImportButton() {
     setExport3(validated.data);
   };
 
+  const handleImportSettings = async (settingsEnv?: Record<string, string>) => {
+    if (!settingsEnv) return;
+
+    const toImport: Record<string, any> = {};
+
+    for (const [key, value] of Object.entries(settingsEnv)) {
+      if (!(key in V3_COMPATIBLE_SETTINGS)) continue;
+
+      toImport[V3_COMPATIBLE_SETTINGS[key]!] = V3_SETTINGS_TRANSFORM[key]
+        ? V3_SETTINGS_TRANSFORM[key](value)
+        : value;
+    }
+
+    const { error } = await fetchApi<Response['/api/server/settings']>(
+      '/api/server/settings',
+      'PATCH',
+      toImport,
+    );
+
+    if (error) {
+      showNotification({
+        title: 'Failed to import settings',
+        message: error.issues
+          ? error.issues.map((x: { message: string }) => x.message).join('\n')
+          : error.error,
+        color: 'red',
+      });
+    } else {
+      showNotification({
+        message: 'Settings imported',
+        color: 'green',
+        icon: <IconDeviceFloppy size='1rem' />,
+      });
+
+      await fetch('/reload');
+    }
+  };
+
   const handleImport = async () => {
     modals.openConfirmModal({
       title: 'Are you sure?',
@@ -70,11 +119,21 @@ export default function ImportButton() {
         });
         setOpen(false);
 
+        const settingsEnv = importSettings
+          ? Object.fromEntries(
+              Object.entries(export3!.request.env).filter(([key]) => key in V3_COMPATIBLE_SETTINGS),
+            )
+          : undefined;
+
+        handleImportSettings(settingsEnv);
+
         const { error, data } = await fetchApi<Response['/api/server/import/v3']>(
           '/api/server/import/v3',
           'POST',
           {
             export3,
+            importFromUser: importFrom === '' ? undefined : importFrom,
+            importSettings: settingsEnv,
           },
         );
 
@@ -154,6 +213,19 @@ export default function ImportButton() {
                     contains sensitive information such as passwords and OAuth tokens.
                   </Alert>
 
+                  {settingsEnv && (
+                    <Alert
+                      mb='xs'
+                      color='green'
+                      variant='outline'
+                      icon={<IconExclamationMark size='1rem' />}
+                      title='Settings Imported'
+                    >
+                      Imported settings have been applied, it is advised to reload the page to ensure the
+                      settings are applied correctly.
+                    </Alert>
+                  )}
+
                   <Button
                     onClick={() => {
                       modals.closeAll();
@@ -224,7 +296,17 @@ export default function ImportButton() {
           </FileButton>
         )}
 
-        {file && export3 && <Export3Details export3={export3} />}
+        {file && export3 && (
+          <>
+            <Export3Details export3={export3} />
+            <Export3ImportSettings
+              export3={export3}
+              importSettings={importSettings}
+              setImportSettings={setImportSettings}
+            />
+            <Export3UserChoose export3={export3} setImportFrom={setImportFrom} importFrom={importFrom} />
+          </>
+        )}
 
         {export3 && (
           <Button onClick={handleImport} fullWidth leftSection={<IconDatabaseImport size='1rem' />} mt='xs'>

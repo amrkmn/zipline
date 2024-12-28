@@ -269,6 +269,133 @@ export const export3Schema = z.object({
 
 export type Export3 = z.infer<typeof export3Schema>;
 
+export const V3_COMPATIBLE_SETTINGS: Record<string, string> = {
+  CORE_RETURN_HTTPS: 'coreReturnHttpsUrls',
+  CORE_TEMP_DIRECTORY: 'coreTempDirectory',
+
+  CHUNKS_MAX_SIZE: 'chunksMax',
+  CHUNKS_CHUNKS_SIZE: 'chunksSize',
+  CHUNKS_ENABLED: 'chunksEnabled',
+
+  UPLOADER_ROUTE: 'filesRoute',
+  UPLOADER_LENGTH: 'filesLength',
+  UPLOADER_DISABLED_EXTENSIONS: 'filesDisabledExtensions',
+  UPLOADER_DEFAULT_EXPIRATION: 'filesDefaultExpiration',
+  UPLOADER_ASSUME_MIMETYPES: 'filesAssumeMimetypes',
+  EXIF_REMOVE_GPS: 'filesRemoveGpsMetadata',
+
+  URLS_ROUTE: 'urlsRoute',
+  URLS_LENGTH: 'urlsLength',
+
+  WEBSITE_TITLE: 'websiteTitle',
+  WEBSITE_EXTERNAL_LINKS: 'websiteExternalLinks',
+  FEATURES_DEFAULT_AVATAR: 'websiteDefaultAvatar',
+
+  OAUTH_BYPASS_LOCAL_LOGIN: 'oauthBypassLocalLogin',
+  FEATURES_OAUTH_LOGIN_ONLY: 'oauthLoginOnly',
+
+  OAUTH_GITHUB_CLIENT_ID: 'oauthGithubClientId',
+  OAUTH_GITHUB_CLIENT_SECRET: 'oauthGithubClientSecret',
+
+  OAUTH_DISCORD_CLIENT_ID: 'oauthDiscordClientId',
+  OAUTH_DISCORD_CLIENT_SECRET: 'oauthDiscordClientSecret',
+  OAUTH_DISCORD_REDIRECT_URI: 'oauthDiscordRedirectUri',
+
+  OAUTH_GOOGLE_CLIENT_ID: 'oauthGoogleClientId',
+  OAUTH_GOOGLE_CLIENT_SECRET: 'oauthGoogleClientSecret',
+  OAUTH_GOOGLE_REDIRECT_URI: 'oauthGoogleRedirectUri',
+
+  FEATURES_OAUTH_REGISTRATION: 'featuresOauthRegistration',
+  FEATURES_USER_REGISTRATION: 'featuresUserRegistration',
+  FEATURES_ROBOTS_TXT: 'featuresRobotsTxt',
+
+  FEATURES_INVITES: 'invitesEnabled',
+  FEATURES_INVITES_LENGTH: 'invitesLength',
+
+  FEATURES_THUMBNAILS: 'featuresThumbnailsEnabled',
+
+  MFA_TOTP_ISSUER: 'mfaTotpIssuer',
+  MFA_TOTP_ENABLED: 'mfaTotpEnabled',
+
+  CORE_STATS_INTERVAL: 'tasksMetricsInterval',
+  CORE_INVITES_INTERVAL: 'tasksClearInvitesInterval',
+  CORE_THUMBNAILS_INTERVAL: 'tasksThumbnailsInterval',
+
+  DISCORD_URL: 'discordWebhookUrl',
+  DISCORD_USERNAME: 'discordUsername',
+  DISCORD_AVATAR_URL: 'discordAvatarUrl',
+
+  DISCORD_UPLOAD_URL: 'discordOnUploadWebhookUrl',
+  DISCORD_UPLOAD_USERNAME: 'discordOnUploadUsername',
+  DISCORD_UPLOAD_AVATAR_URL: 'discordOnUploadAvatarUrl',
+
+  DISCORD_SHORTEN_URL: 'discordShortenUrl',
+  DISCORD_SHORTEN_USERNAME: 'discordShortenUsername',
+  DISCORD_SHORTEN_AVATAR_URL: 'discordShortenAvatarUrl',
+};
+
+const booleanTransform = (value: string) => (value === 'true' ? true : false);
+const numberTransform = (value: string) => (isNaN(Number(value)) ? undefined : Number(value));
+const arrayTransform = (value: string) =>
+  value
+    .split(',')
+    .map((v) => v.trim())
+    .filter((v) => v !== '');
+
+export const V3_SETTINGS_TRANSFORM: Record<keyof typeof V3_COMPATIBLE_SETTINGS, (value: string) => unknown> =
+  {
+    CORE_RETURN_HTTPS: booleanTransform,
+
+    CHUNKS_ENABLED: booleanTransform,
+    CHUNKS_CHUNKS_SIZE: numberTransform,
+    CHUNKS_MAX_SIZE: numberTransform,
+
+    UPLOADER_LENGTH: numberTransform,
+    UPLOADER_ASSUME_MIMETYPES: booleanTransform,
+    UPLOADER_DISABLED_EXTENSIONS: arrayTransform,
+    EXIF_REMOVE_GPS: booleanTransform,
+
+    URLS_LENGTH: numberTransform,
+
+    WEBSITE_EXTERNAL_LINKS: (value) => {
+      try {
+        return JSON.parse(value, function (key, val) {
+          if (key === 'label') {
+            this.name = val;
+            return;
+          }
+
+          if (key === 'link') {
+            this.url = val;
+            return;
+          }
+
+          return val;
+        });
+      } catch {
+        return [];
+      }
+    },
+
+    OAUTH_BYPASS_LOCAL_LOGIN: booleanTransform,
+    FEATURES_OAUTH_LOGIN_ONLY: booleanTransform,
+
+    FEATURES_OAUTH_REGISTRATION: booleanTransform,
+    FEATURES_USER_REGISTRATION: booleanTransform,
+    FEATURES_ROBOTS_TXT: booleanTransform,
+
+    FEATURES_INVITES: booleanTransform,
+    FEATURES_INVITES_LENGTH: numberTransform,
+
+    FEATURES_THUMBNAILS: booleanTransform,
+
+    MFA_TOTP_ENABLED: booleanTransform,
+
+    CORE_STATS_INTERVAL: numberTransform,
+    CORE_INVITES_INTERVAL: numberTransform,
+    CORE_THUMBNAILS_INTERVAL: numberTransform,
+  };
+
 export function validateExport(data: unknown): ReturnType<typeof export3Schema.safeParse> {
   const result = export3Schema.safeParse(data);
   if (!result.success) {
