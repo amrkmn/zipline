@@ -43,6 +43,14 @@ BigInt.prototype.toJSON = function () {
 async function main() {
   const argv = process.argv.slice(2);
   logger.info('starting zipline', { mode: MODE, version: version, argv });
+
+  if (!process.env.DATABASE_URL) {
+    logger.error('DATABASE_URL not set, exiting...');
+    process.exit(1);
+  }
+
+  await runMigrations();
+
   logger.info('reading settings...');
   await reloadSettings();
 
@@ -54,9 +62,6 @@ async function main() {
   }
 
   await mkdir(config.core.tempDirectory, { recursive: true });
-  process.env.DATABASE_URL = config.core.databaseUrl;
-
-  await runMigrations();
 
   const server = fastify({
     ignoreTrailingSlash: true,

@@ -5,7 +5,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DATABASE=postgres
+      - POSTGRES_DATABASE=postgres2
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -18,15 +18,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    # UNCOMMENT THE BELOW LINE ON THE FIRST RUN!
-    # entrypoint: ['pnpm', 'db:prototype']
-    # entrypoint: ['pnpm', 'prisma', 'migrate', 'reset', '--force']
     ports:
       - '3000:3000'
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@postgres/postgres
+      - DATABASE_URL=postgres://postgres:postgres@postgres/postgres2
       - CORE_SECRET=thissecretisverynotsecretbutshouldonlybeusedindevelopmentsoitsfineiguess
       - CORE_HOSTNAME=0.0.0.0
     depends_on:

@@ -18,10 +18,6 @@ services:
 
   zipline:
     image: ghcr.io/diced/zipline:v4
-    # ATTENTION !
-    # entrypoint: ['pnpm', 'db:prototype']
-    # Uncomment the above for the first run, then comment it out again after it runs once.
-    # The database is subject to change, this will reset the current db to match the prisma schema.
     ports:
       - '3000:3000'
     env_file:

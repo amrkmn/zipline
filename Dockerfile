@@ -1,6 +1,7 @@
 FROM node:20-alpine3.19 AS base
 
 ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable pnpm
 RUN corepack prepare pnpm@latest --activate
 
@@ -37,6 +38,8 @@ COPY --from=builder /zipline/.next ./.next
 
 COPY --from=builder /zipline/mimes.json ./mimes.json
 COPY --from=builder /zipline/code.json ./code.json
+
+RUN pnpm build:prisma
 
 # clean
 RUN rm -rf /tmp/* /root/*
