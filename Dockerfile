@@ -5,6 +5,8 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable pnpm
 RUN corepack prepare pnpm@latest --activate
 
+RUN apk add --no-cache ffmpeg
+
 WORKDIR /zipline
 
 COPY prisma ./prisma
