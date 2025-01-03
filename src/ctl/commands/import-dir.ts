@@ -17,12 +17,21 @@ export async function importDir(directory: string, { id, folder }: { id?: string
       where: { username: 'administrator', role: 'SUPERADMIN' },
     });
 
-    if (!user)
-      return console.error(
-        'There was no user with the username "administrator" and role "SUPERADMIN" found. Please provide a user id to continue.',
-      );
+    if (!user) {
+      const firstSuperAdmin = await prisma.user.findFirst({
+        where: {
+          role: 'SUPERADMIN',
+        },
+      });
 
-    userId = user.id;
+      if (!firstSuperAdmin) return console.error('No superadmin found or "administrator" user.');
+
+      userId = firstSuperAdmin.id;
+
+      console.log('No "administrator" found, using', firstSuperAdmin.username);
+    } else {
+      userId = user.id;
+    }
   }
 
   if (folder) {
