@@ -147,7 +147,7 @@ export function parseHeaders(headers: UploadHeaders, fileConfig: Config['files']
     response.deletesAt = expiresAt;
   } else {
     if (fileConfig.defaultExpiration) {
-      const expiresAt = new Date(Date.now() + fileConfig.defaultExpiration);
+      const expiresAt = new Date(Date.now() + ms(fileConfig.defaultExpiration));
       response.deletesAt = expiresAt;
     }
   }

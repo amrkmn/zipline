@@ -92,7 +92,7 @@ export const schema = z.object({
     defaultFormat: z.enum(['random', 'date', 'uuid', 'name', 'gfycat']).default('random'),
     disabledExtensions: z.array(z.string()).default([]),
     maxFileSize: z.number().default(bytes('100mb')),
-    defaultExpiration: z.number().nullable().default(null),
+    defaultExpiration: z.string().nullable().default(null),
     assumeMimetypes: z.boolean().default(false),
     defaultDateFormat: z.string().default('YYYY-MM-DD_HH:mm:ss'),
     removeGpsMetadata: z.boolean().default(false),

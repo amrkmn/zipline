@@ -84,7 +84,7 @@ export default function ServerSettingsFiles({
       filesDefaultFormat: data?.filesDefaultFormat ?? 'random',
       filesDisabledExtensions: data?.filesDisabledExtensions.join(', ') ?? '',
       filesMaxFileSize: bytes(data?.filesMaxFileSize ?? 104857600),
-      filesDefaultExpiration: data?.filesDefaultExpiration ? ms(data.filesDefaultExpiration) : '',
+      filesDefaultExpiration: data?.filesDefaultExpiration ?? '',
       filesAssumeMimetypes: data?.filesAssumeMimetypes ?? false,
       filesDefaultDateFormat: data?.filesDefaultDateFormat ?? 'YYYY-MM-DD_HH:mm:ss',
       filesRemoveGpsMetadata: data?.filesRemoveGpsMetadata ?? false,

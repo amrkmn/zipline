@@ -34,7 +34,7 @@ model Zipline {
   filesDefaultFormat      String   @default("random")
   filesDisabledExtensions String[]
   filesMaxFileSize        Int      @default(104857600)
-  filesDefaultExpiration  Int?
+  filesDefaultExpiration  String?
   filesAssumeMimetypes    Boolean  @default(false)
   filesDefaultDateFormat  String   @default("YYYY-MM-DD_HH:mm:ss")
   filesRemoveGpsMetadata  Boolean  @default(false)
