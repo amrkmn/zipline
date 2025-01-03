@@ -1,6 +1,7 @@
 import { verifyPassword } from '@/lib/crypto';
 import { datasource } from '@/lib/datasource';
 import { prisma } from '@/lib/db';
+import { log } from '@/lib/logger';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { parse } from 'url';
 
@@ -12,6 +13,8 @@ type Query = {
   pw?: string;
   download?: string;
 };
+
+const logger = log('routes').c('files');
 
 export async function filesRoute(
   req: FastifyRequest<{ Params: Params; Querystring: Query }>,
@@ -38,10 +41,15 @@ export async function filesRoute(
   const stream = await datasource.get(file.name);
   if (!stream) return req.server.nextServer.render404(req.raw, res.raw, parsedUrl);
   if (file.password) {
-    if (!pw) return res.forbidden('Password protected.');
+    if (!pw) return res.redirect(`/view/${file.name}`);
+
     const verified = await verifyPassword(pw as string, file.password!);
 
-    if (!verified) return res.forbidden('Incorrect password.');
+    if (!verified) {
+      logger.warn('password protected file accessed with an incorrect password', { id: file.id, ip: req.ip });
+
+      return req.server.nextServer.render404(req.raw, res.raw, parsedUrl);
+    }
   }
 
   await prisma.file.update({

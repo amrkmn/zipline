@@ -2,7 +2,6 @@ import { bytes } from '../bytes';
 import { File } from '../db/models/file';
 import { Url } from '../db/models/url';
 import { User } from '../db/models/user';
-import { log } from '../logger';
 import { ParseValueMetrics } from './metrics';
 
 export type ParseValue = {
@@ -23,8 +22,6 @@ export type ParseValue = {
     jsonf?: string;
   };
 };
-
-const logger = log('parser');
 
 export function parseString(str: string, value: ParseValue) {
   if (!str) return null;
@@ -127,7 +124,7 @@ function modifier(mod: string, value: unknown, tzlocale?: string): string {
           args[0] = locale;
         } catch {
           args[0] = undefined;
-          logger.error(`invalid locale provided ${locale}`);
+          console.error(`invalid locale provided ${locale}`);
         }
       }
 
@@ -136,7 +133,7 @@ function modifier(mod: string, value: unknown, tzlocale?: string): string {
         if (intlTz) args[1] = { timeZone: intlTz };
         else {
           args[1] = undefined;
-          logger.error(`invalid timezone provided ${tz}`);
+          console.error(`invalid timezone provided ${tz}`);
         }
       }
     }
