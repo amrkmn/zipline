@@ -1,7 +1,7 @@
 import { useConfig } from '@/components/ConfigProvider';
 import RelativeDate from '@/components/RelativeDate';
 import { Url } from '@/lib/db/models/url';
-import { formatRootUrl } from '@/lib/url';
+import { formatRootUrl, trimUrl } from '@/lib/url';
 import { ActionIcon, Anchor, Card, Group, Menu, Stack, Text, Tooltip } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
 import { IconCopy, IconDots, IconPencil, IconTrashFilled } from '@tabler/icons-react';
@@ -79,9 +79,9 @@ export default function UserCard({ url, setSelectedUrl }: { url: Url; setSelecte
             </Text>
             <Text size='xs' c='dimmed'>
               <b>Destination:</b>{' '}
-              <Tooltip label={`Open "${url.destination.trim()}" in a new tab`}>
+              <Tooltip label={`Open "${trimUrl(50, url.destination.trim())}" in a new tab`}>
                 <Anchor href={url.destination} target='_blank' rel='noopener noreferrer'>
-                  {url.destination}
+                  {trimUrl(30, url.destination.trim())}
                 </Anchor>
               </Tooltip>
             </Text>

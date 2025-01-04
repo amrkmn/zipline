@@ -1,4 +1,5 @@
 import { Response } from '@/lib/api/response';
+import { bytes } from '@/lib/bytes';
 import {
   Button,
   LoadingOverlay,
@@ -15,8 +16,6 @@ import { IconDeviceFloppy } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { settingsOnSubmit } from '../settingsOnSubmit';
-import { bytes } from '@/lib/bytes';
-import ms from 'ms';
 
 export default function ServerSettingsFiles({
   swr: { data, isLoading },

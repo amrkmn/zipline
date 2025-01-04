@@ -10,7 +10,7 @@ import { IconCopy, IconPencil, IconTrashFilled } from '@tabler/icons-react';
 import { useConfig } from '@/components/ConfigProvider';
 import { useClipboard } from '@mantine/hooks';
 import { useSettingsStore } from '@/lib/store/settings';
-import { formatRootUrl } from '@/lib/url';
+import { formatRootUrl, trimUrl } from '@/lib/url';
 import EditUrlModal from '../EditUrlModal';
 import { useShallow } from 'zustand/shallow';
 
@@ -218,7 +218,7 @@ export default function UrlTableView() {
               sortable: true,
               render: (url) => (
                 <Anchor href={url.destination} target='_blank' rel='noreferrer'>
-                  {url.destination}
+                  {trimUrl(100, url.destination)}
                 </Anchor>
               ),
               filter: (
