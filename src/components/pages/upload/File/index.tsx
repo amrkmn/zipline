@@ -193,7 +193,7 @@ export default function UploadFile() {
 
       <Collapse in={progress.percent === 100}>
         <Paper withBorder p='xs' radius='sm'>
-          <Text ta='center' size='sm' c='yellow'>
+          <Text ta='center' size='sm' c='yellow' fw={500}>
             Finalizing upload(s)...
           </Text>
         </Paper>

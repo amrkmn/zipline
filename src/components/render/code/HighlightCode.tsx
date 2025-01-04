@@ -8,6 +8,10 @@ export default function HighlightCode({ language, code }: { language: string; co
   const lines = code.split('\n').filter((line) => line !== '');
   const lineNumbers = lines.map((_, i) => i + 1);
 
+  if (!hljs.getLanguage(language)) {
+    language = 'text';
+  }
+
   return (
     <Paper withBorder p='xs' my='md' pos='relative'>
       <CopyButton value={code}>

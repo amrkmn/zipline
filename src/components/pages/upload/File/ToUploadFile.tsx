@@ -1,6 +1,17 @@
 import DashboardFileType from '@/components/file/DashboardFileType';
 import { bytes } from '@/lib/bytes';
-import { Button, Center, Group, HoverCard, Overlay, Paper, Stack, Text } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Center,
+  Group,
+  HoverCard,
+  Overlay,
+  Paper,
+  ScrollArea,
+  Stack,
+  Text,
+} from '@mantine/core';
 import { IconFileUpload, IconTrashFilled } from '@tabler/icons-react';
 
 export default function ToUploadFile({
@@ -39,7 +50,12 @@ export default function ToUploadFile({
       </HoverCard.Target>
       <HoverCard.Dropdown>
         <Group maw={400}>
-          <DashboardFileType file={file} show />
+          <ScrollArea>
+            <Box mah={250} maw={400}>
+              <DashboardFileType file={file} show />
+            </Box>
+          </ScrollArea>
+
           <Stack justify='xs'>
             <Text size='sm' c='dimmed'>
               <b>{file.name}</b> {file.type || file.type === '' ? `(${file.type})` : ''}

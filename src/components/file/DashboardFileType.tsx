@@ -55,6 +55,23 @@ export default function DashboardFileType({
   const [type, setType] = useState<string>(file.type.split('/')[0]);
 
   const gettext = async () => {
+    if (!dbFile) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if ((reader.result! as string).length > 1 * 1024 * 1024) {
+          setFileContent(
+            reader.result!.slice(0, 1 * 1024 * 1024) +
+              '\n...\nThe file is too big to display click the download icon to view/download it.',
+          );
+        } else {
+          setFileContent(reader.result as string);
+        }
+      };
+      reader.readAsText(file);
+
+      return;
+    }
+
     if (file.size > 1 * 1024 * 1024) {
       const res = await fetch(`/raw/${file.name}${password ? `?pw=${password}` : ''}`, {
         headers: {
