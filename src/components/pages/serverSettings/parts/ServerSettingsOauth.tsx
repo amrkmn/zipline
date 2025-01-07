@@ -1,5 +1,5 @@
 import { Response } from '@/lib/api/response';
-import { Button, LoadingOverlay, Paper, SimpleGrid, Switch, TextInput, Title } from '@mantine/core';
+import { Anchor, Button, LoadingOverlay, Paper, SimpleGrid, Switch, TextInput, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconDeviceFloppy } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
@@ -106,9 +106,11 @@ export default function ServerSettingsOauth({
         </SimpleGrid>
         <SimpleGrid mt='md' cols={{ base: 1, md: 2 }} spacing='lg'>
           <Paper withBorder p='sm'>
-            <Title order={4} mb='sm'>
-              Discord
-            </Title>
+            <Anchor href='https://discord.com/developers/applications' target='_blank'>
+              <Title order={4} mb='sm'>
+                Discord
+              </Title>
+            </Anchor>
 
             <TextInput label='Discord Client ID' {...form.getInputProps('oauthDiscordClientId')} />
             <TextInput label='Discord Client Secret' {...form.getInputProps('oauthDiscordClientSecret')} />
@@ -119,9 +121,11 @@ export default function ServerSettingsOauth({
             />
           </Paper>
           <Paper withBorder p='sm'>
-            <Title order={4} mb='sm'>
-              Google
-            </Title>
+            <Anchor href='https://console.developers.google.com/' target='_blank'>
+              <Title order={4} mb='sm'>
+                Google
+              </Title>
+            </Anchor>
 
             <TextInput label='Google Client ID' {...form.getInputProps('oauthGoogleClientId')} />
             <TextInput label='Google Client Secret' {...form.getInputProps('oauthGoogleClientSecret')} />
@@ -134,7 +138,11 @@ export default function ServerSettingsOauth({
         </SimpleGrid>
 
         <Paper withBorder p='sm' my='md'>
-          <Title order={4}>GitHub</Title>
+          <Anchor href='https://github.com/settings/developers' target='_blank'>
+            <Title order={4} mb='sm'>
+              GitHub
+            </Title>
+          </Anchor>
 
           <SimpleGrid mt='md' cols={{ base: 1, md: 2 }} spacing='lg'>
             <TextInput label='GitHub Client ID' {...form.getInputProps('oauthGithubClientId')} />
