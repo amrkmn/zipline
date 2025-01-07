@@ -85,7 +85,7 @@ export async function handlePartialUpload({
         },
         ...(options.password && { password: await hashPassword(options.password) }),
         ...(options.folder && { Folder: { connect: { id: options.folder } } }),
-        ...(options.addOriginalName && { originalName: file.filename }),
+        ...(options.addOriginalName && { originalName: options.partial.filename ?? file.filename }),
       },
     });
 
