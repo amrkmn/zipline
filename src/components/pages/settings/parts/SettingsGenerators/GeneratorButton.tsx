@@ -264,7 +264,7 @@ export default function GeneratorButton({
                 description={
                   <>
                     If using a compositor such as{' '}
-                    <Anchor component={Link} href='https://github.com/hyprwm/hyprland'>
+                    <Anchor size='xs' component={Link} href='https://github.com/hyprwm/hyprland'>
                       Hyprland
                     </Anchor>
                     , this option will set the <Code>XDG_CURRENT_DESKTOP=sway</Code> to workaround
@@ -293,6 +293,13 @@ export default function GeneratorButton({
                 }
               />
             </>
+          )}
+
+          {isUnixLike && (
+            <Text c='dimmed' size='sm'>
+              If you are having trouble getting Flameshot to work on Wayland, consult the{' '}
+              <Anchor href='https://zipline.diced.sh/docs/guides/wayland'>Wayland guide</Anchor>.
+            </Text>
           )}
 
           <Button
