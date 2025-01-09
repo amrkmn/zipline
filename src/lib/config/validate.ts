@@ -109,6 +109,7 @@ export const schema = z.object({
           region: z.string(),
           bucket: z.string(),
           endpoint: z.string().nullable().default(null),
+          forcePathStyle: z.boolean().default(false),
         })
         .optional(),
       local: z
