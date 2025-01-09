@@ -8,7 +8,7 @@ on:
 jobs:
   push-amd64:
     name: 'push (amd64)'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -65,7 +65,7 @@ jobs:
             ghcr.io/diced/zipline:v4-${{ steps.sha.outputs.short_sha }}-arm64
 
   ammend-builds:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [push-amd64, push-arm64]
     steps:
       - uses: actions/checkout@v4
