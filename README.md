@@ -19,7 +19,7 @@ Here are some simple instructions to get Zipline v4 running and ready to develop
 
 ## Prerequisites
 
-- nodejs (lts -> 21.x or 18.x)
+- nodejs (lts -> 20.x, 22.x)
 - pnpm (9.x)
 - a postgresql server
 

@@ -4,7 +4,7 @@
   "license": "MIT",
   "version": "4.0.0-dev+1",
   "scripts": {
-    "build": "pnpm run \"/^build:.*/\"",
+    "build": "pnpm run --stream \"/^build:.*/\"",
     "build:prisma": "prisma generate",
     "build:next": "ZIPLINE_BUILD=true next build",
     "build:server": "tsup",
@@ -13,10 +13,11 @@
     "start": "NODE_ENV=production node --trace-warnings --require dotenv/config --enable-source-maps ./build/server",
     "start:inspector": "NODE_ENV=production node --require dotenv/config --inspect=0.0.0.0:9229 --enable-source-maps ./build/server",
     "ctl": "NODE_ENV=production node --require dotenv/config --enable-source-maps ./build/ctl",
-    "validate": "pnpm run \"/^validate:.*/\"",
+    "validate": "pnpm run --stream \"/^validate:.*/\"",
     "validate:lint": "eslint --cache --fix .",
     "validate:format": "prettier --write --ignore-path .gitignore .",
-    "db:prototype": "prisma db push --skip-generate && prisma generate --no-hints"
+    "db:prototype": "prisma db push --skip-generate && prisma generate --no-hints",
+    "db:migrate": "prisma migrate dev --create-only"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.717.0",
@@ -104,7 +105,7 @@
     "typescript": "^5.7.2"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
-  "packageManager": "pnpm@9.15.0"
+  "packageManager": "pnpm@9.15.3"
 }
