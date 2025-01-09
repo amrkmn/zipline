@@ -19,8 +19,6 @@ export function withSafeConfig<T = unknown>(
     const config = safeConfig(libConfig);
     const data = await fn(ctx, config);
 
-    console.log(config, data);
-
     if ((data as any) && (data as any).notFound)
       return {
         notFound: true,
