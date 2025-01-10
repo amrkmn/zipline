@@ -160,6 +160,7 @@ export default function DashboardFileType({
             mah={400}
             src={dbFile ? `/raw/${file.name}${password ? `?pw=${password}` : ''}` : URL.createObjectURL(file)}
             alt={file.name}
+            style={{ width: 'auto' }}
           />
         </Center>
       ) : (
