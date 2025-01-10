@@ -8,6 +8,7 @@ import { canInteract } from '@/lib/role';
 import { getSession } from '@/server/session';
 import { LoadingOverlay } from '@mantine/core';
 import { InferGetServerSidePropsType } from 'next';
+import Head from 'next/head';
 
 export default function DashboardAdminUsersId({
   user,
@@ -18,9 +19,16 @@ export default function DashboardAdminUsersId({
   if (!user) return null;
 
   return (
-    <Layout config={config}>
-      <ViewFiles user={user} />
-    </Layout>
+    <>
+      <Head>
+        <title>
+          {config.website.title ?? 'Zipline'} – {user.username}&quot;s files
+        </title>
+      </Head>
+      <Layout config={config}>
+        <ViewFiles user={user} />
+      </Layout>
+    </>
   );
 }
 

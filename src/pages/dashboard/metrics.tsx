@@ -28,3 +28,5 @@ export default function DashboardMetricsPage({
 }
 
 export const getServerSideProps = withSafeConfig();
+
+DashboardMetricsPage.title = 'Metrics';

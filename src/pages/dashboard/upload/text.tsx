@@ -47,3 +47,5 @@ export const getServerSideProps = withSafeConfig<{
     codeMeta,
   };
 });
+
+DashboardUploadText.title = 'Upload Text';

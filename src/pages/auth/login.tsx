@@ -350,3 +350,5 @@ export const getServerSideProps = withSafeConfig(async () => {
 
   return {};
 });
+
+Login.title = 'Login';

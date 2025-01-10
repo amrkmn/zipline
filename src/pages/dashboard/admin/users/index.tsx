@@ -48,3 +48,5 @@ export const getServerSideProps = withSafeConfig(async (ctx) => {
 
   return {};
 });
+
+DashboardAdminUsers.title = 'Users';

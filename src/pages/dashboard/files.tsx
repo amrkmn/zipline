@@ -19,3 +19,5 @@ export default function DashboardFilesPage({
 }
 
 export const getServerSideProps = withSafeConfig();
+
+DashboardFilesPage.title = 'Files';

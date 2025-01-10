@@ -47,3 +47,5 @@ export const getServerSideProps = withSafeConfig(async (ctx) => {
 
   return {};
 });
+
+DashboardAdminSettings.title = 'Server Settings';

@@ -19,3 +19,5 @@ export default function DashboardUrlsPage({
 }
 
 export const getServerSideProps = withSafeConfig();
+
+DashboardUrlsPage.title = 'URLs';

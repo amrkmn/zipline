@@ -199,3 +199,5 @@ export const getServerSideProps = withSafeConfig<{
     invite: invite as unknown as Invite,
   };
 });
+
+Register.title = 'Register';

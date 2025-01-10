@@ -19,3 +19,5 @@ export default function DashboardUserSettings({
 }
 
 export const getServerSideProps = withSafeConfig();
+
+DashboardUserSettings.title = 'Settings';

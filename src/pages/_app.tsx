@@ -29,13 +29,19 @@ const fetcher = async (url: RequestInfo | URL) => {
   return res.json();
 };
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({
+  Component,
+  pageProps,
+}: AppProps & { Component: AppProps['Component'] & { title: string } }) {
   const themes: ZiplineTheme[] = pageProps.themes;
 
   return (
     <>
       <Head>
-        <title>Zipline</title>
+        <title>
+          {pageProps?.config?.website?.title ?? 'Zipline'}
+          {Component.title ? ` – ${Component.title}` : ''}
+        </title>
         <meta name='viewport' content='minimum-scale=1, initial-scale=1, width=device-width' />
         <link rel='manifest' href='/manifest.json' />
         <link rel='icon' type='image/png' href='/favicon' />

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { mutate } from 'swr';
 
-export default function Login() {
+export default function Logout() {
   const router = useRouter();
   const setUser = useUserStore((state) => state.setUser);
 
@@ -31,3 +31,5 @@ export default function Login() {
     </>
   );
 }
+
+Logout.title = 'Logout';

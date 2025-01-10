@@ -4,7 +4,7 @@ import { Container } from '@mantine/core';
 import { readFile } from 'fs/promises';
 import { InferGetServerSidePropsType } from 'next';
 
-export default function Login({ tos }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function TermsOfService({ tos }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <Container my='md'>
       <Markdown md={tos!} />
@@ -18,9 +18,17 @@ export const getServerSideProps = withSafeConfig(async (_, config) => {
       notFound: true,
     };
 
-  const file = await readFile(config.website.tos, 'utf8');
+  try {
+    const file = await readFile(config.website.tos, 'utf8');
 
-  return {
-    tos: file,
-  };
+    return {
+      tos: file,
+    };
+  } catch {
+    return {
+      notFound: true,
+    };
+  }
 });
+
+TermsOfService.title = 'Terms of Service';

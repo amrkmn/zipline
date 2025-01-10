@@ -245,3 +245,5 @@ export const getServerSideProps: GetServerSideProps = async () => {
     props: {},
   };
 };
+
+Setup.title = 'Setup';

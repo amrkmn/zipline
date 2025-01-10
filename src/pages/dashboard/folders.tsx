@@ -19,3 +19,5 @@ export default function DashboardFoldersPage({
 }
 
 export const getServerSideProps = withSafeConfig();
+
+DashboardFoldersPage.title = 'Folders';

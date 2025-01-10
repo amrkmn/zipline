@@ -32,3 +32,5 @@ export default function DashboardUploadFile({
 }
 
 export const getServerSideProps = withSafeConfig();
+
+DashboardUploadFile.title = 'Upload';

@@ -5,12 +5,21 @@ import { Folder, cleanFolder } from '@/lib/db/models/folder';
 import { withSafeConfig } from '@/lib/middleware/next/withSafeConfig';
 import { Container, SimpleGrid, Title } from '@mantine/core';
 import { InferGetServerSidePropsType } from 'next';
+import Head from 'next/head';
 
-export default function ViewFolderId({ folder }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function ViewFolderId({
+  folder,
+  config,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (!folder) return null;
 
   return (
     <>
+      <Head>
+        <title>
+          {config.website.title ?? 'Zipline'} – {folder.name}
+        </title>
+      </Head>
       <Container>
         <Title order={1}>{folder.name}</Title>
 
