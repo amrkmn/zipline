@@ -162,8 +162,11 @@ async function main() {
   const routesOptions = Object.values(routes);
   Promise.all(routesOptions.map((route) => server.register(route)));
 
-  if (!argv.includes('--skip-next')) server.next('/*', ALL_METHODS);
-  server.get('/', (_, res) => res.redirect('/dashboard'));
+  if (!argv.includes('--skip-next')) {
+    server.get('/', (_, res) => res.redirect('/dashboard'));
+    server.next('/*', ALL_METHODS);
+    server.next('/dashboard', ALL_METHODS);
+  }
 
   // TODO: no longer need this when all the api routes are handled by fastify :)
   const routeKeys = Object.keys(routes); // holds "currently migrated routes" so we can parse json through fastify
@@ -182,7 +185,7 @@ async function main() {
     } else done(null, body);
   });
 
-  server.setErrorHandler((error, req, res) => {
+  server.setErrorHandler((error, _, res) => {
     logger.error(error);
 
     if (error.statusCode) {
