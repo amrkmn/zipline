@@ -16,9 +16,7 @@ export default function ViewFolderId({
   return (
     <>
       <Head>
-        <title>
-          {config.website.title ?? 'Zipline'} – {folder.name}
-        </title>
+        <title>{`${config.website.title ?? 'Zipline'} – ${folder.name}`}</title>
       </Head>
       <Container>
         <Title order={1}>{folder.name}</Title>

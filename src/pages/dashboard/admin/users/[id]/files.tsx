@@ -21,9 +21,7 @@ export default function DashboardAdminUsersId({
   return (
     <>
       <Head>
-        <title>
-          {config.website.title ?? 'Zipline'} – {user.username}&quot;s files
-        </title>
+        <title>{`${config.website.title ?? 'Zipline'} – ${user.username}'s files`}</title>
       </Head>
       <Layout config={config}>
         <ViewFiles user={user} />
