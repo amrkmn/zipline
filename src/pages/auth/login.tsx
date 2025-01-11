@@ -229,7 +229,7 @@ export default function Login({ config }: InferGetServerSidePropsType<typeof get
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              filter: 'blur(10px)',
+              ...(config.website.loginBackgroundBlur && { filter: 'blur(10px)' }),
             }}
           />
         )}

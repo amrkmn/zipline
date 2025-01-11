@@ -39,7 +39,7 @@ export default function App({
     <>
       <Head>
         <title>
-          {`${pageProps?.config?.website?.title ?? 'Zipline'}${Component.title ? `– ${Component.title}` : ''}`}
+          {`${pageProps?.config?.website?.title ?? 'Zipline'}${Component.title ? ` – ${Component.title}` : ''}`}
         </title>
         <meta name='viewport' content='minimum-scale=1, initial-scale=1, width=device-width' />
         <link rel='manifest' href='/manifest.json' />

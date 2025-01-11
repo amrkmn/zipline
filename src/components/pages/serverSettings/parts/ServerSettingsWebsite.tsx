@@ -1,5 +1,5 @@
 import { Response } from '@/lib/api/response';
-import { Button, JsonInput, Paper, SimpleGrid, TextInput, Title } from '@mantine/core';
+import { Button, Grid, JsonInput, Paper, Switch, TextInput, Title } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconDeviceFloppy } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
@@ -29,6 +29,7 @@ export default function ServerSettingsWebsite({
       websiteTitleLogo: '',
       websiteExternalLinks: JSON.stringify(defaultExternalLinks),
       websiteLoginBackground: '',
+      websiteLoginBackgroundBlur: true,
       websiteDefaultAvatar: '',
       websiteTos: '',
 
@@ -66,6 +67,8 @@ export default function ServerSettingsWebsite({
     sendValues.websiteThemeLight = values.websiteThemeLight.trim();
     sendValues.websiteTitle = values.websiteTitle.trim();
 
+    sendValues.websiteLoginBackgroundBlur = values.websiteLoginBackgroundBlur;
+
     return settingsOnSubmit(router, form)(sendValues);
   };
 
@@ -77,6 +80,7 @@ export default function ServerSettingsWebsite({
       websiteTitleLogo: data?.websiteTitleLogo ?? '',
       websiteExternalLinks: JSON.stringify(data?.websiteExternalLinks ?? defaultExternalLinks, null, 2),
       websiteLoginBackground: data?.websiteLoginBackground ?? '',
+      websiteLoginBackgroundBlur: data?.websiteLoginBackgroundBlur ?? true,
       websiteDefaultAvatar: data?.websiteDefaultAvatar ?? '',
       websiteTos: data?.websiteTos ?? '',
       websiteThemeDefault: data?.websiteThemeDefault ?? 'system',
@@ -90,76 +94,103 @@ export default function ServerSettingsWebsite({
       <Title order={2}>Website</Title>
 
       <form onSubmit={form.onSubmit(onSubmit)}>
-        <SimpleGrid mt='md' cols={{ base: 1, md: 2 }} spacing='lg'>
-          <TextInput
-            label='Title'
-            description='The title of the website in browser tabs and at the top.'
-            placeholder='Zipline'
-            {...form.getInputProps('websiteTitle')}
-          />
+        {/* <SimpleGrid mt='md' cols={{ base: 1, md: 2 }} spacing='lg'> */}
+        <Grid>
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <TextInput
+              label='Title'
+              description='The title of the website in browser tabs and at the top.'
+              placeholder='Zipline'
+              {...form.getInputProps('websiteTitle')}
+            />
+          </Grid.Col>
 
-          <TextInput
-            label='Title Logo'
-            description='The URL to use for the title logo. This is placed to the left of the title.'
-            placeholder='https://example.com/logo.png'
-            {...form.getInputProps('websiteTitleLogo')}
-          />
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <TextInput
+              label='Title Logo'
+              description='The URL to use for the title logo. This is placed to the left of the title.'
+              placeholder='https://example.com/logo.png'
+              {...form.getInputProps('websiteTitleLogo')}
+            />
+          </Grid.Col>
 
-          <JsonInput
-            label='External Links'
-            description='The external links to show in the footer. This must be valid JSON.'
-            formatOnBlur
-            minRows={1}
-            maxRows={7}
-            autosize
-            placeholder={JSON.stringify(defaultExternalLinks, null, 2)}
-            {...form.getInputProps('websiteExternalLinks')}
-          />
+          <Grid.Col span={12}>
+            <JsonInput
+              label='External Links'
+              description='The external links to show in the footer. This must be valid JSON.'
+              formatOnBlur
+              minRows={1}
+              maxRows={7}
+              autosize
+              placeholder={JSON.stringify(defaultExternalLinks, null, 2)}
+              {...form.getInputProps('websiteExternalLinks')}
+            />
+          </Grid.Col>
 
-          <TextInput
-            label='Login Background'
-            description='The URL to use for the login background.'
-            placeholder='https://example.com/background.png'
-            {...form.getInputProps('websiteLoginBackground')}
-          />
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <TextInput
+              label='Login Background'
+              description='The URL to use for the login background.'
+              placeholder='https://example.com/background.png'
+              {...form.getInputProps('websiteLoginBackground')}
+            />
+          </Grid.Col>
 
-          <TextInput
-            label='Default Avatar'
-            description='The path to use for the default avatar. This must be a path to an image, not a URL.'
-            placeholder='/zipline/avatar.png'
-            {...form.getInputProps('websiteDefaultAvatar')}
-          />
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <Switch
+              label='Login Background Blur'
+              description='Whether to blur the login background.'
+              {...form.getInputProps('websiteLoginBackgroundBlur', { type: 'checkbox' })}
+            />
+          </Grid.Col>
 
-          <TextInput
-            label='Terms of Service'
-            description='Path to a Markdown (.md) file to use for the terms of service.'
-            placeholder='/zipline/TOS.md'
-            {...form.getInputProps('websiteTos')}
-          />
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <TextInput
+              label='Default Avatar'
+              description='The path to use for the default avatar. This must be a path to an image, not a URL.'
+              placeholder='/zipline/avatar.png'
+              {...form.getInputProps('websiteDefaultAvatar')}
+            />
+          </Grid.Col>
 
-          <TextInput
-            label='Default Theme'
-            description='The default theme to use for the website.'
-            placeholder='system'
-            {...form.getInputProps('websiteThemeDefault')}
-          />
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <TextInput
+              label='Terms of Service'
+              description='Path to a Markdown (.md) file to use for the terms of service.'
+              placeholder='/zipline/TOS.md'
+              {...form.getInputProps('websiteTos')}
+            />
+          </Grid.Col>
 
-          <TextInput
-            label='Dark Theme'
-            description='The dark theme to use for the website when the default theme is "system".'
-            placeholder='builtin:dark_gray'
-            disabled={form.values.websiteThemeDefault !== 'system'}
-            {...form.getInputProps('websiteThemeDark')}
-          />
+          <Grid.Col span={12}>
+            <TextInput
+              label='Default Theme'
+              description='The default theme to use for the website.'
+              placeholder='system'
+              {...form.getInputProps('websiteThemeDefault')}
+            />
+          </Grid.Col>
 
-          <TextInput
-            label='Light Theme'
-            description='The light theme to use for the website when the default theme is "system".'
-            placeholder='builtin:light_gray'
-            disabled={form.values.websiteThemeDefault !== 'system'}
-            {...form.getInputProps('websiteThemeLight')}
-          />
-        </SimpleGrid>
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <TextInput
+              label='Dark Theme'
+              description='The dark theme to use for the website when the default theme is "system".'
+              placeholder='builtin:dark_gray'
+              disabled={form.values.websiteThemeDefault !== 'system'}
+              {...form.getInputProps('websiteThemeDark')}
+            />
+          </Grid.Col>
+
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <TextInput
+              label='Light Theme'
+              description='The light theme to use for the website when the default theme is "system".'
+              placeholder='builtin:light_gray'
+              disabled={form.values.websiteThemeDefault !== 'system'}
+              {...form.getInputProps('websiteThemeLight')}
+            />
+          </Grid.Col>
+        </Grid>
 
         <Button type='submit' mt='md' loading={isLoading} leftSection={<IconDeviceFloppy size='1rem' />}>
           Save

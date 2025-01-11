@@ -182,6 +182,7 @@ export const schema = z.object({
         },
       ]),
     loginBackground: z.string().url().nullable().default(null),
+    loginBackgroundBlur: z.boolean().default(true),
     defaultAvatar: z
       .string()
       .transform((s) => resolve(s))

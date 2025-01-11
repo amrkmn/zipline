@@ -213,6 +213,7 @@ export const DATABASE_TO_PROP = {
   websiteTitleLogo: 'website.titleLogo',
   websiteExternalLinks: 'website.externalLinks',
   websiteLoginBackground: 'website.loginBackground',
+  websiteLoginBackgroundBlur: 'website.loginBackgroundBlur',
   websiteDefaultAvatar: 'website.defaultAvatar',
   websiteTos: 'website.tos',
 

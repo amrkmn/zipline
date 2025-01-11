@@ -155,6 +155,7 @@ export default fastifyPlugin(
               ])
               .transform((value) => (typeof value === 'string' ? JSON.parse(value) : value)),
             websiteLoginBackground: z.string().url().nullable(),
+            websiteLoginBackgroundBlur: z.boolean(),
             websiteDefaultAvatar: z
               .string()
               .transform((s) => resolve(s))

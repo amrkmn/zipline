@@ -63,6 +63,7 @@ model Zipline {
   websiteTitleLogo       String?
   websiteExternalLinks   Json    @default("[{ \"name\": \"GitHub\", \"url\": \"https://github.com/diced/zipline\"}, { \"name\": \"Documentation\", \"url\": \"https://zipline.diced.sh/\"}]")
   websiteLoginBackground String?
+  websiteLoginBackgroundBlur Boolean @default(true)
   websiteDefaultAvatar   String?
   websiteTos             String?
 
