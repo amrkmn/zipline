@@ -7,6 +7,7 @@ import {
   Paper,
   SimpleGrid,
   Switch,
+  Textarea,
   TextInput,
   Title,
 } from '@mantine/core';
@@ -79,8 +80,6 @@ export default function ServerSettingsDiscord({
       discordOnShortenEmbedDescription: '',
       discordOnShortenEmbedFooter: '',
       discordOnShortenEmbedColor: '',
-      discordOnShortenEmbedThumbnail: false,
-      discordOnShortenEmbedImageOrVideo: false,
       discordOnShortenEmbedTimestamp: false,
       discordOnShortenEmbedUrl: false,
     },
@@ -158,8 +157,6 @@ export default function ServerSettingsDiscord({
       discordOnShortenEmbedDescription: (data?.discordOnShortenEmbed as DiscordEmbed)?.description ?? '',
       discordOnShortenEmbedFooter: (data?.discordOnShortenEmbed as DiscordEmbed)?.footer ?? '',
       discordOnShortenEmbedColor: (data?.discordOnShortenEmbed as DiscordEmbed)?.color ?? '',
-      discordOnShortenEmbedThumbnail: (data?.discordOnShortenEmbed as DiscordEmbed)?.thumbnail ?? false,
-      discordOnShortenEmbedImageOrVideo: (data?.discordOnShortenEmbed as DiscordEmbed)?.imageOrVideo ?? false,
       discordOnShortenEmbedTimestamp: (data?.discordOnShortenEmbed as DiscordEmbed)?.timestamp ?? false,
       discordOnShortenEmbedUrl: (data?.discordOnShortenEmbed as DiscordEmbed)?.url ?? false,
     });
@@ -199,6 +196,7 @@ export default function ServerSettingsDiscord({
           Save
         </Button>
       </form>
+
       <SimpleGrid mt='md' cols={{ base: 1, md: 2 }} spacing='lg'>
         <Paper withBorder p='sm'>
           <Title order={3}>On Upload</Title>
@@ -226,6 +224,15 @@ export default function ServerSettingsDiscord({
                 {...formOnUpload.getInputProps('discordOnUploadAvatarUrl')}
               />
             </SimpleGrid>
+
+            <Textarea
+              mt='md'
+              label='Content'
+              description='The content of the notification. This can be blank, but at least one of the content or embed fields must be filled out'
+              minRows={1}
+              maxRows={7}
+              {...formOnUpload.getInputProps('discordOnUploadContent')}
+            />
 
             <Switch
               mt='md'
@@ -321,6 +328,15 @@ export default function ServerSettingsDiscord({
               />
             </SimpleGrid>
 
+            <Textarea
+              mt='md'
+              label='Content'
+              description='The content of the notification. This can be blank, but at least one of the content or embed fields must be filled out'
+              minRows={1}
+              maxRows={7}
+              {...formOnShorten.getInputProps('discordOnShortenContent')}
+            />
+
             <Switch
               mt='md'
               label='Embed'
@@ -353,20 +369,6 @@ export default function ServerSettingsDiscord({
                     label='Color'
                     description='The color of the embed'
                     {...formOnShorten.getInputProps('discordOnShortenEmbedColor')}
-                  />
-
-                  <Switch
-                    label='Thumbnail'
-                    description="Show the thumbnail (it will show the file if it's an image) in the embed"
-                    {...formOnShorten.getInputProps('discordOnShortenEmbedThumbnail', { type: 'checkbox' })}
-                  />
-
-                  <Switch
-                    label='Image/Video'
-                    description='Show the image or video in the embed'
-                    {...formOnShorten.getInputProps('discordOnShortenEmbedImageOrVideo', {
-                      type: 'checkbox',
-                    })}
                   />
 
                   <Switch

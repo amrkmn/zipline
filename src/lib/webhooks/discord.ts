@@ -110,8 +110,9 @@ export function buildResponse(
 
 export async function onUpload({ user, file, link }: { user: User; file: File; link: ParseValue['link'] }) {
   if (!config.discord?.onUpload) return logger.debug('no onUpload config, no webhook executed');
-  if (!config.discord?.webhookUrl || !config.discord?.onUpload?.webhookUrl)
-    return logger.debug('no webhookUrl config, no webhook executed');
+
+  const webhookUrl = config.discord?.onUpload?.webhookUrl || config.discord?.webhookUrl;
+  if (!webhookUrl) return logger.debug('no webhookUrl config, no webhook executed');
 
   const metrics = await parserMetrics(user.id);
 
@@ -148,8 +149,9 @@ export async function onShorten({
   link: ParseValue['link'];
 }) {
   if (!config.discord?.onShorten) return logger.debug('no onShorten config, no webhook executed');
-  if (!config.discord?.webhookUrl || !config.discord?.onShorten?.webhookUrl)
-    return logger.debug('no webhookUrl config, no webhook executed');
+
+  const webhookUrl = config.discord?.onShorten?.webhookUrl || config.discord?.webhookUrl;
+  if (!webhookUrl) return logger.debug('no webhookUrl config, no webhook executed');
 
   const metrics = await parserMetrics(user.id);
 
