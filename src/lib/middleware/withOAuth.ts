@@ -67,26 +67,7 @@ export const withOAuth =
         },
       });
     } catch (e) {
-      logger.debug(`Failed to find existing oauth. Using fallback. ${e}`);
-      if (e.code === 'P2022' || e.code === 'P2025') {
-        const existing = await prisma.user.findFirst({
-          where: {
-            oauth: {
-              some: {
-                provider: provider.toUpperCase() as OauthProviders,
-                username: oauth_resp.username,
-              },
-            },
-          },
-          include: {
-            oauth: true,
-          },
-        });
-        existingOauth = existing?.oauth?.find((o) => o.provider === provider.toUpperCase());
-        if (existingOauth) existingOauth.fallback = true;
-      } else {
-        logger.error(`Failed to find existing oauth. ${e}`);
-      }
+      logger.error(`Failed to find existing oauth, this likely will result in a failure: ${e}`);
     }
 
     const existingUser = await prisma.user.findFirst({
@@ -157,7 +138,7 @@ export const withOAuth =
       logger.info(`User ${user.username} (${user.id}) logged in via oauth(${provider})`);
 
       return res.redirect('/dashboard');
-    } else if ((existingOauth && existingOauth.fallback) || existingOauth) {
+    } else if (existingOauth) {
       await prisma.oAuth.update({
         where: {
           id: existingOauth?.id,

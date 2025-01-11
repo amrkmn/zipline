@@ -100,6 +100,16 @@ async function start() {
     done();
   });
 
+  server.setErrorHandler((error, request, reply) => {
+    console.error(error);
+
+    reply.status(500).send({
+      statusCode: 500,
+      error: 'Internal Server Error',
+      message: error.message,
+    });
+  });
+
   server.get('/favicon.ico', async (_, reply) => {
     if (!existsSync('./public/favicon.ico')) return reply.notFound();
 

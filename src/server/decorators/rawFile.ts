@@ -5,6 +5,7 @@ import fastifyPlugin from 'fastify-plugin';
 import { createBrotliCompress, createDeflate, createGzip } from 'zlib';
 import pump from 'pump';
 import { Transform } from 'stream';
+import { parseRangeHeader } from 'lib/utils/range';
 
 function rawFileDecorator(fastify: FastifyInstance, _, done) {
   fastify.decorateReply('rawFile', rawFile);
@@ -12,13 +13,30 @@ function rawFileDecorator(fastify: FastifyInstance, _, done) {
 
   async function rawFile(this: FastifyReply, id: string) {
     const { download, compress = 'false' } = this.request.query as { download?: string; compress?: string };
-
-    const data = await this.server.datasource.get(id);
-    if (!data) return this.notFound();
+    const size = await this.server.datasource.size(id);
+    if (size === null) return this.notFound();
 
     const mimetype = await guess(extname(id).slice(1));
-    const size = await this.server.datasource.size(id);
+
+    // eslint-disable-next-line prefer-const
+    let [rangeStart, rangeEnd] = parseRangeHeader(this.request.headers.range);
+    if (rangeStart >= rangeEnd)
+      return this.code(416)
+        .header('Content-Range', `bytes 0/${size - 1}`)
+        .send();
+    if (rangeEnd === Infinity) rangeEnd = size - 1;
+
+    const data = await this.server.datasource.get(id, rangeStart, rangeEnd);
+
+    // only send content-range if the client asked for it
+    if (this.request.headers.range) {
+      this.code(206);
+      this.header('Content-Range', `bytes ${rangeStart}-${rangeEnd}/${size}`);
+    }
+
+    this.header('Content-Length', rangeEnd - rangeStart + 1);
     this.header('Content-Type', download ? 'application/octet-stream' : mimetype);
+    this.header('Accept-Ranges', 'bytes');
 
     if (
       this.server.config.core.compression.enabled &&
@@ -28,7 +46,6 @@ function rawFileDecorator(fastify: FastifyInstance, _, done) {
     )
       if (size > this.server.config.core.compression.threshold && mimetype.match(/^(image|video|text)/))
         return this.send(useCompress.call(this, data));
-    this.header('Content-Length', size);
     return this.send(data);
   }
 }
