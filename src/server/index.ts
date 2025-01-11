@@ -166,6 +166,7 @@ async function main() {
     server.get('/', (_, res) => res.redirect('/dashboard'));
     server.next('/*', ALL_METHODS);
     server.next('/dashboard', ALL_METHODS);
+    server.next('/reload', ALL_METHODS);
   }
 
   // TODO: no longer need this when all the api routes are handled by fastify :)
