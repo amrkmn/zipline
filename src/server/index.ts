@@ -187,7 +187,7 @@ async function main() {
   });
 
   server.setErrorHandler((error, _, res) => {
-    logger.error(error);
+    if (process.env.DEBUG === 'zipline') console.error(error);
 
     if (error.statusCode) {
       res.status(error.statusCode);
