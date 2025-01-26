@@ -30,6 +30,18 @@ export default fastifyPlugin(
     server.post<{ Body: Body }>(PATH, { preHandler: [userMiddleware] }, async (req, res) => {
       const { name, color } = req.body;
 
+      if (!name) return res.badRequest('Name is required');
+      if (!color) return res.badRequest('Color is required');
+
+      const existingTag = await prisma.tag.findFirst({
+        where: {
+          name,
+          userId: req.user.id,
+        },
+      });
+
+      if (existingTag) return res.badRequest('Cannot create tag with the same name');
+
       const tag = await prisma.tag.create({
         data: {
           name,
