@@ -74,7 +74,7 @@ export default fastifyPlugin(
         if (role && !z.enum(['USER', 'ADMIN']).safeParse(role).success)
           return res.badRequest('Invalid role (USER, ADMIN)');
 
-        if (role && !canInteract(req.user.role, role)) return res.forbidden('You cannot create this role');
+        if (role && !canInteract(req.user.role, role)) return res.forbidden('You cannot assign this role');
 
         let finalQuota:
           | {
@@ -125,7 +125,7 @@ export default fastifyPlugin(
           data: {
             ...(username && { username }),
             ...(password && { password: await hashPassword(password) }),
-            ...(role !== undefined && { role: 'USER' }),
+            ...(role !== undefined && { role: role || 'USER' }),
             ...(avatar && { avatar }),
             ...(finalQuota && {
               quota: {
