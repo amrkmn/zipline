@@ -1,8 +1,11 @@
 import RelativeDate from '@/components/RelativeDate';
 import FileModal from '@/components/file/DashboardFile/FileModal';
 import { addMultipleToFolder, copyFile, deleteFile } from '@/components/file/actions';
+import { Response } from '@/lib/api/response';
 import { bytes } from '@/lib/bytes';
 import { type File } from '@/lib/db/models/file';
+import { Folder } from '@/lib/db/models/folder';
+import { Tag } from '@/lib/db/models/tag';
 import { useSettingsStore } from '@/lib/store/settings';
 import {
   ActionIcon,
@@ -26,22 +29,26 @@ import {
 } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
 import type { Prisma } from '@prisma/client';
-import { IconCopy, IconExternalLink, IconFile, IconStar, IconTrashFilled } from '@tabler/icons-react';
+import {
+  IconCopy,
+  IconExternalLink,
+  IconFile,
+  IconGridPatternFilled,
+  IconStar,
+  IconTrashFilled,
+} from '@tabler/icons-react';
 import { DataTable } from 'mantine-datatable';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useReducer, useState } from 'react';
-import { bulkDelete, bulkFavorite } from '../bulk';
-import { useApiPagination } from '../useApiPagination';
 import useSWR from 'swr';
-import { Response } from '@/lib/api/response';
-import { Folder } from '@/lib/db/models/folder';
-import TagPill from '../tags/TagPill';
-import { Tag } from '@/lib/db/models/tag';
-import Link from 'next/link';
 import { useShallow } from 'zustand/shallow';
+import { bulkDelete, bulkFavorite } from '../bulk';
+import TagPill from '../tags/TagPill';
+import { useApiPagination } from '../useApiPagination';
 
 type ReducerQuery = {
-  state: { name: string; originalName: string; type: string; tags: string };
+  state: { name: string; originalName: string; type: string; tags: string; id: string };
   action: { field: string; query: string };
 };
 
@@ -51,6 +58,7 @@ const NAMES = {
   name: 'Name',
   originalName: 'Original name',
   type: 'Type',
+  id: 'ID',
 };
 
 function SearchFilter({
@@ -63,10 +71,11 @@ function SearchFilter({
     name: string;
     originalName: string;
     type: string;
+    id: string;
   };
   setSearchField: (...args: any) => void;
   setSearchQuery: (...args: any) => void;
-  field: 'name' | 'originalName' | 'type';
+  field: 'name' | 'originalName' | 'type' | 'id';
 }) {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchField(field);
@@ -83,7 +92,6 @@ function SearchFilter({
       placeholder={`Search by ${NAMES[field].toLowerCase()}`}
       value={searchQuery[field]}
       onChange={onChange}
-      variant='filled'
       size='sm'
     />
   );
@@ -188,7 +196,8 @@ export default function FileTable({ id }: { id?: string }) {
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const [searchField, setSearchField] = useState<'name' | 'originalName' | 'type' | 'tags'>('name');
+  const [idSearchOpen, setIdSearchOpen] = useState(false);
+  const [searchField, setSearchField] = useState<'name' | 'originalName' | 'type' | 'tags' | 'id'>('name');
   const [searchQuery, setSearchQuery] = useReducer(
     (state: ReducerQuery['state'], action: ReducerQuery['action']) => {
       return {
@@ -196,8 +205,24 @@ export default function FileTable({ id }: { id?: string }) {
         [action.field]: action.query,
       };
     },
-    { name: '', originalName: '', type: '', tags: '' },
+    { name: '', originalName: '', type: '', tags: '', id: '' },
   );
+  const [debouncedQuery, setDebouncedQuery] = useState(searchQuery);
+
+  useEffect(() => {
+    if (idSearchOpen) return;
+
+    setSearchQuery({
+      field: 'id',
+      query: '',
+    });
+  }, [idSearchOpen]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedQuery(searchQuery), 300);
+
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
@@ -227,7 +252,7 @@ export default function FileTable({ id }: { id?: string }) {
       search: {
         threshold: searchThreshold,
         field: searchField,
-        query: searchQuery[searchField],
+        query: debouncedQuery[searchField],
       },
     }),
   });
@@ -256,7 +281,7 @@ export default function FileTable({ id }: { id?: string }) {
   }, [data]);
 
   useEffect(() => {
-    for (const field of ['name', 'originalName', 'type', 'tags'] as const) {
+    for (const field of ['name', 'originalName', 'type', 'tags', 'id'] as const) {
       if (field !== searchField) {
         setSearchQuery({
           field,
@@ -276,7 +301,21 @@ export default function FileTable({ id }: { id?: string }) {
         file={selectedFile}
       />
 
-      <Box my='sm'>
+      <Box>
+        <Tooltip label='Search by ID'>
+          <ActionIcon
+            variant='outline'
+            onClick={() => {
+              setIdSearchOpen((open) => !open);
+            }}
+            color='blue'
+            // lol if it works it works :shrug:
+            style={{ position: 'relative', top: '-36.4px', left: '219px', margin: 0 }}
+          >
+            <IconGridPatternFilled size='1rem' />
+          </ActionIcon>
+        </Tooltip>
+
         <Collapse in={selectedFiles.length > 0}>
           <Paper withBorder p='sm' my='sm'>
             <Text size='sm' c='dimmed' mb='xs'>
@@ -361,6 +400,23 @@ export default function FileTable({ id }: { id?: string }) {
           </Paper>
         </Collapse>
 
+        <Collapse in={idSearchOpen}>
+          <Paper withBorder p='sm' my='sm'>
+            <TextInput
+              placeholder='Search by ID'
+              value={searchQuery.id}
+              onChange={(e) => {
+                setSearchField('id');
+                setSearchQuery({
+                  field: 'id',
+                  query: e.target.value,
+                });
+              }}
+              size='sm'
+            />
+          </Paper>
+        </Collapse>
+
         {/* @ts-ignore */}
         <DataTable
           borderRadius='sm'
@@ -426,6 +482,11 @@ export default function FileTable({ id }: { id?: string }) {
               accessor: 'favorite',
               sortable: true,
               render: (file) => (file.favorite ? <Text c='yellow'>Yes</Text> : 'No'),
+            },
+            {
+              accessor: 'id',
+              hidden: searchField !== 'id' || searchQuery.id.trim() === '',
+              filtering: searchField === 'id' && searchQuery.id.trim() !== '',
             },
             {
               accessor: 'actions',

@@ -6,10 +6,12 @@ import { Prisma } from '@prisma/client';
 import fastifyPlugin from 'fastify-plugin';
 import { z } from 'zod';
 
+export type FileSearchField = 'name' | 'originalName' | 'type' | 'tags' | 'id';
+
 export type ApiUserFilesResponse = {
   page: File[];
   search?: {
-    field: 'name' | 'originalName' | 'type' | 'tags';
+    field: FileSearchField;
     query: string | string[];
   };
   total?: number;
@@ -23,12 +25,12 @@ type Query = {
   favorite?: 'true' | 'false';
   sortBy: keyof Prisma.FileOrderByWithAggregationInput;
   order: 'asc' | 'desc';
-  searchField?: 'name' | 'originalName' | 'type' | 'tags';
+  searchField?: FileSearchField;
   searchQuery?: string;
   id?: string;
 };
 
-const validateSearchField = z.enum(['name', 'originalName', 'type', 'tags']).default('name');
+const validateSearchField = z.enum(['name', 'originalName', 'type', 'tags', 'id']).default('name');
 
 const validateSortBy = z
   .enum([
@@ -162,15 +164,22 @@ export default fastifyPlugin(
                       notIn: incompleteFiles.map((file) => file.metadata.file.id),
                     },
                   }
-                : {
-                    [searchField.data]: {
-                      contains: searchQuery,
-                      mode: 'insensitive',
-                    },
-                    id: {
-                      notIn: incompleteFiles.map((file) => file.metadata.file.id),
-                    },
-                  }),
+                : searchField.data === 'id'
+                  ? {
+                      id: {
+                        equals: searchQuery,
+                        notIn: incompleteFiles.map((file) => file.metadata.file.id),
+                      },
+                    }
+                  : {
+                      [searchField.data]: {
+                        contains: searchQuery,
+                        mode: 'insensitive',
+                      },
+                      id: {
+                        notIn: incompleteFiles.map((file) => file.metadata.file.id),
+                      },
+                    }),
             },
             select: fileSelect,
             orderBy: {
