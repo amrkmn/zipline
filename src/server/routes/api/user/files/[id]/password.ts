@@ -1,7 +1,6 @@
 import { verifyPassword } from '@/lib/crypto';
 import { prisma } from '@/lib/db';
 import { log } from '@/lib/logger';
-import { userMiddleware } from '@/server/middleware/user';
 import fastifyPlugin from 'fastify-plugin';
 
 export type ApiUserFilesIdPasswordResponse = {
@@ -27,7 +26,6 @@ export default fastifyPlugin(
     }>({
       url: PATH,
       method: ['POST'],
-      preHandler: [userMiddleware],
       handler: async (req, res) => {
         const file = await prisma.file.findFirst({
           where: {

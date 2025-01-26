@@ -368,11 +368,19 @@ export const getServerSideProps: GetServerSideProps<{
   const themes = await readThemes();
   const metrics = await parserMetrics(user.id);
 
-  if (pw) {
-    const verified = await verifyPassword(pw as string, file.password!);
+  if (pw && file.password) {
+    const verified = await verifyPassword(pw as string, file.password);
+    if (!verified) return { notFound: true };
 
     delete (file as any).password;
-    if (verified) return { props: { file, pw: pw as string, code, host, themes, metrics } };
+
+    return { props: { file, pw: pw as string, code, host, themes, metrics } };
+  } else if (file.password && !pw) {
+    delete (file as any).password;
+
+    return {
+      props: { file, password: true, code, user, config: safeConfig(libConfig), host, themes, metrics },
+    };
   }
 
   const password = !!file.password;
