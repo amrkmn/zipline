@@ -26,7 +26,7 @@ function rawFileDecorator(fastify: FastifyInstance, _, done) {
         .send();
     if (rangeEnd === Infinity) rangeEnd = size - 1;
 
-    const data = await this.server.datasource.get(id, rangeStart, rangeEnd);
+    const data = await this.server.datasource.get(id, rangeStart, rangeEnd + 1);
 
     // only send content-range if the client asked for it
     if (this.request.headers.range) {
@@ -46,6 +46,7 @@ function rawFileDecorator(fastify: FastifyInstance, _, done) {
     )
       if (size > this.server.config.core.compression.threshold && mimetype.match(/^(image|video|text)/))
         return this.send(useCompress.call(this, data));
+
     return this.send(data);
   }
 }
