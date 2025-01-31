@@ -121,6 +121,7 @@ const navLinks: NavLinks[] = [
         label: 'Settings',
         icon: <IconAdjustments size='1rem' />,
         active: (path: string) => path === '/dashboard/admin/settings',
+        if: (user) => user?.role === 'SUPERADMIN',
         href: '/dashboard/admin/settings',
       },
       {
