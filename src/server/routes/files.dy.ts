@@ -1,3 +1,4 @@
+import { config } from '@/lib/config';
 import { verifyPassword } from '@/lib/crypto';
 import { datasource } from '@/lib/datasource';
 import { prisma } from '@/lib/db';
@@ -35,6 +36,47 @@ export async function filesRoute(
   });
 
   if (!file) return req.server.nextServer.render404(req.raw, res.raw, parsedUrl);
+
+  if (file.deletesAt && file.deletesAt <= new Date()) {
+    try {
+      await datasource.delete(file.name);
+      await prisma.file.delete({
+        where: {
+          id: file.id,
+        },
+      });
+    } catch (e) {
+      logger
+        .error('failed to delete file on expiration', {
+          id: file.id,
+        })
+        .error(e as Error);
+    }
+
+    return req.server.nextServer.render404(req.raw, res.raw, parsedUrl);
+  }
+
+  if (file.maxViews && file.views >= file.maxViews) {
+    if (!config.features.deleteOnMaxViews)
+      return req.server.nextServer.render404(req.raw, res.raw, parsedUrl);
+
+    try {
+      await datasource.delete(file.name);
+      await prisma.file.delete({
+        where: {
+          id: file.id,
+        },
+      });
+    } catch (e) {
+      logger
+        .error('failed to delete file on max views', {
+          id: file.id,
+        })
+        .error(e as Error);
+    }
+
+    return req.server.nextServer.render404(req.raw, res.raw, parsedUrl);
+  }
 
   if (file.User?.view.enabled) return res.redirect(`/view/${encodeURIComponent(file.name)}`);
 

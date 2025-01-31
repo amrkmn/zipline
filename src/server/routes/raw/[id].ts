@@ -1,7 +1,9 @@
 import { parseRange } from '@/lib/api/range';
+import { config } from '@/lib/config';
 import { verifyPassword } from '@/lib/crypto';
 import { datasource } from '@/lib/datasource';
 import { prisma } from '@/lib/db';
+import { log } from '@/lib/logger';
 import fastifyPlugin from 'fastify-plugin';
 import { parse } from 'url';
 
@@ -13,6 +15,8 @@ type Querystring = {
   pw?: string;
   download?: string;
 };
+
+const logger = log('routes').c('raw');
 
 export const PATH = '/raw/:id';
 export default fastifyPlugin(
@@ -31,6 +35,47 @@ export default fastifyPlugin(
           name: decodeURIComponent(id),
         },
       });
+
+      if (file?.deletesAt && file.deletesAt <= new Date()) {
+        try {
+          await datasource.delete(file.name);
+          await prisma.file.delete({
+            where: {
+              id: file.id,
+            },
+          });
+        } catch (e) {
+          logger
+            .error('failed to delete file on expiration', {
+              id: file.id,
+            })
+            .error(e as Error);
+        }
+
+        return req.server.nextServer.render404(req.raw, res.raw, parsedUrl);
+      }
+
+      if (file?.maxViews && file.views >= file.maxViews) {
+        if (!config.features.deleteOnMaxViews)
+          return req.server.nextServer.render404(req.raw, res.raw, parsedUrl);
+
+        try {
+          await datasource.delete(file.name);
+          await prisma.file.delete({
+            where: {
+              id: file.id,
+            },
+          });
+        } catch (e) {
+          logger
+            .error('failed to delete file on max views', {
+              id: file.id,
+            })
+            .error(e as Error);
+        }
+
+        return req.server.nextServer.render404(req.raw, res.raw, parsedUrl);
+      }
 
       if (file?.password) {
         if (!pw) return res.forbidden('Password protected.');

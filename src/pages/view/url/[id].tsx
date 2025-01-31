@@ -1,10 +1,11 @@
+import { config } from '@/lib/config';
 import { verifyPassword } from '@/lib/crypto';
 import { prisma } from '@/lib/db';
 import { fetchApi } from '@/lib/fetchApi';
-import { Button, Modal, PasswordInput } from '@mantine/core';
+import { Anchor, Button, Modal, PasswordInput } from '@mantine/core';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ViewUrlId({ url, password }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
@@ -24,6 +25,10 @@ export default function ViewUrlId({ url, password }: InferGetServerSidePropsType
       router.replace(`/view/url/${url.id}?pw=${encodeURI(passwordValue.trim())}`);
     }
   };
+
+  useEffect(() => {
+    if (!password) router.replace(url.destination!);
+  }, []);
 
   return password ? (
     <Modal onClose={() => {}} opened={true} withCloseButton={false} centered title='Password required'>
@@ -46,11 +51,15 @@ export default function ViewUrlId({ url, password }: InferGetServerSidePropsType
         Verify
       </Button>
     </Modal>
-  ) : null;
+  ) : (
+    <p>
+      Redirecting to <Anchor href={url.destination!}>{url.destination!}</Anchor>
+    </p>
+  );
 }
 
 export const getServerSideProps: GetServerSideProps<{
-  url: { id: string };
+  url: { id: string; destination?: string };
   password?: boolean;
 }> = async (context) => {
   const { id, pw } = context.query as { id: string; pw: string };
@@ -64,9 +73,24 @@ export const getServerSideProps: GetServerSideProps<{
       id: true,
       password: true,
       destination: true,
+      maxViews: true,
+      views: true,
     },
   });
   if (!url) return { notFound: true };
+
+  if (url.maxViews && url.views >= url.maxViews) {
+    if (config.features.deleteOnMaxViews)
+      await prisma.url.delete({
+        where: {
+          id: url.id,
+        },
+      });
+
+    return {
+      notFound: true,
+    };
+  }
 
   if (pw) {
     const verified = await verifyPassword(pw, url.password!);
@@ -96,8 +120,17 @@ export const getServerSideProps: GetServerSideProps<{
   const password = url.password ? true : false;
   // @ts-ignore
   delete url.password;
-  // @ts-ignore
-  delete url.destination;
+
+  await prisma.url.update({
+    where: {
+      id: url.id,
+    },
+    data: {
+      views: {
+        increment: 1,
+      },
+    },
+  });
 
   return {
     props: {

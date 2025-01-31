@@ -1,6 +1,7 @@
 import { datasource } from '@/lib/datasource';
 import { IntervalTask } from '..';
 import { bytes } from '@/lib/bytes';
+import { config } from '@/lib/config';
 
 export default function maxViews(prisma: typeof globalThis.__db__) {
   return async function (this: IntervalTask) {
@@ -36,6 +37,11 @@ export default function maxViews(prisma: typeof globalThis.__db__) {
     this.logger.debug(`found ${urls.length} expired urls`, {
       dests: urls.map((u) => u.destination),
     });
+
+    if (!config.features.deleteOnMaxViews) {
+      this.logger.warn('deleteOnMaxViews is disabled, skipping deletion of files and urls');
+      return;
+    }
 
     for (const file of files) {
       try {

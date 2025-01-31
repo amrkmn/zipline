@@ -337,6 +337,9 @@ export const getServerSideProps: GetServerSideProps<{
   });
   if (!file || !file.userId) return { notFound: true };
 
+  if (file.maxViews && file.views >= file.maxViews) return { notFound: true };
+  if (file.deletesAt && file.deletesAt <= new Date()) return { notFound: true };
+
   const user = await prisma.user.findFirst({
     where: {
       id: file.userId,
