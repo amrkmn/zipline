@@ -96,7 +96,10 @@ export default function Login({
         setLoading(false);
       }
     } else {
-      await router.push((router.query.url as string) || '/dashboard');
+      let redirectUrl = (router.query.url as string) || '/dashboard';
+      if (!redirectUrl.startsWith('/dashboard')) redirectUrl = '/dashboard';
+
+      await router.push(redirectUrl);
     }
   };
 
