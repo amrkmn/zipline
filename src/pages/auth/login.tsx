@@ -8,18 +8,19 @@ import { authenticateWeb } from '@/lib/passkey';
 import { eitherTrue } from '@/lib/primitive';
 import {
   Button,
-  Card,
   Center,
+  Divider,
   Group,
+  Image,
   LoadingOverlay,
   Modal,
+  Paper,
   PasswordInput,
   PinInput,
   Stack,
   Text,
   TextInput,
   Title,
-  Image,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { notifications, showNotification } from '@mantine/notifications';
@@ -234,7 +235,16 @@ export default function Login({ config }: InferGetServerSidePropsType<typeof get
           />
         )}
 
-        <Card p='xl' withBorder>
+        <Paper
+          w='350px'
+          p='xl'
+          shadow='xl'
+          withBorder
+          style={{
+            backgroundColor: config.website.loginBackground ? 'rgba(0, 0, 0, 0)' : undefined,
+            backdropFilter: config.website.loginBackgroundBlur ? 'blur(35px)' : undefined,
+          }}
+        >
           <Title order={1} size={50} ta='center'>
             <b>{config.website.title ?? 'Zipline'}</b>
           </Title>
@@ -281,9 +291,7 @@ export default function Login({ config }: InferGetServerSidePropsType<typeof get
 
           <Stack my='xs'>
             {eitherTrue(config.features.oauthRegistration, config.features.userRegistration) && (
-              <Text size='sm' ta='center' c='dimmed'>
-                or
-              </Text>
+              <Divider label='or' />
             )}
 
             <Button
@@ -310,28 +318,38 @@ export default function Login({ config }: InferGetServerSidePropsType<typeof get
                 Sign up
               </Button>
             )}
-            {config.oauthEnabled.discord && (
-              <ExternalAuthButton
-                provider='Discord'
-                alpha={0.1}
-                leftSection={<IconBrandDiscordFilled stroke={4} />}
-              />
-            )}
-            {config.oauthEnabled.github && (
-              <ExternalAuthButton provider='GitHub' alpha={0.1} leftSection={<IconBrandGithubFilled />} />
-            )}
-            {config.oauthEnabled.google && (
-              <ExternalAuthButton
-                provider='Google'
-                alpha={0.1}
-                leftSection={<IconBrandGoogleFilled stroke={4} />}
-              />
-            )}
-            {config.oauthEnabled.oidc && (
-              <ExternalAuthButton provider='OIDC' alpha={0.2} leftSection={<IconCircleKeyFilled />} />
-            )}
+            <Group grow>
+              {config.oauthEnabled.discord && (
+                <ExternalAuthButton
+                  provider='Discord'
+                  alpha={0.1}
+                  leftSection={<IconBrandDiscordFilled stroke={4} size='1.1rem' />}
+                />
+              )}
+              {config.oauthEnabled.github && (
+                <ExternalAuthButton
+                  provider='GitHub'
+                  alpha={0.1}
+                  leftSection={<IconBrandGithubFilled size='1.1rem' />}
+                />
+              )}
+              {config.oauthEnabled.google && (
+                <ExternalAuthButton
+                  provider='Google'
+                  alpha={0.1}
+                  leftSection={<IconBrandGoogleFilled stroke={4} size='1.1rem' />}
+                />
+              )}
+              {config.oauthEnabled.oidc && (
+                <ExternalAuthButton
+                  provider='OIDC'
+                  alpha={0.2}
+                  leftSection={<IconCircleKeyFilled size='1.1rem' />}
+                />
+              )}
+            </Group>
           </Stack>
-        </Card>
+        </Paper>
       </Center>
     </>
   );
