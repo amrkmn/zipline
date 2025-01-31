@@ -12,7 +12,7 @@ jobs:
         arch: [amd64, arm64]
 
     name: push
-    runs-on: ubuntu-24.04${{ matrix.arch == 'arm64' && 'arm' || '' }}
+    runs-on: ubuntu-24.04${{ matrix.arch == 'arm64' && '-arm' || '' }}
     steps:
       - uses: actions/checkout@v4
 
