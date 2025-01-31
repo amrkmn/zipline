@@ -1,7 +1,6 @@
 import DashboardFileType from '@/components/file/DashboardFileType';
 import { isCode } from '@/lib/code';
 import { config as zConfig } from '@/lib/config';
-import { SafeConfig, safeConfig } from '@/lib/config/safe';
 import { verifyPassword } from '@/lib/crypto';
 import { prisma } from '@/lib/db';
 import { fileSelect, type File } from '@/lib/db/models/file';
@@ -39,17 +38,17 @@ export default function ViewFileId({
   pw,
   code,
   user,
-  config,
   host,
   metrics,
+  filesRoute,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  file.createdAt = new Date(file.createdAt);
-  file.updatedAt = new Date(file.updatedAt);
+  file.createdAt = new Date(file.createdAt!);
+  file.updatedAt = new Date(file.updatedAt!);
   file.deletesAt = file.deletesAt ? new Date(file.deletesAt) : null;
 
   if (user) {
-    user.createdAt = new Date(user.createdAt);
-    user.updatedAt = new Date(user.updatedAt);
+    user.createdAt = new Date(user.createdAt!);
+    user.updatedAt = new Date(user.updatedAt!);
   }
 
   const router = useRouter();
@@ -73,32 +72,41 @@ export default function ViewFileId({
 
   const meta = (
     <Head>
-      {user?.view.embedTitle && user?.view.embed && (
+      {user?.view!.embedTitle && user?.view.embed && (
         <meta
           property='og:title'
-          content={parseString(user.view.embedTitle, { file: file, user, ...metrics }) ?? ''}
+          content={
+            parseString(user.view.embedTitle, { file: file as File, user: user as User, ...metrics }) ?? ''
+          }
         />
       )}
-      {user?.view.embedDescription && user?.view.embed && (
+      {user?.view!.embedDescription && user?.view.embed && (
         <meta
           property='og:description'
-          content={parseString(user.view.embedDescription, { file, user, ...metrics }) ?? ''}
+          content={
+            parseString(user.view.embedDescription, { file: file as File, user: user as User, ...metrics }) ??
+            ''
+          }
         />
       )}
-      {user?.view.embedSiteName && user?.view.embed && (
+      {user?.view!.embedSiteName && user?.view.embed && (
         <meta
           property='og:site_name'
-          content={parseString(user.view.embedSiteName, { file, user, ...metrics }) ?? ''}
+          content={
+            parseString(user.view.embedSiteName, { file: file as File, user: user as User, ...metrics }) ?? ''
+          }
         />
       )}
-      {user?.view.embedColor && user?.view.embed && (
+      {user?.view!.embedColor && user?.view.embed && (
         <meta
           property='theme-color'
-          content={parseString(user.view.embedColor, { file, user, ...metrics }) ?? ''}
+          content={
+            parseString(user.view.embedColor, { file: file as File, user: user as User, ...metrics }) ?? ''
+          }
         />
       )}
 
-      {file.type.startsWith('image') && (
+      {file.type!.startsWith('image') && (
         <>
           <meta property='og:type' content='image' />
           <meta property='og:image' itemProp='image' content={`${host}/raw/${file.name}`} />
@@ -109,7 +117,7 @@ export default function ViewFileId({
         </>
       )}
 
-      {file.type.startsWith('video') && (
+      {file.type!.startsWith('video') && (
         <>
           {file.thumbnail && <meta property='og:image' content={`${host}/raw/${file.thumbnail.path}`} />}
 
@@ -120,7 +128,7 @@ export default function ViewFileId({
         </>
       )}
 
-      {file.type.startsWith('audio') && (
+      {file.type!.startsWith('audio') && (
         <>
           <meta name='twitter:card' content='player' />
           <meta name='twitter:player' content={`${host}/raw/${file.name}`} />
@@ -138,7 +146,7 @@ export default function ViewFileId({
         </>
       )}
 
-      {!file.type.startsWith('video') && !file.type.startsWith('image') && (
+      {!file.type!.startsWith('video') && !file.type!.startsWith('image') && (
         <meta property='og:url' content={`${host}/raw/${file.name}`} />
       )}
 
@@ -197,16 +205,16 @@ export default function ViewFileId({
 
       <Collapse in={detailsOpen}>
         <Paper m='md' p='md' withBorder>
-          {mounted && user?.view.content && (
+          {mounted && user?.view!.content && (
             <TypographyStylesProvider>
               <Text
-                ta={user?.view.align ?? 'left'}
+                ta={user?.view!.align ?? 'left'}
                 dangerouslySetInnerHTML={{
                   __html: sanitize(
                     parseString(user.view.content, {
-                      file,
+                      file: file as File,
                       link: {
-                        returned: `${host}${formatRootUrl(config?.files?.route ?? '/u', file.name)}`,
+                        returned: `${host}${formatRootUrl(filesRoute ?? '/u', file.name!)}`,
                         raw: `${host}/raw/${file.name}`,
                       },
                       ...metrics,
@@ -223,13 +231,13 @@ export default function ViewFileId({
         </Paper>
       </Collapse>
 
-      {file.name.endsWith('.md') || file.name.endsWith('.tex') ? (
+      {file.name!.endsWith('.md') || file.name!.endsWith('.tex') ? (
         <Paper m='md' p='md' withBorder>
-          <DashboardFileType file={file} password={pw} show code={code} />
+          <DashboardFileType file={file as File} password={pw} show code={code} />
         </Paper>
       ) : (
         <Box m='sm'>
-          <DashboardFileType file={file} password={pw} show code={code} />
+          <DashboardFileType file={file as File} password={pw} show code={code} />
         </Box>
       )}
     </>
@@ -243,7 +251,7 @@ export default function ViewFileId({
               <Text size='lg' fw={700} display='flex'>
                 {file.name}
               </Text>
-              {user?.view.showMimetype && (
+              {user?.view!.showMimetype && (
                 <Text size='sm' c='dimmed' ml='sm' style={{ alignSelf: 'center' }}>
                   {file.type}
                 </Text>
@@ -261,9 +269,9 @@ export default function ViewFileId({
             </ActionIcon>
           </Group>
 
-          <DashboardFileType file={file} password={pw} show />
+          <DashboardFileType file={file as File} password={pw} show />
 
-          {mounted && user?.view.content && (
+          {mounted && user?.view!.content && (
             <TypographyStylesProvider>
               <Text
                 mt='sm'
@@ -271,11 +279,12 @@ export default function ViewFileId({
                 dangerouslySetInnerHTML={{
                   __html: sanitize(
                     parseString(user?.view.content, {
-                      file,
+                      file: file as File,
                       link: {
-                        returned: `${host}${formatRootUrl(config?.files?.route ?? '/u', file.name)}`,
+                        returned: `${host}${formatRootUrl(filesRoute ?? '/u', file.name!)}`,
                         raw: `${host}/raw/${file.name}`,
                       },
+                      user: user as User,
                       ...metrics,
                     }) ?? '',
                     {
@@ -294,15 +303,15 @@ export default function ViewFileId({
 }
 
 export const getServerSideProps: GetServerSideProps<{
-  file: File;
+  file: Partial<File>;
   password?: boolean;
   pw?: string;
   code: boolean;
-  user?: Omit<User, 'oauthProviders' | 'passkeys'>;
-  config?: SafeConfig;
+  user?: Partial<User>;
   host: string;
   themes: ZiplineTheme[];
   metrics?: Awaited<ReturnType<typeof parserMetrics>>;
+  filesRoute?: string;
 }> = async (context) => {
   const { id, pw } = context.query;
   if (!id) return { notFound: true };
@@ -336,6 +345,9 @@ export const getServerSideProps: GetServerSideProps<{
       ...userSelect,
       oauthProviders: false,
       passkeys: false,
+      sessions: false,
+      totpSecret: false,
+      quota: false,
     },
   });
   if (!user) return { notFound: true };
@@ -374,19 +386,31 @@ export const getServerSideProps: GetServerSideProps<{
 
     delete (file as any).password;
 
-    return { props: { file, pw: pw as string, code, host, themes, metrics } };
+    return {
+      props: { file, pw: pw as string, user, code, host, themes, metrics, filesRoute: zConfig.files.route },
+    };
   } else if (file.password && !pw) {
     delete (file as any).password;
 
     return {
-      props: { file, password: true, code, user, config: safeConfig(libConfig), host, themes, metrics },
+      props: {
+        file: {
+          name: file.name,
+          type: file.type,
+          id: file.id,
+        },
+        password: true,
+        code,
+        user,
+        host,
+        themes,
+        metrics,
+      },
     };
   }
 
   const password = !!file.password;
   delete (file as any).password;
-
-  const config = safeConfig(libConfig);
 
   await prisma.file.update({
     where: {
@@ -405,10 +429,10 @@ export const getServerSideProps: GetServerSideProps<{
       password,
       code,
       user,
-      config,
       host,
       themes,
       metrics,
+      filesRoute: zConfig.files.route,
     },
   };
 };
