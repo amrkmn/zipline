@@ -82,6 +82,7 @@ export default fastifyPlugin(
             ...(req.body.password !== undefined && { password }),
             ...(req.body.maxViews !== undefined && { maxViews: req.body.maxViews }),
             ...(req.body.destination !== undefined && { destination: req.body.destination }),
+            ...(req.body.enabled !== undefined && { enabled: req.body.enabled }),
           },
           omit: {
             password: true,
@@ -102,11 +103,11 @@ export default fastifyPlugin(
       const url = await prisma.url.findFirst({
         where: {
           id: id,
+          userId: req.user.id,
         },
       });
 
       if (!url) return res.notFound();
-      if (url.userId !== req.user.id) return res.forbidden("You don't own this URL");
 
       const deletedUrl = await prisma.url.delete({
         where: {

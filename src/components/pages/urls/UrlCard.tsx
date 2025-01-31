@@ -20,13 +20,17 @@ export default function UserCard({ url, setSelectedUrl }: { url: Url; setSelecte
         <Card.Section withBorder inheritPadding py='xs'>
           <Group justify='space-between'>
             <Text fw={400}>
-              <Anchor
-                href={formatRootUrl(config.urls.route, url.vanity ?? url.code)}
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                {url.vanity ?? url.code}
-              </Anchor>
+              {url.enabled ? (
+                <Anchor
+                  href={formatRootUrl(config.urls.route, url.vanity ?? url.code)}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                >
+                  {url.vanity ?? url.code}
+                </Anchor>
+              ) : (
+                <Text>{url.vanity ?? url.code}</Text>
+              )}
             </Text>
 
             <Menu withinPortal position='bottom-end' shadow='sm'>
@@ -70,6 +74,9 @@ export default function UserCard({ url, setSelectedUrl }: { url: Url; setSelecte
           <Stack gap={1}>
             <Text size='xs' c='dimmed'>
               <b>Views:</b> {url.views.toLocaleString()}
+            </Text>
+            <Text size='xs' c='dimmed'>
+              <b>Enabled:</b> {url.enabled ? 'Yes' : 'No'}
             </Text>
             <Text size='xs' c='dimmed'>
               <b>Created:</b> <RelativeDate date={url.createdAt} />

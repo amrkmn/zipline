@@ -1,7 +1,7 @@
 import RelativeDate from '@/components/RelativeDate';
 import { Response } from '@/lib/api/response';
 import { Url } from '@/lib/db/models/url';
-import { ActionIcon, Anchor, Box, Group, TextInput, Tooltip } from '@mantine/core';
+import { ActionIcon, Anchor, Box, Checkbox, Group, TextInput, Tooltip } from '@mantine/core';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import { useEffect, useReducer, useState } from 'react';
 import useSWR from 'swr';
@@ -247,11 +247,10 @@ export default function UrlTableView() {
               render: (url) => <RelativeDate date={url.createdAt} />,
             },
             {
-              accessor: 'similarity',
-              title: 'Relevance',
+              accessor: 'enabled',
+              title: 'Enabled',
               sortable: true,
-              render: (url) => (url.similarity ? url.similarity.toFixed(4) : 'N/A'),
-              hidden: !searching,
+              render: (url) => <Checkbox checked={url.enabled} />,
             },
             {
               accessor: 'actions',

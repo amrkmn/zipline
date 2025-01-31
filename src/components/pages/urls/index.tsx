@@ -11,6 +11,8 @@ import {
   NumberInput,
   PasswordInput,
   Stack,
+  Switch,
+  Text,
   TextInput,
   Title,
   Tooltip,
@@ -25,6 +27,7 @@ import { useState } from 'react';
 import { mutate } from 'swr';
 import UrlGridView from './views/UrlGridView';
 import UrlTableView from './views/UrlTableView';
+import { Url } from '@/lib/db/models/url';
 
 export default function DashboardURLs() {
   const clipboard = useClipboard();
@@ -37,12 +40,14 @@ export default function DashboardURLs() {
     vanity: string;
     maxViews: '' | number;
     password: string;
+    enabled: boolean;
   }>({
     initialValues: {
       url: '',
       vanity: '',
       maxViews: '',
       password: '',
+      enabled: true,
     },
     validate: {
       url: (value) => (value.length < 1 ? 'URL is required' : null),
@@ -52,12 +57,20 @@ export default function DashboardURLs() {
   const onSubmit = async (values: typeof form.values) => {
     if (URL.canParse(values.url) === false) return form.setFieldError('url', 'Invalid URL');
 
-    const { data, error } = await fetchApi<Extract<Response['/api/user/urls'], { url: string }>>(
+    const { data, error } = await fetchApi<
+      Extract<
+        Response['/api/user/urls'],
+        {
+          url: string;
+        } & Omit<Url, 'password'>
+      >
+    >(
       '/api/user/urls',
       'POST',
       {
         destination: values.url,
         vanity: values.vanity.trim() || null,
+        enabled: values.enabled ?? true,
       },
       {
         ...(values.maxViews !== '' && { 'x-zipline-max-views': String(values.maxViews) }),
@@ -75,8 +88,10 @@ export default function DashboardURLs() {
     } else {
       setOpen(false);
 
-      const open = () => window.open(data?.url, '_blank');
+      const open = () => (values.enabled ? window.open(data?.url, '_blank') : null);
       const copy = () => {
+        if (!values.enabled) return;
+
         clipboard.copy(data?.url);
         notifications.show({
           title: 'Copied URL to clipboard',
@@ -96,16 +111,22 @@ export default function DashboardURLs() {
         children: (
           <Group justify='space-between'>
             <Group justify='left'>
-              <Anchor component={Link} href={data?.url ?? ''}>
-                {data?.url}
-              </Anchor>
+              {data?.enabled ? (
+                <Anchor component={Link} href={data?.url ?? ''}>
+                  {data?.url}
+                </Anchor>
+              ) : (
+                <Text>{data?.url}</Text>
+              )}
             </Group>
             <Group justify='right'>
-              <Tooltip label='Open link in a new tab'>
-                <ActionIcon onClick={() => open()} variant='filled'>
-                  <IconExternalLink size='1rem' />
-                </ActionIcon>
-              </Tooltip>
+              {data?.enabled && (
+                <Tooltip label='Open link in a new tab'>
+                  <ActionIcon onClick={() => open()} variant='filled'>
+                    <IconExternalLink size='1rem' />
+                  </ActionIcon>
+                </Tooltip>
+              )}
               <Tooltip label='Copy link to clipboard'>
                 <ActionIcon onClick={() => copy()} variant='filled'>
                   <IconClipboardCopy size='1rem' />
@@ -139,6 +160,12 @@ export default function DashboardURLs() {
               description='Optional field, leave blank to disable a view limit.'
               min={0}
               {...form.getInputProps('maxViews')}
+            />
+
+            <Switch
+              label='Enabled'
+              description='Allow or prevent this URL from being visited'
+              {...form.getInputProps('enabled', { type: 'checkbox' })}
             />
 
             <PasswordInput

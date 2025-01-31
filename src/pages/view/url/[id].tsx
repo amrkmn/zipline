@@ -75,10 +75,12 @@ export const getServerSideProps: GetServerSideProps<{
       destination: true,
       maxViews: true,
       views: true,
+      enabled: true,
     },
   });
   if (!url) return { notFound: true };
 
+  if (!url.enabled) return { notFound: true };
   if (url.maxViews && url.views >= url.maxViews) {
     if (config.features.deleteOnMaxViews)
       await prisma.url.delete({

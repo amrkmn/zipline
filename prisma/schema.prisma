@@ -336,6 +336,7 @@ model Url {
   views       Int     @default(0)
   maxViews    Int?
   password    String?
+  enabled     Boolean @default(true)
 
   User   User?   @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   userId String?

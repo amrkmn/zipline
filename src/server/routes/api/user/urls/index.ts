@@ -4,20 +4,20 @@ import { prisma } from '@/lib/db';
 import { Url } from '@/lib/db/models/url';
 import { log } from '@/lib/logger';
 import { z } from 'zod';
-import { Prisma } from '@prisma/client';
 import { onShorten } from '@/lib/webhooks';
 import fastifyPlugin from 'fastify-plugin';
 import { userMiddleware } from '@/server/middleware/user';
 
 export type ApiUserUrlsResponse =
   | Url[]
-  | {
+  | ({
       url: string;
-    };
+    } & Omit<Url, 'password'>);
 
 type Body = {
   vanity?: string;
   destination: string;
+  enabled?: boolean;
 };
 
 type Headers = {
@@ -50,7 +50,7 @@ export default fastifyPlugin(
       PATH,
       { preHandler: [userMiddleware, rateLimit] },
       async (req, res) => {
-        const { vanity, destination } = req.body;
+        const { vanity, destination, enabled } = req.body;
         const noJson = !!req.headers['x-zipline-no-json'];
 
         const countUrls = await prisma.url.count({
@@ -97,6 +97,7 @@ export default fastifyPlugin(
             ...(vanity && { vanity: vanity }),
             ...(maxViews && { maxViews: maxViews }),
             ...(password && { password: password }),
+            ...(enabled !== undefined && { enabled: enabled }),
           },
           omit: {
             password: true,
@@ -133,6 +134,7 @@ export default fastifyPlugin(
         if (noJson) return res.type('text/plain').send(responseUrl);
 
         return res.send({
+          ...url,
           url: responseUrl,
         });
       },
@@ -149,18 +151,18 @@ export default fastifyPlugin(
       if (!searchThreshold.success) return res.badRequest('Invalid searchThreshold value');
 
       if (searchQuery) {
-        const similarityResult: Url[] = await prisma.$queryRaw`
-      SELECT
-        word_similarity("${Prisma.raw(searchField.data)}", ${searchQuery}) AS similarity,
-        *
-      FROM "Url"
-      WHERE
-        word_similarity("${Prisma.raw(searchField.data)}", ${searchQuery}) > ${Prisma.raw(
-          String(searchThreshold.data),
-        )} OR
-        "${Prisma.raw(searchField.data)}" ILIKE '${Prisma.sql`%${searchQuery}%`}' AND
-        "userId" = ${req.user.id};
-    `;
+        const similarityResult = await prisma.url.findMany({
+          where: {
+            [searchField.data]: {
+              mode: 'insensitive',
+              contains: searchQuery,
+            },
+            userId: req.user.id,
+          },
+          omit: {
+            password: true,
+          },
+        });
 
         return res.send(similarityResult);
       }
@@ -168,6 +170,9 @@ export default fastifyPlugin(
       const urls = await prisma.url.findMany({
         where: {
           userId: req.user.id,
+        },
+        omit: {
+          password: true,
         },
       });
 

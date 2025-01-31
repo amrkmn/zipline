@@ -1,6 +1,6 @@
 import { Url } from '@/lib/db/models/url';
 import { fetchApi } from '@/lib/fetchApi';
-import { Button, Divider, Modal, NumberInput, PasswordInput, Stack, TextInput } from '@mantine/core';
+import { Button, Divider, Modal, NumberInput, PasswordInput, Stack, Switch, TextInput } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IconEye, IconKey, IconPencil, IconPencilOff, IconTrashFilled } from '@tabler/icons-react';
 import { useState } from 'react';
@@ -21,6 +21,7 @@ export default function EditUrlModal({
   const [password, setPassword] = useState<string | null>('');
   const [vanity, setVanity] = useState<string | null>(url?.vanity ?? null);
   const [destination, setDestination] = useState<string | null>(url?.destination ?? null);
+  const [enabled, setEnabled] = useState<boolean>(url?.enabled ?? true);
 
   const handleRemovePassword = async () => {
     if (!url.password) return;
@@ -56,12 +57,14 @@ export default function EditUrlModal({
       password?: string;
       vanity?: string;
       destination?: string;
+      enabled?: boolean;
     } = {};
 
     if (maxViews !== null) data['maxViews'] = maxViews;
     if (password !== null) data['password'] = password?.trim();
     if (vanity !== null && vanity !== url.vanity) data['vanity'] = vanity?.trim();
     if (destination !== null && destination !== url.destination) data['destination'] = destination?.trim();
+    if (enabled !== url.enabled) data['enabled'] = enabled;
 
     const { error } = await fetchApi(`/api/user/urls/${url.id}`, 'PATCH', data);
 
@@ -116,6 +119,13 @@ export default function EditUrlModal({
           onChange={(event) =>
             setDestination(event.currentTarget.value.trim() === '' ? null : event.currentTarget.value.trim())
           }
+        />
+
+        <Switch
+          label='Enabled'
+          description='Prevent or allow this URL from being visited.'
+          checked={enabled}
+          onChange={(event) => setEnabled(event.currentTarget.checked)}
         />
 
         <Divider />
