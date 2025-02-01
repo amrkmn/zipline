@@ -279,7 +279,7 @@ export default function Layout({ children, config }: { children: React.ReactNode
                   Settings
                 </Menu.Item>
 
-                {isAdministrator(user?.role) && (
+                {user?.role === 'SUPERADMIN' && (
                   <Menu.Item
                     leftSection={<IconAdjustments size='1rem' />}
                     component={Link}
