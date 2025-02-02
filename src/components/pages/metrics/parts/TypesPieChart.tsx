@@ -22,6 +22,4 @@ export default function TypesPieChart({ metric }: { metric: Metric }) {
       size={200}
     />
   );
-
-  return null;
 }

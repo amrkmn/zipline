@@ -1,6 +1,7 @@
 import { Metric } from '@/lib/db/models/metric';
 import { ChartTooltip, LineChart } from '@mantine/charts';
 import { Paper, Title } from '@mantine/core';
+import { defaultChartProps } from '../defaultChartProps';
 
 export default function ViewsGraph({ metrics }: { metrics: Metric[] }) {
   const sortedMetrics = metrics.sort(
@@ -10,40 +11,7 @@ export default function ViewsGraph({ metrics }: { metrics: Metric[] }) {
   return (
     <Paper radius='sm' withBorder p='sm'>
       <Title order={3}>Views</Title>
-      {/* <Line
-        data={[
-          ...metrics.map((metric) => ({
-            date: metric.createdAt,
-            views: metric.data.fileViews,
-            type: 'Files',
-          })),
-          ...metrics.map((metric) => ({
-            date: metric.createdAt,
-            views: metric.data.urlViews,
-            type: 'URLs',
-          })),
-        ]}
-        xField='date'
-        yField='views'
-        seriesField='type'
-        xAxis={{
-          type: 'time',
-          mask: 'YYYY-MM-DD HH:mm:ss',
-        }}
-        yAxis={{
-          label: {
-            formatter: (v) => `${v} views`,
-          },
-        }}
-        legend={{
-          position: 'top',
-        }}
-        padding='auto'
-        smooth
-      /> */}
       <LineChart
-        mt='xs'
-        h={400}
         data={sortedMetrics.map((metric) => ({
           date: new Date(metric.createdAt).getTime(),
           files: metric.data.fileViews,
@@ -52,18 +20,15 @@ export default function ViewsGraph({ metrics }: { metrics: Metric[] }) {
         series={[
           {
             name: 'files',
-            label: 'File Views',
+            label: 'Files',
             color: 'blue',
           },
           {
             name: 'urls',
-            label: 'URL Views',
+            label: 'URLs',
             color: 'green',
           },
         ]}
-        dataKey='date'
-        curveType='natural'
-        lineChartProps={{ syncId: 'datedStatistics' }}
         xAxisProps={{
           tickFormatter: (v) => new Date(v).toLocaleString(),
         }}
@@ -73,14 +38,14 @@ export default function ViewsGraph({ metrics }: { metrics: Metric[] }) {
               label={new Date(label).toLocaleString()}
               payload={payload}
               series={[
-                { name: 'files', label: 'File Views' },
-                { name: 'urls', label: 'URL Views' },
+                { name: 'files', label: 'Files' },
+                { name: 'urls', label: 'URLs' },
               ]}
+              valueFormatter={(v) => v + ` view${v === 1 ? '' : 's'}`}
             />
           ),
         }}
-        connectNulls
-        withDots={false}
+        {...defaultChartProps}
       />
     </Paper>
   );

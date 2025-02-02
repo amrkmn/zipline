@@ -2,6 +2,7 @@ import { bytes } from '@/lib/bytes';
 import { Metric } from '@/lib/db/models/metric';
 import { LineChart, ChartTooltip } from '@mantine/charts';
 import { Paper, Title } from '@mantine/core';
+import { defaultChartProps } from '../defaultChartProps';
 
 export default function StorageGraph({ metrics }: { metrics: Metric[] }) {
   const sortedMetrics = metrics.sort(
@@ -15,8 +16,6 @@ export default function StorageGraph({ metrics }: { metrics: Metric[] }) {
       </Title>
 
       <LineChart
-        mt='xs'
-        h={400}
         data={sortedMetrics.map((metric) => ({
           date: new Date(metric.createdAt).getTime(),
           storage: metric.data.storage,
@@ -27,10 +26,7 @@ export default function StorageGraph({ metrics }: { metrics: Metric[] }) {
             label: 'Storage Used',
           },
         ]}
-        dataKey='date'
-        curveType='natural'
         valueFormatter={(v) => bytes(Number(v))}
-        lineChartProps={{ syncId: 'datedStatistics' }}
         xAxisProps={{
           tickFormatter: (v) => new Date(v).toLocaleString(),
         }}
@@ -44,8 +40,8 @@ export default function StorageGraph({ metrics }: { metrics: Metric[] }) {
             />
           ),
         }}
-        connectNulls
-        withDots={false}
+        {...defaultChartProps}
+        withLegend={false}
       />
     </Paper>
   );

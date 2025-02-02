@@ -2,7 +2,7 @@ import { Box, Button, Group, Modal, Paper, SimpleGrid, Text, Title, Tooltip } fr
 import { DatePicker } from '@mantine/dates';
 import { IconCalendarSearch, IconCalendarTime } from '@tabler/icons-react';
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FilesUrlsCountGraph from './parts/FilesUrlsCountGraph';
 import { useApiStats } from './useStats';
 import { StatsCardsSkeleton } from './parts/StatsCards';
@@ -17,7 +17,8 @@ export default function DashboardMetrics() {
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
     new Date(Date.now() - 86400000 * 7),
     new Date(),
-  ]);
+  ]); // default: [7 days ago, now]
+
   const [open, setOpen] = useState(false);
   const [allTime, setAllTime] = useState(false);
 
@@ -27,6 +28,15 @@ export default function DashboardMetrics() {
     all: allTime,
   });
 
+  const handleDateChange = (value: [Date | null, Date | null]) => {
+    setAllTime(false);
+    setDateRange(value);
+  };
+
+  useEffect(() => {
+    if (allTime) setDateRange([null, null]);
+  }, [allTime]);
+
   return (
     <>
       <Modal title='Change range' opened={open} onClose={() => setOpen(false)} size='auto'>
@@ -34,10 +44,7 @@ export default function DashboardMetrics() {
           <DatePicker
             type='range'
             value={dateRange}
-            onChange={(value) => {
-              setDateRange(value);
-              setAllTime(false);
-            }}
+            onChange={handleDateChange}
             allowSingleDateInRange={false}
             maxDate={new Date(Date.now() + 0)}
           />
@@ -64,9 +71,9 @@ export default function DashboardMetrics() {
           <Text size='sm' c='dimmed'>
             {data?.length ? (
               <>
-                {new Date(data?.[data.length - 1]?.createdAt).toLocaleDateString()}
+                {new Date(data?.[0]?.createdAt).toLocaleDateString()}
                 {' to '}
-                {new Date(data?.[0]?.createdAt).toLocaleDateString()}{' '}
+                {new Date(data?.[data.length - 1]?.createdAt).toLocaleDateString()}
               </>
             ) : (
               <>
@@ -80,12 +87,16 @@ export default function DashboardMetrics() {
             All Time
           </Text>
         )}
-        <Tooltip label='This may take longer than usual to load.'>
+        {/* <Tooltip label='This may take longer than usual to load.'> */}
+        <Tooltip
+          label={!allTime ? 'This may take longer than usual to load.' : 'You are viewing all time stats.'}
+        >
           <Button
             size='compact-sm'
             variant='outline'
             leftSection={<IconCalendarTime size='1rem' />}
             onClick={() => setAllTime(true)}
+            disabled={allTime}
           >
             Show All Time
           </Button>

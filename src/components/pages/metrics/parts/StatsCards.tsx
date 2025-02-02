@@ -45,7 +45,7 @@ export function StatsCardsSkeleton() {
 
 export default function StatsCards({ data }: { data: Metric[] }) {
   if (!data.length) return null;
-  const recent = data[0];
+  const recent = data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
 
   return (
     <SimpleGrid

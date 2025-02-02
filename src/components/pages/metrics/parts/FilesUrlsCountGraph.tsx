@@ -1,6 +1,7 @@
 import { Metric } from '@/lib/db/models/metric';
 import { ChartTooltip, LineChart } from '@mantine/charts';
 import { Paper, Title } from '@mantine/core';
+import { defaultChartProps } from '../defaultChartProps';
 
 export default function FilesUrlsCountGraph({ metrics }: { metrics: Metric[] }) {
   const sortedMetrics = metrics.sort(
@@ -12,8 +13,6 @@ export default function FilesUrlsCountGraph({ metrics }: { metrics: Metric[] }) 
       <Title order={3}>Count</Title>
 
       <LineChart
-        mt='xs'
-        h={400}
         data={sortedMetrics.map((metric) => ({
           date: new Date(metric.createdAt).getTime(),
           files: metric.data.files,
@@ -31,9 +30,6 @@ export default function FilesUrlsCountGraph({ metrics }: { metrics: Metric[] }) 
             color: 'green',
           },
         ]}
-        dataKey='date'
-        curveType='natural'
-        lineChartProps={{ syncId: 'datedStatistics' }}
         xAxisProps={{
           tickFormatter: (v) => new Date(v).toLocaleString(),
         }}
@@ -49,8 +45,7 @@ export default function FilesUrlsCountGraph({ metrics }: { metrics: Metric[] }) 
             />
           ),
         }}
-        connectNulls
-        withDots={false}
+        {...defaultChartProps}
       />
     </Paper>
   );

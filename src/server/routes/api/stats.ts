@@ -23,8 +23,12 @@ export default fastifyPlugin(
       const fromDate = from ? new Date(from) : new Date(Date.now() - 86400000 * 7); // defaults to a week ago
       const toDate = to ? new Date(to) : new Date();
 
-      if (!all && (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())))
-        return res.badRequest('invalid date(s)');
+      if (!all) {
+        if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) return res.badRequest('invalid date(s)');
+
+        if (fromDate > toDate) return res.badRequest('from date must be before to date');
+        if (fromDate > new Date()) return res.badRequest('from date must be in the past');
+      }
 
       const stats = await prisma.metric.findMany({
         where: {
