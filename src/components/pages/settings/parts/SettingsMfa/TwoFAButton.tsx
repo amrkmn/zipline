@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   Center,
+  Code,
   Image,
   LoadingOverlay,
   Modal,
@@ -112,7 +113,12 @@ export default function TwoFAButton() {
 
   return (
     <>
-      <Modal title='Enable 2FA' opened={totpOpen} onClose={() => setTotpOpen(false)}>
+      <Modal
+        title={user?.totpSecret ? 'Disable Two-Factor Authentication' : 'Enable Two-Factor Authentication'}
+        opened={totpOpen}
+        onClose={() => setTotpOpen(false)}
+        size='md'
+      >
         <Stack gap='sm'>
           {user?.totpSecret ? (
             <Text size='sm' c='dimmed'>
@@ -121,10 +127,10 @@ export default function TwoFAButton() {
           ) : (
             <>
               <Text size='sm' c='dimmed'>
-                <b>Step 1</b> Open/download an authenticator that supports qrcode scanning or manual code
+                <b>Step 1</b> Open/download an authenticator that supports QR code scanning or manual code
                 entry. Popular options include{' '}
-                <Anchor component={Link} href='https://authy.com/' target='_blank'>
-                  Authy
+                <Anchor component={Link} href='https://2fas.com/' target='_blank'>
+                  2FAs
                 </Anchor>
                 ,{' '}
                 <Anchor
@@ -168,7 +174,7 @@ export default function TwoFAButton() {
 
               <Text size='sm' c='dimmed'>
                 If you can&apos;t scan the QR code, you can manually enter the following code into your
-                authenticator app: <br /> {twoData?.secret ?? ''}
+                authenticator app: <Code>{twoData?.secret ?? ''}</Code>
               </Text>
 
               <Text size='sm' c='dimmed'>
