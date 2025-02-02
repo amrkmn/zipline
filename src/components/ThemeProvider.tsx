@@ -42,14 +42,14 @@ export default function Theming({
     theme =
       systemTheme === 'dark'
         ? (findTheme(user ? preferredDark : (defaultTheme?.dark ?? ''), themes) ??
-          findTheme('builtin:dark_gray', themes))
+          findTheme('builtin:dark_blue', themes))
         : (findTheme(user ? preferredLight : (defaultTheme?.light ?? ''), themes) ??
-          findTheme('builtin:light_gray', themes));
+          findTheme('builtin:light_blue', themes));
   }
 
   if (!theme) {
     theme =
-      findTheme('builtin:dark_gray') ??
+      findTheme('builtin:dark_blue') ??
       ({
         id: 'builtin:dark_gray',
         name: 'Dark Gray',
