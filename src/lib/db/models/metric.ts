@@ -39,7 +39,3 @@ export const metricDataSchema = z.object({
     }),
   ),
 });
-
-export function percentChange(a: number, b: number): number {
-  return ((b - a) / a) * 100;
-}

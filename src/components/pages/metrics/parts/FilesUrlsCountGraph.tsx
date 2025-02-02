@@ -1,7 +1,7 @@
 import { Metric } from '@/lib/db/models/metric';
 import { ChartTooltip, LineChart } from '@mantine/charts';
 import { Paper, Title } from '@mantine/core';
-import { defaultChartProps } from '../defaultChartProps';
+import { defaultChartProps } from '../statsHelpers';
 
 export default function FilesUrlsCountGraph({ metrics }: { metrics: Metric[] }) {
   const sortedMetrics = metrics.sort(
