@@ -167,8 +167,9 @@ export default fastifyPlugin(
                 : searchField.data === 'id'
                   ? {
                       id: {
-                        equals: searchQuery,
+                        contains: searchQuery,
                         notIn: incompleteFiles.map((file) => file.metadata.file.id),
+                        mode: 'insensitive',
                       },
                     }
                   : {
