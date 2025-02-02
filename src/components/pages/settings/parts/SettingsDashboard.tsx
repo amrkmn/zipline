@@ -1,7 +1,7 @@
 import { useThemes } from '@/components/ThemeProvider';
 import { useSettingsStore } from '@/lib/store/settings';
-import { Group, NumberInput, Paper, Select, Stack, Switch, Text, Title } from '@mantine/core';
-import { IconMoonFilled, IconPaintFilled, IconPercentage, IconSunFilled } from '@tabler/icons-react';
+import { Group, Paper, Select, Stack, Switch, Text, Title } from '@mantine/core';
+import { IconMoonFilled, IconPaintFilled, IconSunFilled } from '@tabler/icons-react';
 import { useShallow } from 'zustand/shallow';
 
 const renderThemeOption =
@@ -51,18 +51,6 @@ export default function SettingsDashboard() {
             onChange={(event) => update('warnDeletion', event.currentTarget.checked)}
           />
         </Group>
-
-        <NumberInput
-          label='Search Threshold'
-          description='When performing a similarity check on file/url searches, this is the minimum percentage of similarity required to show the file/url. The lower the number, the more results will be shown though they will be less relevant to the actual search query. A recomended value is between 0.1 and 0.4 as this will yield moderate-relevancy results that should match your queries.'
-          min={0}
-          max={100}
-          value={settings.searchThreshold}
-          onChange={(value) => update('searchThreshold', value === '' ? 0 : Number(value))}
-          step={0.01}
-          decimalScale={2}
-          leftSection={<IconPercentage size='1rem' />}
-        />
 
         <Select
           label='Theme'

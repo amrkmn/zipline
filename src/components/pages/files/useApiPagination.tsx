@@ -11,7 +11,6 @@ type ApiPaginationOptions = {
   order?: 'asc' | 'desc';
   id?: string;
   search?: {
-    threshold?: number;
     field?: string;
     query: string;
   };
@@ -34,8 +33,6 @@ const fetcher = async (
   if (options.order) searchParams.append('order', options.order);
   if (options.id) searchParams.append('id', options.id);
   if (options.search) {
-    if (options.search.threshold !== undefined)
-      searchParams.append('searchThreshold', options.search.threshold.toString());
     if (options.search.field) searchParams.append('searchField', options.search.field);
     searchParams.append('searchQuery', options.search.query);
   }

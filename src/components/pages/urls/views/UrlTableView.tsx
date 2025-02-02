@@ -12,7 +12,6 @@ import { useClipboard } from '@mantine/hooks';
 import { useSettingsStore } from '@/lib/store/settings';
 import { formatRootUrl, trimUrl } from '@/lib/url';
 import EditUrlModal from '../EditUrlModal';
-import { useShallow } from 'zustand/shallow';
 
 const NAMES = {
   code: 'Code',
@@ -55,20 +54,11 @@ function SearchFilter({
   );
 }
 
-const fetcher = async ({
-  searchQuery,
-  searchField,
-  searchThreshold,
-}: {
-  searchQuery?: string;
-  searchField?: string;
-  searchThreshold?: number;
-}) => {
+const fetcher = async ({ searchQuery, searchField }: { searchQuery?: string; searchField?: string }) => {
   const searchParams = new URLSearchParams();
   if (searchQuery) {
     searchParams.append('searchQuery', searchQuery);
     if (searchField) searchParams.append('searchField', searchField);
-    if (searchThreshold) searchParams.append('searchThreshold', searchThreshold.toString());
   }
 
   const res = await fetch(`/api/user/urls${searchParams.toString() ? `?${searchParams.toString()}` : ''}`);
@@ -105,9 +95,7 @@ export default function UrlTableView() {
       destination: '',
     },
   );
-  const [warnDeletion, searchThreshold] = useSettingsStore(
-    useShallow((state) => [state.settings.warnDeletion, state.settings.searchThreshold]),
-  );
+  const warnDeletion = useSettingsStore((state) => state.settings.warnDeletion);
 
   const { data, isLoading } = useSWR<Extract<Response['/api/user/urls'], Url[]>>(
     {
@@ -115,7 +103,6 @@ export default function UrlTableView() {
       ...(searchQuery[searchField].trim() !== '' && {
         searchQuery: searchQuery[searchField],
         searchField,
-        searchThreshold,
       }),
     },
     fetcher,
@@ -126,11 +113,6 @@ export default function UrlTableView() {
     direction: 'desc',
   });
   const [sorted, setSorted] = useState<Url[]>(data ?? []);
-
-  const searching =
-    searchQuery.code.trim() !== '' ||
-    searchQuery.vanity.trim() !== '' ||
-    searchQuery.destination.trim() !== '';
 
   const [selectedUrl, setSelectedUrl] = useState<Url | null>(null);
 

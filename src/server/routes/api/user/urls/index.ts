@@ -30,13 +30,11 @@ type Headers = {
 type Query = {
   searchField?: 'destination' | 'vanity' | 'code';
   searchQuery?: string;
-  searchThreshold?: string;
 };
 
 export const PATH = '/api/user/urls';
 
 const validateSearchField = z.enum(['destination', 'vanity', 'code']).default('destination');
-const validateThreshold = z.number().default(0.1);
 
 const logger = log('api').c('user').c('urls');
 
@@ -146,9 +144,6 @@ export default fastifyPlugin(
         : null;
       const searchField = validateSearchField.safeParse(req.query.searchField || 'destination');
       if (!searchField.success) return res.badRequest('Invalid searchField value');
-
-      const searchThreshold = validateThreshold.safeParse(Number(req.query.searchThreshold) || 0.1);
-      if (!searchThreshold.success) return res.badRequest('Invalid searchThreshold value');
 
       if (searchQuery) {
         const similarityResult = await prisma.url.findMany({

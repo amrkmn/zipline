@@ -42,7 +42,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useReducer, useState } from 'react';
 import useSWR from 'swr';
-import { useShallow } from 'zustand/shallow';
 import { bulkDelete, bulkFavorite } from '../bulk';
 import TagPill from '../tags/TagPill';
 import { useApiPagination } from '../useApiPagination';
@@ -182,9 +181,7 @@ function TagsFilter({
 export default function FileTable({ id }: { id?: string }) {
   const router = useRouter();
   const clipboard = useClipboard();
-  const [searchThreshold, warnDeletion] = useSettingsStore(
-    useShallow((state) => [state.settings.searchThreshold, state.settings.warnDeletion]),
-  );
+  const warnDeletion = useSettingsStore((state) => state.settings.warnDeletion);
 
   const { data: folders } = useSWR<Extract<Response['/api/user/folders'], Folder[]>>(
     '/api/user/folders?noincl=true',
@@ -250,7 +247,6 @@ export default function FileTable({ id }: { id?: string }) {
     id,
     ...(searchQuery[searchField].trim() !== '' && {
       search: {
-        threshold: searchThreshold,
         field: searchField,
         query: debouncedQuery[searchField],
       },
