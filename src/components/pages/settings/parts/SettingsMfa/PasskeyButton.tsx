@@ -15,7 +15,7 @@ export default function PasskeyButton() {
   const user = useUserStore((state) => state.user);
 
   const [passkeyOpen, setPasskeyOpen] = useState(false);
-  const [passkeyErrored, setPasskeyErrored] = useState(false);
+  const [passkeyError, setPasskeyError] = useState<string | null>(null);
   const [passkeyLoading, setPasskeyLoading] = useState(false);
   const [namerShown, setNamerShown] = useState(false);
   const [savedKey, setSavedKey] = useState<RegistrationResponseJSON | null>(null);
@@ -27,8 +27,8 @@ export default function PasskeyButton() {
       const res = await registerWeb(user!);
       setNamerShown(true);
       setSavedKey(res.toJSON());
-    } catch {
-      setPasskeyErrored(true);
+    } catch (e: any) {
+      setPasskeyError(e.message ?? 'An error occurred while creating a passkey');
       setPasskeyLoading(false);
       setSavedKey(null);
     }
@@ -44,7 +44,7 @@ export default function PasskeyButton() {
 
     if (error) {
       setNamerShown(false);
-      setPasskeyErrored(true);
+      setPasskeyError('');
       setPasskeyLoading(false);
       setSavedKey(null);
 
@@ -109,12 +109,14 @@ export default function PasskeyButton() {
   };
 
   useEffect(() => {
-    if (passkeyErrored) {
-      setTimeout(() => {
-        setPasskeyErrored(false);
-      }, 2500);
+    if (passkeyError) {
+      const timeout = setTimeout(() => {
+        setPasskeyError(null);
+      }, 10000);
+
+      return () => clearTimeout(timeout);
     }
-  }, [passkeyErrored]);
+  }, [passkeyError]);
 
   return (
     <>
@@ -143,16 +145,22 @@ export default function PasskeyButton() {
           <Button
             size='sm'
             leftSection={<IconKey size='1rem' />}
-            color={passkeyErrored ? 'red' : undefined}
+            color={passkeyError ? 'red' : undefined}
             onClick={handleRegisterPasskey}
             loading={passkeyLoading}
+            disabled={!!passkeyError}
           >
-            {passkeyErrored
-              ? 'Error while creating a passkey'
+            {passkeyError
+              ? 'Error while creating a passkey - try again later'
               : passkeyLoading
                 ? 'Loading...'
                 : 'Create a passkey'}
           </Button>
+          {passkeyError && (
+            <Text size='xs' c='red'>
+              {passkeyError}
+            </Text>
+          )}
 
           {namerShown && (
             <>
