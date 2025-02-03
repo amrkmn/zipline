@@ -99,13 +99,17 @@ export default function Register({ config, invite }: InferGetServerSidePropsType
     <>
       <Center h='100vh'>
         <Paper withBorder p='sm'>
-          {invite && (
+          {invite ? (
             <div>
               <Title order={4} fw={500}>
-                You have been invited to join <b>{config.website.title}</b> by{' '}
+                You have been invited to join <b>{config?.website?.title ?? 'Zipline'}</b> by{' '}
                 <b>{invite.inviter!.username}</b>
               </Title>
             </div>
+          ) : (
+            <Title order={4} fw={500}>
+              Register for <b>{config?.website?.title ?? 'Zipline'}</b>
+            </Title>
           )}
 
           <Text size='sm' c='dimmed'>

@@ -5,7 +5,7 @@
   "version": "4.0.0-dev+1",
   "scripts": {
     "build": "pnpm run --stream \"/^build:.*/\"",
-    "build:prisma": "prisma generate",
+    "build:prisma": "prisma generate --no-hints",
     "build:next": "ZIPLINE_BUILD=true next build",
     "build:server": "tsup",
     "dev": "TURBOPACK=1 NODE_ENV=development DEBUG=zipline tsx --require dotenv/config --enable-source-maps ./src/server",

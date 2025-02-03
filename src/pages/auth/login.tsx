@@ -42,7 +42,9 @@ import useSWR from 'swr';
 
 export default function Login({ config }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
-  const { data, isLoading, mutate } = useSWR<Response['/api/user']>('/api/user');
+  const { data, isLoading, mutate } = useSWR<Response['/api/user']>('/api/user', {
+    refreshInterval: 30000,
+  });
 
   const showLocalLogin =
     router.query.local === 'true' ||
