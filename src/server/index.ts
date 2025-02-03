@@ -19,7 +19,7 @@ import { fastifyRateLimit } from '@fastify/rate-limit';
 import { fastifySensible } from '@fastify/sensible';
 import { fastifyStatic } from '@fastify/static';
 import fastify from 'fastify';
-import { mkdir } from 'fs/promises';
+import { mkdir, readFile } from 'fs/promises';
 import ms from 'ms';
 import { parse } from 'url';
 import { version } from '../../package.json';
@@ -69,8 +69,8 @@ async function main() {
     ignoreTrailingSlash: true,
     https: notNull(config.ssl.key, config.ssl.cert)
       ? {
-          key: config.ssl.key!,
-          cert: config.ssl.cert!,
+          key: await readFile(config.ssl.key!, 'utf8'),
+          cert: await readFile(config.ssl.cert!, 'utf8'),
         }
       : null,
   });
