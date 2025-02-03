@@ -1,5 +1,15 @@
 import { Response } from '@/lib/api/response';
-import { Anchor, Button, LoadingOverlay, Paper, SimpleGrid, Switch, TextInput, Title } from '@mantine/core';
+import {
+  Anchor,
+  Button,
+  LoadingOverlay,
+  Paper,
+  SimpleGrid,
+  Switch,
+  Text,
+  TextInput,
+  Title,
+} from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconDeviceFloppy } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
@@ -89,6 +99,10 @@ export default function ServerSettingsOauth({
       <LoadingOverlay visible={isLoading} />
 
       <Title order={2}>OAuth</Title>
+
+      <Text size='sm' c='dimmed'>
+        For OAuth to work, the &quot;OAuth Registration&quot; setting must be enabled in the Features section.
+      </Text>
 
       <form onSubmit={form.onSubmit(onSubmit)}>
         <SimpleGrid mt='md' cols={{ base: 1, md: 2 }} spacing='lg'>

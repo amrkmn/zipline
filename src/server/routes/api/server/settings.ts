@@ -18,6 +18,8 @@ type Settings = Awaited<ReturnType<typeof readDatabaseSettings>>;
 export type ApiServerSettingsResponse = Settings;
 type Body = Partial<Settings>;
 
+const reservedRoutes = ['/dashboard', '/api', '/raw', '/robots.txt', '/manifest.json', '/favicon.ico'];
+
 const zMs = z.string().refine((value) => ms(value) > 0, 'Value must be greater than 0');
 const zBytes = z.string().refine((value) => bytes(value) > 0, 'Value must be greater than 0');
 
@@ -93,7 +95,10 @@ export default fastifyPlugin(
                 return false;
               }
             }, 'Directory does not exist'),
-            coreDefaultDomain: z.string().nullable(),
+            coreDefaultDomain: z
+              .string()
+              .nullable()
+              .refine((value) => !value || /^[a-z0-9-.]+$/.test(value), 'Invalid domain format'),
             coreReturnHttpsUrls: z.boolean(),
 
             chunksEnabled: z.boolean(),
@@ -106,11 +111,20 @@ export default fastifyPlugin(
             tasksThumbnailsInterval: zMs,
             tasksMetricsInterval: zMs,
 
-            filesRoute: z.string().startsWith('/'),
+            filesRoute: z
+              .string()
+              .startsWith('/')
+              .refine(
+                (value) => !reservedRoutes.some((route) => value.startsWith(route)),
+                'Provided route is reserved',
+              ),
             filesLength: z.number().min(1).max(64),
             filesDefaultFormat: z.enum(['random', 'date', 'uuid', 'name', 'gfycat']),
             filesDisabledExtensions: z
-              .union([z.array(z.string()), z.string()])
+              .union([
+                z.array(z.string().refine((s) => !s.startsWith('.'), 'extension can\'t include "."')),
+                z.string(),
+              ])
               .transform((value) =>
                 typeof value === 'string' ? value.split(',').map((ext) => ext.trim()) : value,
               ),
@@ -121,7 +135,13 @@ export default fastifyPlugin(
             filesDefaultDateFormat: z.string(),
             filesRemoveGpsMetadata: z.boolean(),
 
-            urlsRoute: z.string().startsWith('/'),
+            urlsRoute: z
+              .string()
+              .startsWith('/')
+              .refine(
+                (value) => !reservedRoutes.some((route) => value.startsWith(route)),
+                'Provided route is reserved',
+              ),
             urlsLength: z.number().min(1).max(64),
 
             featuresImageCompression: z.boolean(),
@@ -132,7 +152,13 @@ export default fastifyPlugin(
             featuresDeleteOnMaxViews: z.boolean(),
 
             featuresThumbnailsEnabled: z.boolean(),
-            featuresThumbnailsNumberThreads: z.number().min(1).max(cpus().length),
+            featuresThumbnailsNumberThreads: z
+              .number()
+              .min(1)
+              .max(
+                cpus().length,
+                'Number of threads must be less than or equal to the number of CPUs: ' + cpus().length,
+              ),
 
             featuresMetricsEnabled: z.boolean(),
             featuresMetricsAdminOnly: z.boolean(),
@@ -158,8 +184,15 @@ export default fastifyPlugin(
             websiteLoginBackgroundBlur: z.boolean(),
             websiteDefaultAvatar: z
               .string()
-              .transform((s) => resolve(s))
-              .nullable(),
+              .nullable()
+              .transform((s) => (s ? resolve(s) : null))
+              .refine((input) => {
+                try {
+                  return !input || statSync(input).isFile();
+                } catch {
+                  return false;
+                }
+              }, 'File does not exist'),
             websiteTos: z
               .string()
               .nullable()

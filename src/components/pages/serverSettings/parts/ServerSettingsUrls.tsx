@@ -40,7 +40,7 @@ export default function ServerSettingsUrls({
         <SimpleGrid mt='md' cols={{ base: 1, md: 2 }} spacing='lg'>
           <TextInput
             label='Route'
-            description='The route to use for short URLs.'
+            description='The route to use for short URLs. Requires a server restart.'
             placeholder='/go'
             {...form.getInputProps('urlsRoute')}
           />

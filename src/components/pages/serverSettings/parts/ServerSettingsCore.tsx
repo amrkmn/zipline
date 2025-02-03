@@ -59,8 +59,8 @@ export default function ServerSettingsCore({
         <SimpleGrid mt='md' cols={{ base: 1, md: 2 }} spacing='lg'>
           <TextInput
             label='Default Domain'
-            description='The domain to use when generating URLs.'
-            placeholder='https://example.com'
+            description='The domain to use when generating URLs. This value should not include the protocol.'
+            placeholder='example.com'
             {...form.getInputProps('coreDefaultDomain')}
           />
 

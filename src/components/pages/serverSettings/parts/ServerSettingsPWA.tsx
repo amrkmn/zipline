@@ -6,6 +6,7 @@ import {
   Paper,
   SimpleGrid,
   Switch,
+  Text,
   TextInput,
   Title,
 } from '@mantine/core';
@@ -67,11 +68,15 @@ export default function ServerSettingsPWA({
 
       <Title order={2}>PWA</Title>
 
+      <Text size='sm' c='dimmed'>
+        Refresh the page after enabling PWA to see any changes.
+      </Text>
+
       <form onSubmit={form.onSubmit(onSubmit)}>
         <Switch
           mt='md'
           label='PWA Enabled'
-          description='Allow users to install the Zipline PWA on their devices. After enabling, refresh the page to see the download button.'
+          description='Allow users to install the Zipline PWA on their devices.'
           {...form.getInputProps('pwaEnabled', { type: 'checkbox' })}
         />
 
