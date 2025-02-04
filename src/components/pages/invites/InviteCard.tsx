@@ -1,6 +1,6 @@
 import RelativeDate from '@/components/RelativeDate';
 import { Invite } from '@/lib/db/models/invite';
-import { ActionIcon, Card, Group, Menu, Stack, Text } from '@mantine/core';
+import { ActionIcon, Anchor, Card, Group, Menu, Stack, Text } from '@mantine/core';
 import { IconCopy, IconDots, IconTrashFilled } from '@tabler/icons-react';
 import { copyInviteUrl, deleteInvite } from './actions';
 import { useClipboard } from '@mantine/hooks';
@@ -16,7 +16,9 @@ export default function InviteCard({ invite }: { invite: Invite }) {
       <Card withBorder shadow='sm' radius='sm'>
         <Card.Section withBorder inheritPadding py='xs'>
           <Group justify='space-between'>
-            <Text fw={400}>{invite.code}</Text>
+            <Anchor href={`/invite/${invite.code}`} target='_blank' fw={400}>
+              {invite.code}
+            </Anchor>
 
             <Menu withinPortal position='bottom-end' shadow='sm'>
               <Group gap={2}>

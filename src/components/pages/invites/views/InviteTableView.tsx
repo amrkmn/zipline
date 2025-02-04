@@ -1,7 +1,7 @@
 import RelativeDate from '@/components/RelativeDate';
 import { Response } from '@/lib/api/response';
 import { Invite } from '@/lib/db/models/invite';
-import { ActionIcon, Box, Group, Tooltip } from '@mantine/core';
+import { ActionIcon, Anchor, Box, Group, Tooltip } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
 import { IconCopy, IconTrashFilled } from '@tabler/icons-react';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
@@ -52,6 +52,11 @@ export default function InviteTableView() {
             {
               accessor: 'code',
               sortable: true,
+              render: (invite) => (
+                <Anchor href={`/invite/${invite.code}`} target='_blank'>
+                  {invite.code}
+                </Anchor>
+              ),
             },
             {
               accessor: 'inviter.username',
