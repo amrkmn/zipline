@@ -169,7 +169,7 @@ export async function addToFolder(file: File, folderId: string | null) {
 
   const { data, error } = await fetchApi<Response['/api/user/folders/[id]']>(
     `/api/user/folders/${folderId}`,
-    'POST',
+    'PUT',
     {
       id: file.id,
     },

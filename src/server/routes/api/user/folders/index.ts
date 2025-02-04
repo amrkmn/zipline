@@ -24,68 +24,13 @@ export const PATH = '/api/user/folders';
 export default fastifyPlugin(
   (server, _, done) => {
     server.route<{
-      Body: Body;
       Querystring: Query;
     }>({
       url: PATH,
-      method: ['GET', 'POST'],
+      method: 'GET',
       preHandler: [userMiddleware],
       handler: async (req, res) => {
         const { noincl } = req.query;
-
-        if (req.method === 'POST') {
-          const { name, isPublic } = req.body;
-          let files = req.body.files;
-          if (!name) return res.badRequest('Name is required');
-
-          if (files) {
-            const filesAdd = await prisma.file.findMany({
-              where: {
-                id: {
-                  in: files,
-                },
-              },
-              select: {
-                id: true,
-              },
-            });
-
-            if (!filesAdd.length) return res.badRequest('No files found, with given request');
-
-            files = filesAdd.map((f) => f.id);
-          }
-
-          const folder = await prisma.folder.create({
-            data: {
-              name,
-              userId: req.user.id,
-              ...(files?.length && {
-                files: {
-                  connect: files!.map((f) => ({ id: f })),
-                },
-              }),
-              public: isPublic ?? false,
-            },
-            ...(!noincl && {
-              include: {
-                files: {
-                  select: {
-                    ...fileSelect,
-                    password: true,
-                  },
-                },
-              },
-            }),
-          });
-
-          logger.info('folder created', {
-            folder: folder.name,
-            user: req.user.username,
-            files: files?.length || undefined,
-          });
-
-          return res.send(cleanFolder(folder));
-        }
 
         const folders = await prisma.folder.findMany({
           where: {
@@ -104,6 +49,65 @@ export default fastifyPlugin(
         });
 
         return res.send(cleanFolders(folders));
+      },
+    });
+
+    server.route<{
+      Body: Body;
+    }>({
+      url: PATH,
+      method: 'POST',
+      preHandler: [userMiddleware],
+      handler: async (req, res) => {
+        const { name, isPublic } = req.body;
+        let files = req.body.files;
+        if (!name) return res.badRequest('Name is required');
+
+        if (files) {
+          const filesAdd = await prisma.file.findMany({
+            where: {
+              id: {
+                in: files,
+              },
+            },
+            select: {
+              id: true,
+            },
+          });
+
+          if (!filesAdd.length) return res.badRequest('No files found, with given request');
+
+          files = filesAdd.map((f) => f.id);
+        }
+
+        const folder = await prisma.folder.create({
+          data: {
+            name,
+            userId: req.user.id,
+            ...(files?.length && {
+              files: {
+                connect: files!.map((f) => ({ id: f })),
+              },
+            }),
+            public: isPublic ?? false,
+          },
+          include: {
+            files: {
+              select: {
+                ...fileSelect,
+                password: true,
+              },
+            },
+          },
+        });
+
+        logger.info('folder created', {
+          folder: folder.name,
+          user: req.user.username,
+          files: files?.length || undefined,
+        });
+
+        return res.send(cleanFolder(folder));
       },
     });
 

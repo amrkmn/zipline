@@ -7,8 +7,16 @@ import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { copyFolderUrl, deleteFolder, editFolderVisibility } from '../actions';
-import { IconCopy, IconFiles, IconLock, IconLockOpen, IconTrashFilled } from '@tabler/icons-react';
+import {
+  IconCopy,
+  IconFiles,
+  IconLock,
+  IconLockOpen,
+  IconPencil,
+  IconTrashFilled,
+} from '@tabler/icons-react';
 import ViewFilesModal from '../ViewFilesModal';
+import EditFolderNameModal from '../EditFolderNameModal';
 
 export default function FolderTableView() {
   const clipboard = useClipboard();
@@ -21,6 +29,8 @@ export default function FolderTableView() {
   });
   const [sorted, setSorted] = useState<Folder[]>(data ?? []);
   const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
+
+  const [editNameOpen, setEditNameOpen] = useState<Folder | null>(null);
 
   useEffect(() => {
     if (data) {
@@ -46,6 +56,12 @@ export default function FolderTableView() {
         opened={!!selectedFolder}
         onClose={() => setSelectedFolder(null)}
         folder={selectedFolder}
+      />
+
+      <EditFolderNameModal
+        opened={!!editNameOpen}
+        folder={editNameOpen}
+        onClose={() => setEditNameOpen(null)}
       />
 
       <Box my='sm'>
@@ -119,6 +135,17 @@ export default function FolderTableView() {
                       }}
                     >
                       {folder.public ? <IconLockOpen size='1rem' /> : <IconLock size='1rem' />}
+                    </ActionIcon>
+                  </Tooltip>
+                  <Tooltip label='Edit Folder Name'>
+                    <ActionIcon
+                      color='blue'
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEditNameOpen(folder);
+                      }}
+                    >
+                      <IconPencil size='1rem' />
                     </ActionIcon>
                   </Tooltip>
                   <Tooltip label='Delete Folder'>

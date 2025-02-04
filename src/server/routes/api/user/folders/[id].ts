@@ -14,6 +14,7 @@ type Params = {
 type Body = {
   id?: string;
   isPublic?: boolean;
+  name?: string;
 
   delete?: 'file' | 'folder';
 };
@@ -28,7 +29,7 @@ export default fastifyPlugin(
       Params: Params;
     }>({
       url: PATH,
-      method: ['GET', 'POST', 'PATCH', 'DELETE'],
+      method: ['GET', 'PUT', 'PATCH', 'DELETE'],
       preHandler: [userMiddleware],
       handler: async (req, res) => {
         const { id } = req.params;
@@ -49,7 +50,7 @@ export default fastifyPlugin(
         if (!folder) return res.notFound('Folder not found');
         if (req.user.id !== folder.userId) return res.forbidden('You do not own this folder');
 
-        if (req.method === 'POST') {
+        if (req.method === 'PUT') {
           const { id } = req.body;
           if (!id) return res.badRequest('File id is required');
 
@@ -99,15 +100,15 @@ export default fastifyPlugin(
 
           return res.send(cleanFolder(nFolder));
         } else if (req.method === 'PATCH') {
-          const { isPublic } = req.body;
-          if (isPublic === undefined) return res.badRequest('isPublic is required');
+          const { isPublic, name } = req.body;
 
           const nFolder = await prisma.folder.update({
             where: {
               id: folder.id,
             },
             data: {
-              public: isPublic,
+              ...(isPublic !== undefined && { public: isPublic }),
+              ...(name && { name }),
             },
             include: {
               files: {

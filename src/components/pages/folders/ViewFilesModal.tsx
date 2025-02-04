@@ -1,6 +1,6 @@
 import DashboardFile from '@/components/file/DashboardFile';
 import { Folder } from '@/lib/db/models/folder';
-import { Modal, Paper, SimpleGrid } from '@mantine/core';
+import { Group, Modal, Paper, SimpleGrid, Text } from '@mantine/core';
 
 export default function ViewFilesModal({
   folder,
@@ -38,6 +38,15 @@ export default function ViewFilesModal({
           {folder?.files?.map((file) => <DashboardFile file={file} key={file.id} />)}
         </SimpleGrid>
       )}
+
+      <Group justify='space-between' mt='xs'>
+        <Text size='sm' c='dimmed'>
+          {folder?.id}
+        </Text>
+        <Text size='sm' c='dimmed'>
+          {folder?.files?.length} files found
+        </Text>
+      </Group>
     </Modal>
   );
 }
