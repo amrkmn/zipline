@@ -2,19 +2,30 @@ import RelativeDate from '@/components/RelativeDate';
 import { Folder } from '@/lib/db/models/folder';
 import { ActionIcon, Anchor, Card, Group, Menu, Stack, Text } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
-import { IconCopy, IconDots, IconFiles, IconLock, IconLockOpen, IconTrashFilled } from '@tabler/icons-react';
+import {
+  IconCopy,
+  IconDots,
+  IconFiles,
+  IconLock,
+  IconLockOpen,
+  IconPencil,
+  IconTrashFilled,
+} from '@tabler/icons-react';
 import { useState } from 'react';
 import ViewFilesModal from './ViewFilesModal';
 import { copyFolderUrl, deleteFolder, editFolderVisibility } from './actions';
+import EditFolderNameModal from './EditFolderNameModal';
 
 export default function FolderCard({ folder }: { folder: Folder }) {
   const clipboard = useClipboard();
 
-  const [open, setOpen] = useState(false);
+  const [viewOpen, setViewOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
 
   return (
     <>
-      <ViewFilesModal opened={open} onClose={() => setOpen(false)} folder={folder} />
+      <ViewFilesModal opened={viewOpen} onClose={() => setViewOpen(false)} folder={folder} />
+      <EditFolderNameModal folder={folder} opened={editOpen} onClose={() => setEditOpen(false)} />
 
       <Card withBorder shadow='sm' radius='sm'>
         <Card.Section withBorder inheritPadding py='xs'>
@@ -39,7 +50,7 @@ export default function FolderCard({ folder }: { folder: Folder }) {
               </Group>
 
               <Menu.Dropdown>
-                <Menu.Item leftSection={<IconFiles size='1rem' />} onClick={() => setOpen(true)}>
+                <Menu.Item leftSection={<IconFiles size='1rem' />} onClick={() => setViewOpen(true)}>
                   View Files
                 </Menu.Item>
                 <Menu.Item
@@ -47,6 +58,9 @@ export default function FolderCard({ folder }: { folder: Folder }) {
                   onClick={() => editFolderVisibility(folder, !folder.public)}
                 >
                   {folder.public ? 'Make Private' : 'Make Public'}
+                </Menu.Item>
+                <Menu.Item leftSection={<IconPencil size='1rem' />} onClick={() => setEditOpen(true)}>
+                  Edit Name
                 </Menu.Item>
                 <Menu.Item
                   leftSection={<IconCopy size='1rem' />}
