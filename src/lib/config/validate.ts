@@ -53,7 +53,7 @@ export const schema = z.object({
           message: 'Secret must be changed from the default value',
         });
 
-      if (s.length <= 32) {
+      if (s.length < 32) {
         return c.addIssue({
           code: 'too_small',
           minimum: 32,
