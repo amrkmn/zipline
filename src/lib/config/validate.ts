@@ -119,7 +119,8 @@ export const schema = z.object({
             .transform((s) => resolve(s))
             .default('./uploads'),
         })
-        .optional(),
+        .optional()
+        .default({ directory: './uploads' }),
     })
     .superRefine((s, c) => {
       if (s.type === 's3' && !s.s3) {
