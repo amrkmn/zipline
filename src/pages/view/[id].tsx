@@ -24,7 +24,7 @@ import {
   Text,
   TypographyStylesProvider,
 } from '@mantine/core';
-import { IconDownload, IconInfoCircleFilled } from '@tabler/icons-react';
+import { IconDownload, IconInfoCircleFilled, IconMaximize } from '@tabler/icons-react';
 import { sanitize } from 'isomorphic-dompurify';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
@@ -269,7 +269,7 @@ export default function ViewFileId({
             </ActionIcon>
           </Group>
 
-          <DashboardFileType file={file as File} password={pw} show />
+          <DashboardFileType allowZoom file={file as File} password={pw} show />
 
           {mounted && user?.view!.content && (
             <TypographyStylesProvider>

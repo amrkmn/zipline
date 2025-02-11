@@ -35,16 +35,47 @@ function Placeholder({ text, Icon, ...props }: { text: string; Icon: Icon; onCli
   );
 }
 
+function FileZoomModal({
+  setOpen,
+  children,
+}: {
+  setOpen: (open: boolean) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        background: 'rgba(0, 0, 0, 0.5)',
+        backdropFilter: 'blur(5px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 9999,
+      }}
+      onClick={() => setOpen(false)}
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function DashboardFileType({
   file,
   show,
   password,
   code,
+  allowZoom,
 }: {
   file: DbFile | File;
   show?: boolean;
   password?: string;
   code?: boolean;
+  allowZoom?: boolean;
 }) {
   const disableMediaPreview = useSettingsStore((state) => state.settings.disableMediaPreview);
 
@@ -53,6 +84,8 @@ export default function DashboardFileType({
 
   const [fileContent, setFileContent] = useState('');
   const [type, setType] = useState<string>(file.type.split('/')[0]);
+
+  const [open, setOpen] = useState(false);
 
   const gettext = async () => {
     if (!dbFile) {
@@ -129,6 +162,7 @@ export default function DashboardFileType({
           muted
           controls
           src={dbFile ? `/raw/${file.name}${password ? `?pw=${password}` : ''}` : URL.createObjectURL(file)}
+          style={{ cursor: 'pointer' }}
         />
       ) : (file as DbFile).thumbnail && dbFile ? (
         <Box pos='relative'>
@@ -160,8 +194,25 @@ export default function DashboardFileType({
             mah={400}
             src={dbFile ? `/raw/${file.name}${password ? `?pw=${password}` : ''}` : URL.createObjectURL(file)}
             alt={file.name}
-            style={{ width: 'auto' }}
+            style={{ maxWidth: '90vw', maxHeight: '90vh', cursor: allowZoom ? 'zoom-in' : 'default' }}
+            onClick={() => setOpen(true)}
           />
+          {allowZoom && open && (
+            <FileZoomModal setOpen={setOpen}>
+              <MantineImage
+                src={
+                  dbFile ? `/raw/${file.name}${password ? `?pw=${password}` : ''}` : URL.createObjectURL(file)
+                }
+                alt={file.name}
+                style={{
+                  maxWidth: '90vw',
+                  maxHeight: '90vh',
+                  objectFit: 'contain',
+                  cursor: 'zoom-out',
+                }}
+              />
+            </FileZoomModal>
+          )}
         </Center>
       ) : (
         <MantineImage
