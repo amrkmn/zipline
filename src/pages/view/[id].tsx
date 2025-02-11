@@ -24,7 +24,7 @@ import {
   Text,
   TypographyStylesProvider,
 } from '@mantine/core';
-import { IconDownload, IconInfoCircleFilled, IconMaximize } from '@tabler/icons-react';
+import { IconDownload, IconInfoCircleFilled } from '@tabler/icons-react';
 import { sanitize } from 'isomorphic-dompurify';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
