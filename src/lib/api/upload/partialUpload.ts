@@ -1,8 +1,3 @@
-import { ApiUploadResponse, MultipartFileBuffer } from '@/server/routes/api/upload';
-import { FastifyRequest } from 'fastify';
-import { writeFile } from 'fs/promises';
-import { extname, join } from 'path';
-import { Worker } from 'worker_threads';
 import { config } from '@/lib/config';
 import { hashPassword } from '@/lib/crypto';
 import { prisma } from '@/lib/db';
@@ -10,6 +5,12 @@ import { log } from '@/lib/logger';
 import { guess } from '@/lib/mimes';
 import { formatFileName } from '@/lib/uploader/formatFileName';
 import { UploadHeaders, UploadOptions } from '@/lib/uploader/parseHeaders';
+import { ApiUploadResponse, MultipartFileBuffer } from '@/server/routes/api/upload';
+import { FastifyRequest } from 'fastify';
+import { writeFile } from 'fs/promises';
+import { join } from 'path';
+import { Worker } from 'worker_threads';
+import { getExtension } from './upload';
 
 const logger = log('api').c('upload');
 export async function handlePartialUpload({
@@ -31,7 +32,8 @@ export async function handlePartialUpload({
   if (!options.partial.identifier || !options.partial.range || options.partial.range.length !== 3)
     throw 'Invalid partial upload';
 
-  const extension = options.overrides?.extension ?? extname(options.partial.filename);
+  const extension = getExtension(options.partial.filename, options.overrides?.extension);
+
   if (config.files.disabledExtensions.includes(extension)) throw `File extension ${extension} is not allowed`;
 
   const format = options.format || config.files.defaultFormat;

@@ -17,6 +17,27 @@ import { UploadHeaders, UploadOptions } from '@/lib/uploader/parseHeaders';
 
 const logger = log('api').c('upload');
 
+const commonDoubleExts = [
+  '.tar.gz',
+  '.tar.xz',
+  '.tar.bz2',
+  '.tar.lz',
+  '.tar.lzma',
+  '.tar.Z',
+  '.tar.7z',
+  '.zip.gz',
+  '.zip.xz',
+  '.rar.gz',
+  '.log.gz',
+  '.csv.gz',
+  '.pdf.gz',
+  // feel free to PR more
+];
+
+export const getExtension = (filename: string, override?: string): string => {
+  return override ?? commonDoubleExts.find((ext) => filename.endsWith(ext)) ?? extname(filename);
+};
+
 export async function handleFile({
   file,
   i,
@@ -32,7 +53,8 @@ export async function handleFile({
   response: ApiUploadResponse;
   req: FastifyRequest<{ Headers: UploadHeaders }>;
 }) {
-  const extension = options.overrides?.extension ?? extname(file.filename);
+  const extension = getExtension(file.filename, options.overrides?.extension);
+
   if (config.files.disabledExtensions.includes(extension)) throw `File extension ${extension} is not allowed`;
 
   if (file.file.bytesRead > bytes(config.files.maxFileSize))
