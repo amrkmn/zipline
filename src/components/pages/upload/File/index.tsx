@@ -18,7 +18,7 @@ import {
 import { Dropzone } from '@mantine/dropzone';
 import { useClipboard, useColorScheme } from '@mantine/hooks';
 import { notifications, showNotification } from '@mantine/notifications';
-import { IconDeviceSdCard, IconFiles, IconPhoto, IconUpload, IconX } from '@tabler/icons-react';
+import { IconDeviceSdCard, IconFiles, IconUpload, IconX } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import UploadOptionsButton from '../UploadOptionsButton';
@@ -153,7 +153,7 @@ export default function UploadFile() {
             <IconX size='3.2rem' stroke={1.5} color={theme.colors.red[colorScheme === 'dark' ? 4 : 6]} />
           </Dropzone.Reject>
           <Dropzone.Idle>
-            <IconPhoto size='3.2rem' stroke={1.5} />
+            <IconFiles size='3.2rem' stroke={1.5} />
           </Dropzone.Idle>
 
           <div>
