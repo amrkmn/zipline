@@ -45,7 +45,7 @@ export const discordContent = z
 export const schema = z.object({
   core: z.object({
     port: z.number().default(3000),
-    hostname: z.string().default('localhost'),
+    hostname: z.string().default('0.0.0.0'),
     secret: z.string().superRefine((s, c) => {
       if (s === 'changethis')
         return c.addIssue({
@@ -179,7 +179,7 @@ export const schema = z.object({
         },
         {
           name: 'Documentation',
-          url: 'https://zipline.diced.tech',
+          url: 'https://zipline.diced.sh',
         },
       ]),
     loginBackground: z.string().url().nullable().default(null),
@@ -191,8 +191,8 @@ export const schema = z.object({
       .default(null),
     theme: z.object({
       default: z.string().default('system'),
-      dark: z.string().default('builtin:dark_gray'),
-      light: z.string().default('builtin:light_gray'),
+      dark: z.string().default('builtin:dark_blue'),
+      light: z.string().default('builtin:light_blue'),
     }),
     tos: z
       .string()
