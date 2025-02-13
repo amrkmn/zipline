@@ -31,8 +31,6 @@ const variantColorResolver: VariantColorsResolver = (input) => {
     theme: input.theme,
   });
 
-  console.log(parsedColor);
-
   return {
     background: rgba(parsedColor.value, 1),
     hover: rgba(parsedColor.value, input.color === 'oidc.0' ? 0.2 : 0.1),
