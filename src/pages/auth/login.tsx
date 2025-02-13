@@ -43,7 +43,7 @@ import useSWR from 'swr';
 export default function Login({ config }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const { data, isLoading, mutate } = useSWR<Response['/api/user']>('/api/user', {
-    refreshInterval: 30000,
+    refreshInterval: 120000,
   });
 
   const showLocalLogin =
@@ -324,30 +324,20 @@ export default function Login({ config }: InferGetServerSidePropsType<typeof get
               {config.oauthEnabled.discord && (
                 <ExternalAuthButton
                   provider='Discord'
-                  alpha={0.1}
                   leftSection={<IconBrandDiscordFilled stroke={4} size='1.1rem' />}
                 />
               )}
               {config.oauthEnabled.github && (
-                <ExternalAuthButton
-                  provider='GitHub'
-                  alpha={0.1}
-                  leftSection={<IconBrandGithubFilled size='1.1rem' />}
-                />
+                <ExternalAuthButton provider='GitHub' leftSection={<IconBrandGithubFilled size='1.1rem' />} />
               )}
               {config.oauthEnabled.google && (
                 <ExternalAuthButton
                   provider='Google'
-                  alpha={0.1}
                   leftSection={<IconBrandGoogleFilled stroke={4} size='1.1rem' />}
                 />
               )}
               {config.oauthEnabled.oidc && (
-                <ExternalAuthButton
-                  provider='OIDC'
-                  alpha={0.2}
-                  leftSection={<IconCircleKeyFilled size='1.1rem' />}
-                />
+                <ExternalAuthButton provider='OIDC' leftSection={<IconCircleKeyFilled size='1.1rem' />} />
               )}
             </Group>
           </Stack>

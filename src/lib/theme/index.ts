@@ -1,4 +1,15 @@
-import { AppShell, LoadingOverlay, MantineTheme, MantineThemeOverride, Modal } from '@mantine/core';
+import {
+  AppShell,
+  defaultVariantColorsResolver,
+  lighten,
+  LoadingOverlay,
+  MantineTheme,
+  MantineThemeOverride,
+  Modal,
+  parseThemeColor,
+  rgba,
+  VariantColorsResolver,
+} from '@mantine/core';
 
 export type ZiplineTheme = MantineTheme & {
   id: string;
@@ -11,9 +22,30 @@ export function findTheme(id: string, themes: ZiplineTheme[] = []): ZiplineTheme
   return themes.find((theme) => theme.id === id);
 }
 
+const variantColorResolver: VariantColorsResolver = (input) => {
+  const defaultResolvedColors = defaultVariantColorsResolver(input);
+  if (input.variant !== 'oauth') return defaultResolvedColors;
+
+  const parsedColor = parseThemeColor({
+    color: input.color || input.theme.primaryColor,
+    theme: input.theme,
+  });
+
+  console.log(parsedColor);
+
+  return {
+    background: rgba(parsedColor.value, 1),
+    hover: rgba(parsedColor.value, input.color === 'oidc.0' ? 0.2 : 0.1),
+    border: `1px solid ${parsedColor.value}`,
+    color: lighten(parsedColor.value, 1),
+    hoverColor: rgba(parsedColor.value, 1),
+  };
+};
+
 export function themeComponents(theme: ZiplineTheme): MantineThemeOverride {
   return {
     ...theme,
+    variantColorResolver: variantColorResolver,
     components: {
       AppShell: AppShell.extend({
         styles: {
