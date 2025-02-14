@@ -134,6 +134,8 @@ export default fastifyPlugin(
             filesAssumeMimetypes: z.boolean(),
             filesDefaultDateFormat: z.string(),
             filesRemoveGpsMetadata: z.boolean(),
+            filesRandomWordsNumAdjectives: z.number().min(1).max(20),
+            filesRandomWordsSeparator: z.string(),
 
             urlsRoute: z
               .string()

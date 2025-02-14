@@ -40,6 +40,8 @@ export const rawConfig: any = {
     assumeMimetypes: undefined,
     defaultDateFormat: undefined,
     removeGpsMetadata: undefined,
+    randomWordsNumAdjectives: undefined,
+    randomWordsSeperator: undefined,
   },
   urls: {
     route: undefined,
@@ -188,6 +190,8 @@ export const DATABASE_TO_PROP = {
   filesAssumeMimetypes: 'files.assumeMimetypes',
   filesDefaultDateFormat: 'files.defaultDateFormat',
   filesRemoveGpsMetadata: 'files.removeGpsMetadata',
+  filesRandomWordsNumAdjectives: 'files.randomWordsNumAdjectives',
+  filesRandomWordsSeperator: 'files.randomWordsSeperator',
 
   urlsRoute: 'urls.route',
   urlsLength: 'urls.length',

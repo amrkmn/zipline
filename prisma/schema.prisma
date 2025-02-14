@@ -20,8 +20,8 @@ model Zipline {
   coreTempDirectory   String // default join(tmpdir(), 'zipline')
 
   chunksEnabled Boolean @default(true)
-  chunksMax     String     @default("95mb")
-  chunksSize    String     @default("25mb")
+  chunksMax     String  @default("95mb")
+  chunksSize    String  @default("25mb")
 
   tasksDeleteInterval       String @default("30m")
   tasksClearInvitesInterval String @default("30m")
@@ -29,15 +29,17 @@ model Zipline {
   tasksThumbnailsInterval   String @default("30m")
   tasksMetricsInterval      String @default("30m")
 
-  filesRoute              String   @default("/u")
-  filesLength             Int      @default(6)
-  filesDefaultFormat      String   @default("random")
-  filesDisabledExtensions String[]
-  filesMaxFileSize        String      @default("100mb")
-  filesDefaultExpiration  String?
-  filesAssumeMimetypes    Boolean  @default(false)
-  filesDefaultDateFormat  String   @default("YYYY-MM-DD_HH:mm:ss")
-  filesRemoveGpsMetadata  Boolean  @default(false)
+  filesRoute                          String   @default("/u")
+  filesLength                         Int      @default(6)
+  filesDefaultFormat                  String   @default("random")
+  filesDisabledExtensions             String[]
+  filesMaxFileSize                    String   @default("100mb")
+  filesDefaultExpiration              String?
+  filesAssumeMimetypes                Boolean  @default(false)
+  filesDefaultDateFormat              String   @default("YYYY-MM-DD_HH:mm:ss")
+  filesRemoveGpsMetadata              Boolean  @default(false)
+  filesRandomWordsNumAdjectives       Int      @default(2)
+  filesRandomWordsSeparator           String   @default("-")
 
   urlsRoute  String @default("/go")
   urlsLength Int    @default(6)
@@ -59,13 +61,13 @@ model Zipline {
   invitesEnabled Boolean @default(true)
   invitesLength  Int     @default(6)
 
-  websiteTitle           String  @default("Zipline")
-  websiteTitleLogo       String?
-  websiteExternalLinks   Json    @default("[{ \"name\": \"GitHub\", \"url\": \"https://github.com/diced/zipline\"}, { \"name\": \"Documentation\", \"url\": \"https://zipline.diced.sh/\"}]")
-  websiteLoginBackground String?
+  websiteTitle               String  @default("Zipline")
+  websiteTitleLogo           String?
+  websiteExternalLinks       Json    @default("[{ \"name\": \"GitHub\", \"url\": \"https://github.com/diced/zipline\"}, { \"name\": \"Documentation\", \"url\": \"https://zipline.diced.sh/\"}]")
+  websiteLoginBackground     String?
   websiteLoginBackgroundBlur Boolean @default(true)
-  websiteDefaultAvatar   String?
-  websiteTos             String?
+  websiteDefaultAvatar       String?
+  websiteTos                 String?
 
   websiteThemeDefault String @default("system")
   websiteThemeDark    String @default("builtin:dark_gray")
@@ -243,7 +245,7 @@ model File {
   updatedAt DateTime  @updatedAt
   deletesAt DateTime?
 
-  name         String  // name & file saved on datasource
+  name         String // name & file saved on datasource
   originalName String? // original name of file when uploaded
   size         BigInt
   type         String

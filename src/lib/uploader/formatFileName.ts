@@ -4,6 +4,7 @@ import { Config } from '../config/validate';
 import { randomCharacters } from '../crypto';
 import { randomUUID } from 'crypto';
 import { parse } from 'path';
+import { randomWords } from './randomWords';
 
 export function formatFileName(nameFormat: Config['files']['defaultFormat'], originalName?: string) {
   switch (nameFormat) {
@@ -17,7 +18,9 @@ export function formatFileName(nameFormat: Config['files']['defaultFormat'], ori
       const { name } = parse(originalName!);
 
       return name;
+    case 'random-words':
     case 'gfycat':
+      return randomWords(config.files.randomWordsNumAdjectives, config.files.randomWordsSeperator);
     default:
       return randomCharacters(config.files.length);
   }

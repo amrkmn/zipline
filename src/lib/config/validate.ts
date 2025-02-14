@@ -87,13 +87,15 @@ export const schema = z.object({
   files: z.object({
     route: z.string().startsWith('/').min(1).trim().toLowerCase().default('/u'),
     length: z.number().default(6),
-    defaultFormat: z.enum(['random', 'date', 'uuid', 'name', 'gfycat']).default('random'),
+    defaultFormat: z.enum(['random', 'date', 'uuid', 'name', 'gfycat', 'random-words']).default('random'),
     disabledExtensions: z.array(z.string()).default([]),
     maxFileSize: z.string().default('100mb'),
     defaultExpiration: z.string().nullable().default(null),
     assumeMimetypes: z.boolean().default(false),
     defaultDateFormat: z.string().default('YYYY-MM-DD_HH:mm:ss'),
     removeGpsMetadata: z.boolean().default(false),
+    randomWordsNumAdjectives: z.number().default(3),
+    randomWordsSeperator: z.string().default('-'),
   }),
   urls: z.object({
     route: z.string().startsWith('/').min(1).trim().toLowerCase().default('/go'),

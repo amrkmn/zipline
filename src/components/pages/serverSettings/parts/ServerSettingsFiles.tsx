@@ -32,6 +32,8 @@ export default function ServerSettingsFiles({
     filesAssumeMimetypes: boolean;
     filesDefaultDateFormat: string;
     filesRemoveGpsMetadata: boolean;
+    filesRandomWordsNumAdjectives: number;
+    filesRandomWordsSeparator: string;
   }>({
     initialValues: {
       filesRoute: '/u',
@@ -43,6 +45,8 @@ export default function ServerSettingsFiles({
       filesAssumeMimetypes: false,
       filesDefaultDateFormat: 'YYYY-MM-DD_HH:mm:ss',
       filesRemoveGpsMetadata: false,
+      filesRandomWordsNumAdjectives: 3,
+      filesRandomWordsSeparator: '-',
     },
   });
 
@@ -86,6 +90,8 @@ export default function ServerSettingsFiles({
       filesAssumeMimetypes: data?.filesAssumeMimetypes ?? false,
       filesDefaultDateFormat: data?.filesDefaultDateFormat ?? 'YYYY-MM-DD_HH:mm:ss',
       filesRemoveGpsMetadata: data?.filesRemoveGpsMetadata ?? false,
+      filesRandomWordsNumAdjectives: data?.filesRandomWordsNumAdjectives ?? 3,
+      filesRandomWordsSeparator: data?.filesRandomWordsSeparator ?? '-',
     });
   }, [data]);
 
@@ -158,6 +164,21 @@ export default function ServerSettingsFiles({
             description='The default date format to use.'
             placeholder='YYYY-MM-DD_HH:mm:ss'
             {...form.getInputProps('filesDefaultDateFormat')}
+          />
+
+          <NumberInput
+            label='Random Words Num Adjectives'
+            description='The number of adjectives to use for the random-words/gfycat format.'
+            min={1}
+            max={10}
+            {...form.getInputProps('filesRandomWordsNumAdjectives')}
+          />
+
+          <TextInput
+            label='Random Words Separator'
+            description='The separator to use for the random-words/gfycat format.'
+            placeholder='-'
+            {...form.getInputProps('filesRandomWordsSeparator')}
           />
         </SimpleGrid>
 
