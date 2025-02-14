@@ -15,6 +15,7 @@ export async function deleteUser(user: User) {
       cancel: 'Cancel',
       confirm: 'Delete',
     },
+    confirmProps: { color: 'red' },
     onConfirm: () =>
       modals.openConfirmModal({
         centered: true,

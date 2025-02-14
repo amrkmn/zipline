@@ -1,6 +1,6 @@
 import DashboardFile from '@/components/file/DashboardFile';
 import { Folder } from '@/lib/db/models/folder';
-import { Group, Modal, Paper, SimpleGrid, Text } from '@mantine/core';
+import { Group, Modal, SimpleGrid, Text } from '@mantine/core';
 
 export default function ViewFilesModal({
   folder,
@@ -20,11 +20,7 @@ export default function ViewFilesModal({
       opened={opened}
       onClose={onClose}
     >
-      {folder?.files?.length === 0 ? (
-        <Paper p='lg' withBorder>
-          No files found
-        </Paper>
-      ) : (
+      {folder?.files?.length === 0 ? null : (
         <SimpleGrid
           my='sm'
           spacing='md'

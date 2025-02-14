@@ -2,6 +2,7 @@ import { Response } from '@/lib/api/response';
 import {
   Button,
   ColorInput,
+  Group,
   LoadingOverlay,
   Paper,
   SimpleGrid,
@@ -11,7 +12,7 @@ import {
   Title,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { IconDeviceFloppy } from '@tabler/icons-react';
+import { IconDeviceFloppy, IconRefresh } from '@tabler/icons-react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { settingsOnSubmit } from '../settingsOnSubmit';
@@ -122,9 +123,14 @@ export default function ServerSettingsPWA({
           />
         </SimpleGrid>
 
-        <Button type='submit' mt='md' loading={isLoading} leftSection={<IconDeviceFloppy size='1rem' />}>
-          Save
-        </Button>
+        <Group mt='md'>
+          <Button type='submit' loading={isLoading} leftSection={<IconDeviceFloppy size='1rem' />}>
+            Save
+          </Button>
+          <Button onClick={() => router.reload()} leftSection={<IconRefresh size='1rem' />}>
+            Refresh
+          </Button>
+        </Group>
       </form>
     </Paper>
   );

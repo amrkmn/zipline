@@ -1,10 +1,10 @@
 import { Button, Center, Group, Pagination, Paper, SimpleGrid, Skeleton, Stack, Title } from '@mantine/core';
 import { IconFileUpload, IconFilesOff } from '@tabler/icons-react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useApiPagination } from '../useApiPagination';
-import dynamic from 'next/dynamic';
 
 const DashboardFile = dynamic(() => import('@/components/file/DashboardFile'), {
   loading: () => <Skeleton height={350} animate />,
@@ -18,6 +18,14 @@ export default function Files({ id }: { id?: string }) {
     page,
     id,
   });
+
+  const [cachedPages, setCachedPages] = useState<number>(1);
+
+  useEffect(() => {
+    if (data?.pages) {
+      setCachedPages(data.pages);
+    }
+  }, [data?.pages]);
 
   useEffect(() => {
     router.replace(
@@ -74,7 +82,7 @@ export default function Files({ id }: { id?: string }) {
       </SimpleGrid>
 
       <Center>
-        <Pagination my='sm' value={page} onChange={setPage} total={data?.pages ?? 1} />
+        <Pagination my='sm' value={page} onChange={setPage} total={cachedPages} />
       </Center>
     </>
   );
