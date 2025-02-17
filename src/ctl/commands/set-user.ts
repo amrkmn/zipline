@@ -4,7 +4,7 @@ const SUPPORTED_FIELDS = ['username', 'password', 'role', 'avatar', 'token', 'to
 export async function setUser(property: string, value: string, { id }: { id: string }) {
   if (!SUPPORTED_FIELDS.includes(property)) return console.error('Unsupported field:', property);
 
-  const { prisma } = await import('@/lib/db');
+  const { prisma } = await import('@/lib/db/index.js');
   const user = await prisma.user.findFirst({
     where: { id },
   });

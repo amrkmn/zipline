@@ -7,7 +7,7 @@ export async function importDir(directory: string, { id, folder }: { id?: string
   const fullPath = resolve(directory);
   if (!statSync(fullPath).isDirectory()) return console.error('Not a directory:', directory);
 
-  const { prisma } = await import('@/lib/db');
+  const { prisma } = await import('@/lib/db/index.js');
   let userId: string;
 
   if (id) {
@@ -68,7 +68,7 @@ export async function importDir(directory: string, { id, folder }: { id?: string
 
   console.log('Imported', res.count, 'files');
 
-  const { datasource } = await import('@/lib/datasource');
+  const { datasource } = await import('@/lib/datasource/index.js');
   for (let i = 0; i !== files.length; ++i) {
     const buff = await readFile(join(fullPath, files[i]));
 

@@ -20,7 +20,7 @@ export async function listUsers({ extra, format, id }: { extra?: string[]; forma
     }
   }
 
-  const { prisma } = await import('@/lib/db');
+  const { prisma } = await import('@/lib/db/index.js');
   const users = await prisma.user.findMany({
     where: id ? { id } : undefined,
     select,
