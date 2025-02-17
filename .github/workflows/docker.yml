@@ -76,4 +76,4 @@ jobs:
         run: |
           docker manifest push ghcr.io/diced/zipline:trunk-${{ steps.sha.outputs.short_sha }} && \
           docker manifest push ghcr.io/diced/zipline:trunk && \
-          docker manifest push ghcr.io/diced/zipline:v4 && \
+          docker manifest push ghcr.io/diced/zipline:v4
