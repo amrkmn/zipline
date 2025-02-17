@@ -7,6 +7,13 @@ const nextConfig = {
       destination: '/auth/register?code=:code',
     },
   ],
+  redirects: async () => [
+    {
+      source: '/r/:id',
+      destination: '/raw/:id',
+      permanent: true,
+    },
+  ],
   webpack: (config) => {
     config.resolve.fallback = { worker_threads: false };
 
