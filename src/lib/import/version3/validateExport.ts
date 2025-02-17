@@ -180,7 +180,7 @@ export const export3Schema = z.object({
   users: z.record(
     z.object({
       username: z.string(),
-      password: z.string(),
+      password: z.string().optional().nullable(),
       avatar: z.string().optional().nullable(),
       administrator: z.boolean(),
       super_administrator: z.boolean(),
