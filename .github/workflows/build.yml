@@ -2,9 +2,9 @@ name: 'Build'
 
 on:
   push:
-    branches: [v4]
+    branches: [v4, trunk]
   pull_request:
-    branches: [v4]
+    branches: [v4, trunk]
   workflow_dispatch:
 
 jobs:

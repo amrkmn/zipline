@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/diced/zipline/v4/public/zipline_small.png"/>
+  <img src="https://raw.githubusercontent.com/diced/zipline/trunk/public/zipline_small.png"/>
 
 The next generation ShareX / File upload server
 
@@ -10,7 +10,7 @@ The next generation ShareX / File upload server
 
 ![Build](https://img.shields.io/github/actions/workflow/status/diced/zipline/build.yml?logo=github&style=flat&branch=trunk)
 
-[v4.zipline.diced.sh](https://v4.zipline.diced.sh) | [v3.zipline.diced.sh](https://v3.zipline.diced.sh)
+[zipline.diced.sh](https://zipline.diced.sh) | [old v3.zipline.diced.sh](https://v3.zipline.diced.sh)
 
 <!-- TODO: change these links and image branch -->
 

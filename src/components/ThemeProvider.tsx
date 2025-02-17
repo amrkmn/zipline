@@ -2,6 +2,7 @@ import { Config } from '@/lib/config/validate';
 import { useSettingsStore } from '@/lib/store/settings';
 import { useUserStore } from '@/lib/store/user';
 import { ZiplineTheme, findTheme, themeComponents } from '@/lib/theme';
+import dark_blue from '@/lib/theme/builtins/dark_blue';
 import { MantineProvider, createTheme } from '@mantine/core';
 import { useColorScheme } from '@mantine/hooks';
 import { createContext, useContext } from 'react';
@@ -48,14 +49,7 @@ export default function Theming({
   }
 
   if (!theme) {
-    theme =
-      findTheme('builtin:dark_blue') ??
-      ({
-        id: 'builtin:dark_gray',
-        name: 'Dark Gray',
-        colorScheme: 'dark',
-        primaryColor: 'gray',
-      } as unknown as ZiplineTheme); // back up theme if all else fails lol
+    theme = findTheme('builtin:dark_blue') ?? (dark_blue as unknown as ZiplineTheme); // back up theme if all else fails lol
   }
 
   return (

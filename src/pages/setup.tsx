@@ -25,10 +25,21 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { mutate } from 'swr';
 
+function LinkToDoc({ href, title, children }: { href: string; title: string; children: React.ReactNode }) {
+  return (
+    <Text>
+      <Anchor href={href} target='_blank' rel='noopener noreferrer'>
+        {title}
+      </Anchor>{' '}
+      {children}
+    </Text>
+  );
+}
+
 export default function Setup() {
   const router = useRouter();
 
-  const [active, setActive] = useState(1);
+  const [active, setActive] = useState(0);
   const nextStep = () => setActive((current) => (current < 3 ? current + 1 : current));
   const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
 
@@ -107,39 +118,34 @@ export default function Setup() {
             <SimpleGrid spacing='md' cols={{ base: 1, sm: 1 }}>
               <Paper withBorder p='sm' my='sm' h='100%'>
                 <Title order={2}>Documentation</Title>
-                <Text>Here are a couple of useful documentation links to get you started with Zipline.</Text>
+                <Text>Here are a couple of useful documentation links to get you started with Zipline:</Text>
 
-                {/* TODO: change these to actual links.. */}
-                <Text c='dimmed'>
-                  <Anchor>[name]</Anchor>: desc
-                </Text>
+                <Stack mt='xs'>
+                  <LinkToDoc href='https://zipline.diced.sh/docs/config' title='Configuration'>
+                    Configuring Zipline to your needs
+                  </LinkToDoc>
 
-                <Text c='dimmed'>
-                  <Anchor>[name]</Anchor>: desc
-                </Text>
-                <Text c='dimmed'>
-                  <Anchor>[name]</Anchor>: desc
-                </Text>
-                <Text c='dimmed'>
-                  <Anchor>[name]</Anchor>: desc
-                </Text>
-                <Text c='dimmed'>
-                  <Anchor>[name]</Anchor>: desc
-                </Text>
+                  <LinkToDoc href='https://zipline.diced.sh/docs/migrate' title='Migrate from v3 to v4'>
+                    Upgrading from a previous version of Zipline
+                  </LinkToDoc>
+                </Stack>
               </Paper>
 
               <Paper withBorder p='sm' my='sm' h='100%'>
                 <Title order={2}>Configuration</Title>
 
                 <Text>
-                  Zipline&apos;s configuration is managed by environment variables. Zipline makes this easy by
-                  providing support for using a <Code>.env</Code> file. When using <b>Docker Compose</b> all
-                  the environment variables are found in the <Code>docker-compose.yml</Code> file.
+                  Most of Zipline&apos;s configuration is now managed through the dashboard. Once you login as
+                  a super-admin, you can click on your username in the top right corner and select
+                  &quot;Server Settings&quot; to configure your instance. The only exception to this is a few
+                  sensitive environment variables that must be set in order for Zipline to run. To change
+                  this, depending on the setup, you can either edit the <Code>.env</Code> or{' '}
+                  <Code>docker-compose.yml</Code> file.
                 </Text>
 
                 <Text>
                   To see all of the available environment variables, please refer to the documentation{' '}
-                  <Anchor component={Link} href='https://zipl.vercel.app/docs/config'>
+                  <Anchor component={Link} href='https://zipline.diced.sh/docs/config'>
                     here.
                   </Anchor>
                 </Text>
@@ -199,8 +205,8 @@ export default function Setup() {
             <Title order={2}>Setup complete!</Title>
 
             <Text>
-              Clicking &quot;continue&quot; below will create your super-admin account and log you in. You
-              will be redirected to the dashboard shortly after that.
+              Clicking &quot;Finish&quot; below will create your super-admin account and log you in. You will
+              be redirected to the dashboard shortly after that.
             </Text>
             <Group justify='space-between' my='lg'>
               <Button
