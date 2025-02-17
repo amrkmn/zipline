@@ -63,14 +63,14 @@ jobs:
       - name: create manifests
         run: |
           docker manifest create ghcr.io/diced/zipline:trunk-${{ steps.sha.outputs.short_sha }} \
-            --amend ghcr.io/diced/zipline:v4-${{ steps.sha.outputs.short_sha }}-amd64 \
-            --amend ghcr.io/diced/zipline:v4-${{ steps.sha.outputs.short_sha }}-arm64 && \
+            --amend ghcr.io/diced/zipline:trunk-${{ steps.sha.outputs.short_sha }}-amd64 \
+            --amend ghcr.io/diced/zipline:trunk-${{ steps.sha.outputs.short_sha }}-arm64 && \
           docker manifest create ghcr.io/diced/zipline:trunk \
-            --amend ghcr.io/diced/zipline:v4-${{ steps.sha.outputs.short_sha }}-amd64 \
-            --amend ghcr.io/diced/zipline:v4-${{ steps.sha.outputs.short_sha }}-arm64
+            --amend ghcr.io/diced/zipline:trunk-${{ steps.sha.outputs.short_sha }}-amd64 \
+            --amend ghcr.io/diced/zipline:trunk-${{ steps.sha.outputs.short_sha }}-arm64
           docker manifest create ghcr.io/diced/zipline:v4 \
-            --amend ghcr.io/diced/zipline:v4-${{ steps.sha.outputs.short_sha }}-amd64 \
-            --amend ghcr.io/diced/zipline:v4-${{ steps.sha.outputs.short_sha }}-arm64
+            --amend ghcr.io/diced/zipline:trunk-${{ steps.sha.outputs.short_sha }}-amd64 \
+            --amend ghcr.io/diced/zipline:trunk-${{ steps.sha.outputs.short_sha }}-arm64
 
       - name: push manifests
         run: |
