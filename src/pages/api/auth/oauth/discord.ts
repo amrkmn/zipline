@@ -41,7 +41,9 @@ async function handler({ code, host, state }: OAuthQuery, logger: Logger): Promi
     client_secret: config.oauth.discord.clientSecret!,
     grant_type: 'authorization_code',
     code,
-    redirect_uri: `${config.core.returnHttpsUrls ? 'https' : 'http'}://${host}/api/auth/oauth/discord`,
+    redirect_uri:
+      config.oauth.discord.redirectUri ??
+      `${config.core.returnHttpsUrls ? 'https' : 'http'}://${host}/api/auth/oauth/discord`,
     scope: 'identify',
   });
 

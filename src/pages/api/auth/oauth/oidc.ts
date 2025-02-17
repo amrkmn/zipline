@@ -42,7 +42,9 @@ async function handler({ code, host, state }: OAuthQuery, _logger: Logger): Prom
     client_secret: config.oauth.oidc.clientSecret!,
     grant_type: 'authorization_code',
     code,
-    redirect_uri: `${config.core.returnHttpsUrls ? 'https' : 'http'}://${host}/api/auth/oauth/oidc`,
+    redirect_uri:
+      config.oauth.oidc.redirectUri ??
+      `${config.core.returnHttpsUrls ? 'https' : 'http'}://${host}/api/auth/oauth/oidc`,
   });
 
   const res = await fetch(config.oauth.oidc.tokenUrl!, {

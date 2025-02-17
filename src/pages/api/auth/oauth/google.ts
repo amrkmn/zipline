@@ -41,7 +41,9 @@ async function handler({ code, host, state }: OAuthQuery, _logger: Logger): Prom
     client_secret: config.oauth.google.clientSecret!,
     grant_type: 'authorization_code',
     code,
-    redirect_uri: `${config.core.returnHttpsUrls ? 'https' : 'http'}://${host}/api/auth/oauth/google`,
+    redirect_uri:
+      config.oauth.google.redirectUri ??
+      `${config.core.returnHttpsUrls ? 'https' : 'http'}://${host}/api/auth/oauth/google`,
     access_type: 'offline',
   });
 
